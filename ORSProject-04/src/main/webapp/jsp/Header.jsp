@@ -36,6 +36,7 @@
 	<a href="<%=ORSView.MARKSHEET_CTL%>">Add MarkSheet</a> |
 	<a href="<%=ORSView.MARKSHEET_LIST_CTL%>">MarkSheet List</a> |
 	<a href="<%=ORSView.SUBJECT_CTL%>">Add Subject</a> |
+	<a href="<%=ORSView.SUBJECT_LIST_CTL%>">Subject List</a> |
 	<a href="<%=ORSView.LOGIN_CTL + "?operation=logout"%>">Logout</a> |
 
 	<%
