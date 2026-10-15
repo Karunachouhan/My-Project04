@@ -38,11 +38,11 @@
 	<a href="<%=ORSView.SUBJECT_CTL%>">Add Subject</a> |
 	<a href="<%=ORSView.SUBJECT_LIST_CTL%>">Subject List</a> |
 	<a href="<%=ORSView.LOGIN_CTL + "?operation=logout"%>">Logout</a> |
-
+    <a href="<%=ORSView.CHANGE_PASSWORD_CTL%>">ChangePassword</a> |
 	<%
 	} else {
 	%>
-	<h2>Hii, Guest</h2>
+	<h2><%=welcomeMsg + "Guest" %></h2>
 	<a href="<%=ORSView.LOGIN_CTL%>">Login</a> |
 	<a href="<%=ORSView.USER_REGISTRATION_CTL%>">SignUp</a> |
 	<%

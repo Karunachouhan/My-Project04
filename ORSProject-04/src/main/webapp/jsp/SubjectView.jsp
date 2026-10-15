@@ -17,7 +17,7 @@
 	%>
 	<%@include file="Header.jsp"%>
 	<div align="center">
-		<h1>Add Subject</h1>
+		<h1><%=bean != null && bean.getId()>0 ? "Update Subject" : "Add Subject"%></h1>
 		<h3 style="color: green"><%=succ%></h3>
 		<h3 style="color: red"><%=error%></h3>
 		<form action="<%=ORSView.COURSE_CTL%>" method="post">
