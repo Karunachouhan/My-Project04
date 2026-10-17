@@ -34,8 +34,7 @@
 				<tr>
 					<th>Roll No.</th>
 					<td><input type="number" name="rollNo"
-						placeholder="search by roll no" value=""><input
-						type="submit" name="opertion" value="<%=MarksheetCtl.OP_SEARCH%>"></td>
+						placeholder="search by roll no" value=""></td>
 
 					<th>Name</th>
 					<td><input type="text" name="name" value=""

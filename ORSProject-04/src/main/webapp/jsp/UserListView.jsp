@@ -31,23 +31,16 @@
 				<tr>
 					<th>First Name</th>
 					<td><input type="text" name="firstName" value=""
-						placeholder="search by first name"><input type="submit"
-						name="operation" value="<%=UserCtl.OP_SEARCH%>"></td>
-				</tr>
-				<tr>
+						placeholder="search by first name"></td>
+
 					<th>Last Name</th>
 					<td><input type="text" name="lastName" value=""
-						placeholder="search by last name"><input type="submit"
-						name="operation" value="<%=UserCtl.OP_SEARCH%>"></td>
-				</tr>
-
-				<tr>
+						placeholder="search by last name"></td>
+			
 					<th>Login</th>
 					<td><input type="email" name="login" value=""
-						placeholder="search by login"><input type="submit"
-						name="operation" value="<%=UserCtl.OP_SEARCH%>"></td>
-				</tr>
-				<tr>
+						placeholder="search by login"></td>
+			
 					<th>Dob</th>
 					<td><input type="date" name="dob" value=""
 						placeholder="search by dob"><input type="submit"

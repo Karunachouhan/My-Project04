@@ -33,8 +33,7 @@
 				<tr>
 					<th>First Name</th>
 					<td><input type="text" name="firstName" value=""
-						placeholder="search by first name"><input type="submit"
-						name="operation" value="<%=FacultyCtl.OP_SEARCH%>"></td>
+						placeholder="search by first name">
 
 					<th>Last Name</th>
 					<td><input type="text" name="lastName" value=""
