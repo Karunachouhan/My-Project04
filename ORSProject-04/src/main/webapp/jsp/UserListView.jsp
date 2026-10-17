@@ -1,3 +1,4 @@
+<%@page import="in.co.rays.proj4.controller.UserCtl"%>
 <%@page import="java.util.Iterator"%>
 <%@page import="java.util.List"%>
 <%@page import="in.co.rays.proj4.util.ServletUtility"%>
@@ -22,10 +23,37 @@
 	<%@ include file="Header.jsp"%>
 	<div align="center">
 		<h1>User List</h1>
-		<h3 style="color :red"><%=succ %></h3>
-		<h3 style="color :red"><%=error %></h3>
+		<h3 style="color: red"><%=succ%></h3>
+		<h3 style="color: red"><%=error%></h3>
 
 		<form action="<%=ORSView.USER_LIST_CTL%>" method="post">
+			<table>
+				<tr>
+					<th>First Name</th>
+					<td><input type="text" name="firstName" value=""
+						placeholder="search by first name"><input type="submit"
+						name="operation" value="<%=UserCtl.OP_SEARCH%>"></td>
+				</tr>
+				<tr>
+					<th>Last Name</th>
+					<td><input type="text" name="lastName" value=""
+						placeholder="search by last name"><input type="submit"
+						name="operation" value="<%=UserCtl.OP_SEARCH%>"></td>
+				</tr>
+
+				<tr>
+					<th>Login</th>
+					<td><input type="email" name="login" value=""
+						placeholder="search by login"><input type="submit"
+						name="operation" value="<%=UserCtl.OP_SEARCH%>"></td>
+				</tr>
+				<tr>
+					<th>Dob</th>
+					<td><input type="date" name="dob" value=""
+						placeholder="search by dob"><input type="submit"
+						name="operation" value="<%=UserCtl.OP_SEARCH%>"></td>
+				</tr>
+			</table>
 			<table border="10px" width="100%">
 				<tr style="background: skyblue">
 					<th><input type="checkbox"
@@ -58,7 +86,7 @@
 				<%
 				}
 				%>
-				
+
 				<%@ include file="ListFooter.jsp"%>
 			</table>
 		</form>

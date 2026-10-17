@@ -1,3 +1,4 @@
+<%@page import="in.co.rays.proj4.controller.CourseCtl"%>
 <%@page import="java.util.Iterator"%>
 <%@page import="in.co.rays.proj4.bean.CourseBean"%>
 <%@page import="java.util.List"%>
@@ -26,6 +27,14 @@
 		<h3 style="color: green"><%=succ%></h3>
 		<h3 style="color: red"><%=error%></h3>
 		<form action="<%=ORSView.COURSE_LIST_CTL%>" method="post">
+			<table>
+				<tr>
+					<th>Name</th>
+					<td><input type="text" name="name" value=""
+						placeholder="search by course  name"><input type="submit"
+						name="operation" value="<%=CourseCtl.OP_SEARCH%>"></td>
+				</tr>
+			</table>
 			<table border="10px" width="100%">
 				<tr style="background: skyblue">
 					<th><input type="checkbox"
@@ -53,10 +62,10 @@
 				<%
 				}
 				%>
-             
-             <%@include file="ListFooter.jsp"%>
+
+				<%@include file="ListFooter.jsp"%>
 			</table>
-			
+
 		</form>
 	</div>
 

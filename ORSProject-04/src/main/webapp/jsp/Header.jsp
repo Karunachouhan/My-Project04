@@ -1,3 +1,4 @@
+<%@page import="in.co.rays.proj4.util.MessageSource"%>
 <%@page import="in.co.rays.proj4.bean.RoleBean"%>
 <%@page import="in.co.rays.proj4.controller.ORSView"%>
 <%@page import="in.co.rays.proj4.bean.UserBean"%>
@@ -12,10 +13,12 @@
 <body>
 
 	<%
+	MessageSource ms = MessageSource.getInstance();
 	UserBean user = (UserBean) session.getAttribute("user");
 	String role = (String) session.getAttribute("role");
 	boolean isLogin = user != null;
 	String welcomeMsg = "Hii, ";
+	String locale = ms.getLanguage();
 	%>
 
 	<%
@@ -38,11 +41,11 @@
 	<a href="<%=ORSView.SUBJECT_CTL%>">Add Subject</a> |
 	<a href="<%=ORSView.SUBJECT_LIST_CTL%>">Subject List</a> |
 	<a href="<%=ORSView.LOGIN_CTL + "?operation=logout"%>">Logout</a> |
-    <a href="<%=ORSView.CHANGE_PASSWORD_CTL%>">ChangePassword</a> |
+	<a href="<%=ORSView.CHANGE_PASSWORD_CTL%>">ChangePassword</a> |
 	<%
 	} else {
 	%>
-	<h2><%=welcomeMsg + "Guest" %></h2>
+	<h2><%=welcomeMsg + "Guest"%></h2>
 	<a href="<%=ORSView.LOGIN_CTL%>">Login</a> |
 	<a href="<%=ORSView.USER_REGISTRATION_CTL%>">SignUp</a> |
 	<%
@@ -51,6 +54,24 @@
 
 	<a href="<%=ORSView.WELCOME_CTL%>">Welcome</a>
 
+	<!-- Language Dropdown -->
+	<div align="right">
+	<table>
+		<tr>
+			<td style="width: 120px; text-align: center;">
+
+				<form style="margin: 0;">
+					<select name="lang" onchange="this.form.submit()">
+
+						<option value="en" <%=("en".equals(locale)) ? "selected" : ""%>>English</option>
+						<option value="hi" <%=("hi".equals(locale)) ? "selected" : ""%>>Hindi</option>
+
+					</select>
+				</form>
+			</td>
+		</tr>
+	</table>
+	</div>
 	<hr>
 </body>
 </html>

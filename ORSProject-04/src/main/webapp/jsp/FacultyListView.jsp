@@ -1,3 +1,4 @@
+<%@page import="in.co.rays.proj4.controller.FacultyCtl"%>
 <%@page import="java.util.Iterator"%>
 <%@page import="in.co.rays.proj4.bean.FacultyBean"%>
 <%@page import="java.util.List"%>
@@ -28,6 +29,19 @@
 		<h3 style="color: green"><%=succ%></h3>
 		<h3 style="color: red"><%=error%></h3>
 		<form action="<%=ORSView.FACULTY_LIST_CTL%>" method="post">
+			<table>
+				<tr>
+					<th>First Name</th>
+					<td><input type="text" name="firstName" value=""
+						placeholder="search by first name"><input type="submit"
+						name="operation" value="<%=FacultyCtl.OP_SEARCH%>"></td>
+
+					<th>Last Name</th>
+					<td><input type="text" name="lastName" value=""
+						placeholder="search by last name"><input type="submit"
+						name="operation" value="<%=FacultyCtl.OP_SEARCH%>"></td>
+				</tr>
+			</table>
 			<table border="10px" width="100%">
 				<tr style="background: skyblue">
 					<th><input type="checkbox"

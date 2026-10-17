@@ -120,22 +120,22 @@ public class UserModel extends BaseModel<UserBean> {
 				sql.append(" and id = " + bean.getId());
 			}
 			if (bean.getFirstName() != null && bean.getFirstName().length() > 0) {
-				sql.append(" and first_name like '" + bean.getFirstName() + "'");
+				sql.append(" and first_name like '" + bean.getFirstName() + "%'");
 			}
 			if (bean.getLastName() != null && bean.getLastName().length() > 0) {
-				sql.append(" and last_name like '" + bean.getLastName() + "'");
+				sql.append(" and last_name like '" + bean.getLastName() + "%'");
 			}
 			if (bean.getLogin() != null && bean.getLogin().length() > 0) {
-				sql.append(" and login like '" + bean.getLogin() + "'");
+				sql.append(" and login like '" + bean.getLogin() + "%'");
 			}
 			if (bean.getPassword() != null && bean.getPassword().length() > 0) {
-				sql.append(" and password like '" + bean.getPassword() + "'");
+				sql.append(" and password like '" + bean.getPassword() + "%'");
 			}
 			if (bean.getDob() != null) {
 				sql.append(" and dob = " + bean.getDob());
 			}
 			if (bean.getMobileNo() != null && bean.getMobileNo().length() > 10) {
-				sql.append(" and mobie_no like '" + bean.getMobileNo() + "'");
+				sql.append(" and mobie_no like '" + bean.getMobileNo() + "%'");
 			}
 			if (bean.getRoleId() > 0) {
 				sql.append(" and role_id = " + bean.getRoleId());
@@ -144,31 +144,31 @@ public class UserModel extends BaseModel<UserBean> {
 				sql.append(" and unsuccessfull_login = " + bean.getUnsuccessfullLogin());
 			}
 			if (bean.getGender() != null && bean.getGender().length() > 0) {
-				sql.append(" and gender like '" + bean.getGender() + "'");
+				sql.append(" and gender like '" + bean.getGender() + "%'");
 			}
 			if (bean.getLastLogin() != null) {
 				sql.append(" and last_login = " + bean.getLastLogin());
 			}
 			if (bean.getUserLock() != null && bean.getUserLock().length() > 0) {
-				sql.append(" and user_lock like '" + bean.getUserLock() + "'");
+				sql.append(" and user_lock like '" + bean.getUserLock() + "%'");
 			}
 			if (bean.getRegisteredIp() != null && bean.getRegisteredIp().length() > 0) {
-				sql.append(" and registered_ip like '" + bean.getRegisteredIp() + "'");
+				sql.append(" and registered_ip like '" + bean.getRegisteredIp() + "%'");
 			}
 			if (bean.getLastLoginIp() != null && bean.getLastLoginIp().length() > 0) {
-				sql.append(" and last_login_ip like '" + bean.getLastLoginIp() + "'");
+				sql.append(" and last_login_ip like '" + bean.getLastLoginIp() + "%'");
 			}
 			if (bean.getCreatedBy() != null && bean.getCreatedBy().length() > 0) {
-				sql.append(" and created_by like'" + bean.getCreatedBy() + "'");
+				sql.append(" and created_by like'" + bean.getCreatedBy() + "%'");
 			}
 			if (bean.getModifiedBy() != null && bean.getModifiedBy().length() > 0) {
-				sql.append(" and modified_by like'" + bean.getModifiedBy() + "'");
+				sql.append(" and modified_by like'" + bean.getModifiedBy() + "%'");
 			}
 			if (bean.getCreatedDatetime() != null) {
-				sql.append(" and created_datetime like'" + bean.getCreatedDatetime() + "'");
+				sql.append(" and created_datetime like'" + bean.getCreatedDatetime() + "%'");
 			}
 			if (bean.getModifiedDatetime() != null) {
-				sql.append(" and modified_datetime like'" + bean.getModifiedDatetime() + "'");
+				sql.append(" and modified_datetime like'" + bean.getModifiedDatetime() + "%'");
 			}
 		}
 
@@ -216,7 +216,7 @@ public class UserModel extends BaseModel<UserBean> {
 		return null;
 	}
 
-	public UserBean forgotPassword(String login) {
+	public UserBean forgetPassword(String login) {
 		UserBean bean = findByLogin(login);
 
 		if (bean != null) {

@@ -1,3 +1,4 @@
+<%@page import="in.co.rays.proj4.controller.RoleCtl"%>
 <%@page import="in.co.rays.proj4.controller.BaseCtl"%>
 <%@page import="java.util.Iterator"%>
 <%@page import="in.co.rays.proj4.util.ServletUtility"%>
@@ -28,6 +29,14 @@
 		<h3 style="color: red"><%=error%></h3>
 
 		<form action="<%=ORSView.ROLE_LIST_CTL%>" method="post">
+			<table>
+				<tr>
+					<th>Name</th>
+					<td><input type="text" name="name" value=""
+						placeholder="search by name"><input type="submit"
+						name="operation" value="<%=RoleCtl.OP_SEARCH%>"></td>
+				</tr>
+			</table>
 			<table border="10px" width="100%">
 				<tr style="background: skyblue">
 					<th><input type="checkbox"
@@ -48,19 +57,18 @@
 					<td><input type="checkbox" name="ids"
 						value="<%=bean.getId()%>"></td>
 					<td><%=index++%></td>
-					<td><%=bean.getId() %>
+					<td><%=bean.getId()%>
 					<td><%=bean.getName()%></td>
 					<td><%=bean.getDescription()%></td>
 					<td><a href="<%=ORSView.ROLE_CTL + "?id=" + bean.getId()%>">Edit</a></td>
 				</tr>
 				<%
-				
 				}
 				%>
 
-             <%@ include file="ListFooter.jsp"%>
+				<%@ include file="ListFooter.jsp"%>
 			</table>
-               
+
 		</form>
 
 	</div>

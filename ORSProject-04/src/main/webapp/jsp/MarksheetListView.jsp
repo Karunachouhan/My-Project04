@@ -1,3 +1,4 @@
+<%@page import="in.co.rays.proj4.controller.MarksheetCtl"%>
 <%@page import="java.util.Iterator"%>
 <%@page import="in.co.rays.proj4.bean.MarksheetBean"%>
 <%@page import="in.co.rays.proj4.util.ServletUtility"%>
@@ -28,6 +29,20 @@
 		<h3 style="color: red"><%=error%></h3>
 
 		<form action="<%=ORSView.MARKSHEET_LIST_CTL%>" method="post">
+
+			<table>
+				<tr>
+					<th>Roll No.</th>
+					<td><input type="number" name="rollNo"
+						placeholder="search by roll no" value=""><input
+						type="submit" name="opertion" value="<%=MarksheetCtl.OP_SEARCH%>"></td>
+
+					<th>Name</th>
+					<td><input type="text" name="name" value=""
+						placeholder="search by name"><input type="submit"
+						name="operation" value="<%=MarksheetCtl.OP_SEARCH%>"></td>
+				</tr>
+			</table>
 			<table border="10px" width="100%">
 				<tr style="background: skyblue">
 					<th><input type="checkbox"

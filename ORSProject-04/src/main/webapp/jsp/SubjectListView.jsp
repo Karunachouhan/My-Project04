@@ -1,3 +1,4 @@
+<%@page import="in.co.rays.proj4.controller.SubjectCtl"%>
 <%@page import="java.util.Iterator"%>
 <%@page import="in.co.rays.proj4.bean.SubjectBean"%>
 <%@page import="java.util.List"%>
@@ -27,6 +28,16 @@
 		<h3 style="color: red"><%=error%></h3>
 
 		<form action="<%=ORSView.SUBJECT_LIST_CTL%>" method="post">
+		
+		<table>
+				<tr>
+					<th>Name</th>
+					<td><input type="text" name="name" value=""
+						placeholder="search by subject name"><input type="submit"
+						name="operation" value="<%=SubjectCtl.OP_SEARCH%>"></td>
+				</tr>
+			</table>
+			
 			<table border="10px" width="100%">
 				<tr style="background: skyblue">
 					<th><input type="checkbox"

@@ -62,6 +62,9 @@ public abstract class BaseListCtl<B extends BaseBean, M extends BaseModel> exten
 			pageNo = DataUtility.getInt(request.getParameter("pageNo"));
 			pageNo--;
 		}
+		if (OP_SEARCH.equalsIgnoreCase(op)) {
+			pageNo = 1;
+		}
 
 		List<B> list = model.search(bean, pageNo, pageSize);
 		List<B> nextList = model.search(bean, pageNo + 1, pageSize);

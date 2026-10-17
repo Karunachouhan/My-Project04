@@ -1,3 +1,4 @@
+<%@page import="in.co.rays.proj4.controller.CollegeCtl"%>
 <%@page import="java.util.Iterator"%>
 <%@page import="in.co.rays.proj4.bean.CollegeBean"%>
 <%@page import="java.util.List"%>
@@ -28,6 +29,14 @@
 		<h3 style="color: red"><%=error%></h3>
 
 		<form action="<%=ORSView.COLLEGE_LIST_CTL%>" method="post">
+			<table>
+				<tr>
+					<th>Name</th>
+					<td><input type="text" name="name" value=""
+						placeholder="search by college name"><input type="submit"
+						name="operation" value="<%=CollegeCtl.OP_SEARCH%>"></td>
+				</tr>
+			</table>
 			<table border="10px" width="100%">
 				<tr style="background: skyblue">
 					<th><input type="checkbox"
