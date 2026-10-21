@@ -40,6 +40,8 @@
 	<a href="<%=ORSView.MARKSHEET_LIST_CTL%>">MarkSheet List</a> |
 	<a href="<%=ORSView.SUBJECT_CTL%>">Add Subject</a> |
 	<a href="<%=ORSView.SUBJECT_LIST_CTL%>">Subject List</a> |
+	<a href="<%=ORSView.STUDENT_CTL%>">Add Student</a> |
+	<a href="<%=ORSView.STUDENT_LIST_CTL%>">Student List</a> |
 	<a href="<%=ORSView.LOGIN_CTL + "?operation=logout"%>">Logout</a> |
 	<a href="<%=ORSView.CHANGE_PASSWORD_CTL%>">ChangePassword</a> |
 	<%
@@ -56,21 +58,21 @@
 
 	<!-- Language Dropdown -->
 	<div align="right">
-	<table>
-		<tr>
-			<td style="width: 120px; text-align: center;">
+		<table>
+			<tr>
+				<td style="width: 120px; text-align: center;">
 
-				<form style="margin: 0;">
-					<select name="lang" onchange="this.form.submit()">
+					<form style="margin: 0;">
+						<select name="lang" onchange="this.form.submit()">
 
-						<option value="en" <%=("en".equals(locale)) ? "selected" : ""%>>English</option>
-						<option value="hi" <%=("hi".equals(locale)) ? "selected" : ""%>>Hindi</option>
+							<option value="en" <%=("en".equals(locale)) ? "selected" : ""%>>English</option>
+							<option value="hi" <%=("hi".equals(locale)) ? "selected" : ""%>>Hindi</option>
 
-					</select>
-				</form>
-			</td>
-		</tr>
-	</table>
+						</select>
+					</form>
+				</td>
+			</tr>
+		</table>
 	</div>
 	<hr>
 </body>

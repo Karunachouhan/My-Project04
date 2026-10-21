@@ -34,7 +34,7 @@
 			<table>
 
 				<tr>
-					<th>Name</th>
+					<th>Name<font color="red">*</font></th>
 					<td><input type="text" name="name"
 						placeholder="enter role name"
 						value="<%=DataUtility.getStringData(bean.getName())%>"></td>
@@ -42,7 +42,7 @@
 				</tr>
 
 				<tr>
-					<th>description</th>
+					<th>description<font color="red">*</font></th>
 					<td><input type="text" name="description"
 						placeholder="enter description"
 						value="<%=DataUtility.getStringData(bean.getDescription())%>"></td>

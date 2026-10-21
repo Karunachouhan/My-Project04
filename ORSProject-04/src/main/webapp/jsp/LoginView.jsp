@@ -27,14 +27,14 @@
 			<table>
             
 				<tr>
-					<th><%=ms.get("login.login") %></th>
+					<th><%=ms.get("login.login") %><font color="red">*</font></th>
 					<td><input type="text" name="login"
 						placeholder="enter you login" value=""></td>
 					<td style="color: red"><%=ServletUtility.getErrorMessage("login", request)%></td>
 				</tr>
 
 				<tr>
-					<th><%=ms.get("login.password")%>
+					<th><%=ms.get("login.password")%><font color="red">*</font>
 					</th>
 					<td><input type="password" name="password"
 						placeholder="enter you password" value=""></td>

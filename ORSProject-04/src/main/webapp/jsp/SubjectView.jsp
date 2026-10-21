@@ -22,30 +22,30 @@
 		<h3 style="color: red"><%=error%></h3>
 		<form action="<%=ORSView.COURSE_CTL%>" method="post">
 
-			<table>
-
-				<tr>
-					<th>Name</th>
-					<td><input type="text" name="name"
-						placeholder="enter your name" value="<%=DataUtility.getStringData(bean.getName())%>"></td>
-					<td style="color: red"><%=ServletUtility.getErrorMessage("name", request)%></td>
+			<table> 
+<tr>
+					<th>Course Name<font color="red">*</font></th>
+					<td><select name='courseId'>
+							<option selected value=''>------------Select-------------</option>
+							<option value='1'>BCA</option>
+							<option value='2'>BBA</option>
+							<option value='3'>MTech</option>
+							<option value='4'>BA</option>
+							<option value='5'>MCA</option>
+							<option value='6'>MBA</option>
+							<option value='7'>Btech</option>
+					</select></td>
+					<td style="color: red"><%=ServletUtility.getErrorMessage("studentId", request)%></td>
 				</tr>
 
 				<tr>
-					<th>Description</th>
+					<th>Description<font color="red">*</font></th>
 					<td><input type="text" name="description"
 						placeholder="enter description" value="<%=DataUtility.getStringData(bean.getDescription())%>"></td>
 					<td style="color: red"><%=ServletUtility.getErrorMessage("description", request)%>
 					</td>
 				</tr>
-
-				<tr>
-					<th>Course Id</th>
-					<td><input type="text" name="courseId"
-						placeholder="enter your course Id" value="<%=DataUtility.getStringData(bean.getCourseId())%>"></td>
-					<td style="color: red"><%=ServletUtility.getErrorMessage("courseId", request)%></td>
-				</tr>
-
+				
 				<tr>
 				     <th></th>
 					<td><input type="submit" name="operation"

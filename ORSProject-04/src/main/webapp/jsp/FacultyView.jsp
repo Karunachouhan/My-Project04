@@ -26,23 +26,22 @@
 		<form action="<%=ORSView.FACULTY_CTL%>" method="post">
 			<table>
 				<tr>
-					<th>College Id</th>
-					<td><input type="text" name="collegeId"
-						placeholder="enter your college id"
-						value="<%=DataUtility.getStringData(bean.getCollegeId())%>"></td>
-					<td style="color: red"><%=ServletUtility.getErrorMessage("collegeId", request)%></td>
+					<th>College<font color="red">*</font></th>
+					<td><select name='collegeId'>
+							<option selected value=''>------------Select-------------</option>
+							<option value='1'>Chameli Devi College</option>
+							<option value='2'>IPS Academy</option>
+							<option value='3'>Acropolis Institution</option>
+							<option value='4'>IPS college</option>
+							<option value='5'>Sage University</option>
+							<option value='6'>Malwa Institute</option>
+							<option value='7'>Women Polytechnic college</option>
+					</select></td>
+					<td style="color: red"><%=ServletUtility.getErrorMessage("roleId", request)%></td>
 				</tr>
 
 				<tr>
-					<th>College Name</th>
-					<td><input type="text" name="collegeName"
-						placeholder="enter your college name"
-						value="<%=DataUtility.getStringData(bean.getCollegeName())%>"></td>
-					<td style="color: red"><%=ServletUtility.getErrorMessage("collegeName", request)%></td>
-				</tr>
-
-				<tr>
-					<th>First Name</th>
+					<th>First Name<font color="red">*</font></th>
 					<td><input type="text" name="firstName"
 						placeholder="enter your first name"
 						value="<%=DataUtility.getStringData(bean.getFirstName())%>"></td>
@@ -50,7 +49,7 @@
 				</tr>
 
 				<tr>
-					<th>Last Name</th>
+					<th>Last Name<font color="red">*</font></th>
 					<td><input type="text" name="lastName"
 						placeholder="enter your last name"
 						value="<%=DataUtility.getStringData(bean.getLastName())%>"></td>
@@ -58,7 +57,7 @@
 				</tr>
 
 				<tr>
-					<th>Email</th>
+					<th>Email<font color="red">*</font></th>
 					<td><input type="email" name="email"
 						placeholder="enter your email"
 						value="<%=DataUtility.getStringData(bean.getEmail())%>"></td>
@@ -66,7 +65,7 @@
 				</tr>
 
 				<tr>
-					<th>Mobile No.</th>
+					<th>Mobile No.<font color="red">*</font></th>
 					<td><input type="number" name="mobileNo"
 						placeholder="enter your mobile no"
 						value="<%=DataUtility.getStringData(bean.getMobileNo())%>"></td>
@@ -74,7 +73,7 @@
 				</tr>
 
 				<tr>
-					<th>Address</th>
+					<th>Address<font color="red">*</font></th>
 					<td><input type="text" name="address"
 						placeholder="enter your address"
 						value="<%=DataUtility.getStringData(bean.getAddress())%>"></td>
@@ -82,7 +81,7 @@
 				</tr>
 
 				<tr>
-					<th>Gender</th>
+					<th>Gender<font color="red">*</font></th>
 					<td><select name="gender">
 							<option selected value=''>-----Select------</option>
 							<option value="male">Male</option>
@@ -93,7 +92,7 @@
 				</tr>
 
 				<tr>
-					<th>DOB</th>
+					<th>DOB<font color="red">*</font></th>
 					<td><input type="date" name="dob"
 						placeholder="enter your date of birth"
 						value="<%=DataUtility.getStringData(bean.getDateOfBirth())%>"></td>

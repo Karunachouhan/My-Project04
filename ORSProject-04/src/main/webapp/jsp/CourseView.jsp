@@ -27,7 +27,7 @@
 			<table>
 
 				<tr>
-					<th>Name</th>
+					<th>Name<font color="red">*</font></th>
 					<td><input type="text" name="name"
 						placeholder="enter your name"
 						value="<%=DataUtility.getStringData(bean.getName())%>"></td>
@@ -35,7 +35,7 @@
 				</tr>
 
 				<tr>
-					<th>Description</th>
+					<th>Description<font color="red">*</font></th>
 					<td><input type="text" name="description"
 						placeholder="enter description"
 						value="<%=DataUtility.getStringData(bean.getDescription())%>"></td>
@@ -44,7 +44,7 @@
 				</tr>
 
 				<tr>
-					<th>Duration</th>
+					<th>Duration<font color="red">*</font></th>
 					<td><input type="text" name="duration"
 						placeholder="enter duration"
 						value="<%=DataUtility.getStringData(bean.getDuration())%>"></td>
@@ -55,6 +55,7 @@
 					<th></th>
 					<td><input type="submit" name="operation"
 						value="<%=CourseCtl.OP_SAVE%>"></td>
+						</tr>
 			</table>
 		</form>
 	</div>

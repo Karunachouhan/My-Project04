@@ -15,11 +15,7 @@ public class FacultyCtl extends BaseCtl<FacultyBean, FacultyModel> {
 		boolean pass = true;
 
 		if (DataValidator.isNull(request.getParameter("collegeId"))) {
-			request.setAttribute("collegeId", "College id is required");
-			pass = false;
-		}
-		if (DataValidator.isNull(request.getParameter("collegeName"))) {
-			request.setAttribute("collegeName", "College name is required");
+			request.setAttribute("collegeId", "College is required");
 			pass = false;
 		}
 		if (DataValidator.isNull(request.getParameter("firstName"))) {
@@ -59,7 +55,6 @@ public class FacultyCtl extends BaseCtl<FacultyBean, FacultyModel> {
 		FacultyBean bean = new FacultyBean();
 
 		bean.setCollegeId(DataUtility.getInt(request.getParameter("collegeId")));
-		bean.setCollegeName(DataUtility.getString(request.getParameter("collegeName")));
 		bean.setFirstName(DataUtility.getString(request.getParameter("firstName")));
 		bean.setLastName(DataUtility.getString(request.getParameter("lastName")));
 		bean.setEmail(DataUtility.getString(request.getParameter("email")));
@@ -67,7 +62,7 @@ public class FacultyCtl extends BaseCtl<FacultyBean, FacultyModel> {
 		bean.setAddress(DataUtility.getString(request.getParameter("address")));
 		bean.setGender(DataUtility.getString(request.getParameter("gender")));
 		bean.setDateOfBirth(DataUtility.getDate(request.getParameter("dob")));
-
+      
 		return bean;
 
 	}

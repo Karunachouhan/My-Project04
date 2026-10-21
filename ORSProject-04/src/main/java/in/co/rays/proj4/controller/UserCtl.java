@@ -38,6 +38,10 @@ public class UserCtl extends BaseCtl<UserBean, UserModel> {
 			request.setAttribute("dob", "dob is required");
 			pass = false;
 		}
+		if(DataValidator.isNull(request.getParameter("roleId"))) {
+			request.setAttribute("roleId", "role is required");
+			pass = false;
+		}
 		return pass;
 	}
 
@@ -52,6 +56,7 @@ public class UserCtl extends BaseCtl<UserBean, UserModel> {
 		// bean.setConfirmPassword(DataUtility.getString(request.getParameter("confirmPassword")));
 		bean.setGender(DataUtility.getString(request.getParameter("gender")));
 		bean.setDob(DataUtility.getDate(request.getParameter("dob")));
+		bean.setRoleId(DataUtility.getLong(request.getParameter("roleId")));;
 		return bean;
 	}
 
