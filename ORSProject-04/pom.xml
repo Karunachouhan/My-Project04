@@ -1,24 +1,23 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>in.co.rays.proj4</groupId>
-	<artifactId>ORSProject-04</artifactId>
-	<packaging>war</packaging>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>ORSProject-04 Maven Webapp</name>
-	<url>http://maven.apache.org</url>
-
-	<!-- ===== Properties ===== -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>in.co.rays.proj4</groupId>
+  <artifactId>ORSProject-04</artifactId>
+  <packaging>war</packaging>
+  <version>0.0.1-SNAPSHOT</version>
+  <name>ORSProject-04 Maven Webapp</name>
+  <url>http://maven.apache.org</url>
+  
+  	<!-- ===== Properties ===== -->
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>21</maven.compiler.source>
 		<maven.compiler.target>21</maven.compiler.target>
 	</properties>
-
-	<dependencies>
-
-		<!-- Servlet API (provided by Tomcat 11 at runtime) -->
+  
+  <dependencies>
+   
+   <!-- Servlet API (provided by Tomcat 11 at runtime) -->
 		<dependency>
 			<groupId>jakarta.servlet</groupId>
 			<artifactId>jakarta.servlet-api</artifactId>
@@ -114,10 +113,10 @@
 			<version>5.11.0</version>
 			<scope>test</scope>
 		</dependency>
-
-	</dependencies>
-
-	<build>
+ 
+  </dependencies>
+ 
+<build>
 		<finalName>ORSProject-04</finalName>
 
 		<plugins>
@@ -155,4 +154,5 @@
 		</plugins>
 
 	</build>
+
 </project>

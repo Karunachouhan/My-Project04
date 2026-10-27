@@ -31,7 +31,7 @@ public class UserModel extends BaseModel<UserBean> {
 			conn.setAutoCommit(false);
 
 			PreparedStatement pstmt = conn
-					.prepareStatement("insert into " + getTable() + " values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+					.prepareStatement("insert into " + getTable() + " values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 			pstmt.setLong(1, nextPk());
 			pstmt.setString(2, bean.getFirstName());
 			pstmt.setString(3, bean.getLastName());
@@ -50,6 +50,7 @@ public class UserModel extends BaseModel<UserBean> {
 			pstmt.setString(16, bean.getModifiedBy());
 			pstmt.setTimestamp(17, bean.getCreatedDatetime());
 			pstmt.setTimestamp(18, bean.getModifiedDatetime());
+			pstmt.setString(18, bean.getPhoto());
 			int i = pstmt.executeUpdate();
 
 			conn.commit();
@@ -258,6 +259,27 @@ public class UserModel extends BaseModel<UserBean> {
 		System.out.println("Mail send successfully");
 
 		return pk;
+	}
+
+	public void updatePhoto(long id,String photo) {
+		Connection conn = null;
+		
+		try {
+			conn = JDBCDataSource.getConnection();
+			conn.setAutoCommit(false);
+			
+			PreparedStatement pstmt = conn.prepareStatement("update " + getTable() + " set photo = ? where id = ?");
+			pstmt.setString(1, photo);
+			pstmt.setLong(2, id);
+			pstmt.executeUpdate();
+			conn.commit();
+			pstmt.close();
+		}catch(Exception e) {
+			e.printStackTrace();
+			JDBCDataSource.trnRollBack(conn);
+		}finally {
+			JDBCDataSource.closeConnection(conn);
+		}
 	}
 
 	@Override

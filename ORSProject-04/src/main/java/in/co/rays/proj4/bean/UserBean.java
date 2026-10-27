@@ -20,6 +20,15 @@ public class UserBean extends BaseBean {
 	private String registeredIp;
 	private String lastLoginIp;
 	private long roleId;
+	private String photo;
+
+	public String getPhoto() {
+		return photo;
+	}
+
+	public void setPhoto(String photo) {
+		this.photo = photo;
+	}
 
 	public String getFirstName() {
 		return firstName;
@@ -154,6 +163,7 @@ public class UserBean extends BaseBean {
 			setUserLock(rs.getString("user_lock"));
 			setRegisteredIp(rs.getString("registered_ip"));
 			setLastLoginIp(rs.getString("last_login_ip"));
+			setPhoto(rs.getString("photo"));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -24,6 +24,51 @@
 		<h3 style="color: green"><%=succ%></h3>
 		<h3 style="color: red"><%=error%></h3>
 
+		<div align="center">
+			<%
+			if (bean.getId() > 0) {
+			%>
+
+			<form action="<%=ORSView.UPLOAD_PHOTO_CTL%>" method="POST"
+				enctype="multipart/form-data">
+
+				<input type="hidden" name="id" value="<%=bean.getId()%>">
+
+				<table>
+
+					<tr>
+						<th>Photo</th>
+					</tr>
+
+					<tr>
+						<td align="center"><img
+							src="<%=ORSView.UPLOAD_PHOTO_CTL%>?id=<%=bean.getId()%>"
+							onerror="this.style.display='none';" alt="User Photo" width="80"
+							height="80"
+							style="object-fit: cover; border-radius: 50%; border: 1px solid #ccc;">
+						</td>
+					</tr>
+
+					<tr>
+						<td align="center"><input type="file" name="photo"
+							accept="image/*"></td>
+					</tr>
+
+					<tr>
+						<td align="center"><input type="submit" value="Upload Photo">
+						</td>
+					</tr>
+
+				</table>
+
+			</form>
+
+			<%
+			}
+			%>
+		</div>
+
+
 		<form action="<%=ORSView.USER_CTL%>" method="post">
 			<table>
 				<tr>
@@ -65,7 +110,7 @@
 					<td style="color: red"><%=ServletUtility.getErrorMessage("gender", request)%>
 					</td>
 				</tr>
-				
+
 				<tr>
 					<th>Role<font color="red">*</font></th>
 					<td><select name='roleId'>
