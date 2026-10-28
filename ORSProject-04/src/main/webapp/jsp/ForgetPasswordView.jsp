@@ -15,7 +15,7 @@
 	%>
 	<%@include file="Header.jsp"%>
 	<div align="center">
-	<h1>Forget Password</h1>
+		<h1>Forget Password</h1>
 		<h3 style="color: green"><%=succ%></h3>
 		<h3 style="color: red"><%=error%></h3>
 		<form action="<%=ORSView.FORGET_PASSWORD_CTL%>" method="post">
@@ -25,6 +25,7 @@
 					<th>Login</th>
 					<td><input type="email" name="login"
 						placeholder="enter your email" value=""></td>
+					<td style="color: red"><%=ServletUtility.getErrorMessage("login", request)%></td>
 				</tr>
 				<tr>
 					<th></th>

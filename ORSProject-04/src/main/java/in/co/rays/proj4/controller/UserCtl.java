@@ -1,6 +1,10 @@
 package in.co.rays.proj4.controller;
 
+import java.util.List;
+
+import in.co.rays.proj4.bean.RoleBean;
 import in.co.rays.proj4.bean.UserBean;
+import in.co.rays.proj4.model.RoleModel;
 import in.co.rays.proj4.model.UserModel;
 import in.co.rays.proj4.util.DataUtility;
 import in.co.rays.proj4.util.DataValidator;
@@ -59,7 +63,13 @@ public class UserCtl extends BaseCtl<UserBean, UserModel> {
 		bean.setRoleId(DataUtility.getLong(request.getParameter("roleId")));;
 		return bean;
 	}
-
+    
+	@Override
+	protected void preload(HttpServletRequest request) {
+		RoleModel rmodel = new RoleModel();
+		List<RoleBean> roleList = rmodel.search(null, 0, 0);
+		request.setAttribute("roleList", roleList);
+	}
 	@Override
 	public UserModel getModel() {
 		return new UserModel();

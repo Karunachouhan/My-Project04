@@ -1,3 +1,7 @@
+<%@page import="in.co.rays.proj4.util.HTMLUtility"%>
+<%@page import="java.util.HashMap"%>
+<%@page import="javax.management.relation.RoleList"%>
+<%@page import="java.util.List"%>
 <%@page import="in.co.rays.proj4.util.DataUtility"%>
 <%@page import="in.co.rays.proj4.controller.UserCtl"%>
 <%@page import="in.co.rays.proj4.util.ServletUtility"%>
@@ -15,6 +19,10 @@
 	<%
 	String succ = ServletUtility.getSuccessMessage(request);
 	String error = ServletUtility.getErrorMessage(request);
+	List<RoleList> roleList = (List) request.getAttribute("roleList");
+	HashMap<String, String> map = new HashMap<String, String>();
+	map.put("male", "male");
+	map.put("female", "female");
 	%>
 
 	<%@ include file="Header.jsp"%>
@@ -101,26 +109,13 @@
 				</tr>
 				<tr>
 					<th>Gender<font color="red">*</font></th>
-					<td><select name="gender">
-							<option value="">-- Select Gender --</option>
-							<option value="Male">Male</option>
-							<option value="Female">Female</option>
-							<option value="Other">Other</option>
-					</select></td>
-					<td style="color: red"><%=ServletUtility.getErrorMessage("gender", request)%>
-					</td>
+					<td><%=HTMLUtility.getList("gender", DataUtility.getStringData(bean.getGender()), map)%></td>
+					<td style="color: red"><%=ServletUtility.getErrorMessage("gender", request)%></td>
 				</tr>
 
 				<tr>
 					<th>Role<font color="red">*</font></th>
-					<td><select name='roleId'>
-							<option selected value=''>------------Select-------------</option>
-							<option value='1'>Admin</option>
-							<option value='2'>Student</option>
-							<option value='3'>Faculty</option>
-							<option value='4'>College</option>
-							<option value='5'>KIOSK</option>
-					</select></td>
+					<td><%=HTMLUtility.getList("roleId", DataUtility.getStringData(bean.getRoleId()), roleList)%></td>
 					<td style="color: red"><%=ServletUtility.getErrorMessage("roleId", request)%></td>
 				</tr>
 

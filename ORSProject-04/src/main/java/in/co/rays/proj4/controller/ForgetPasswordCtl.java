@@ -38,17 +38,17 @@ public class ForgetPasswordCtl extends BaseCtl<UserBean, UserModel> {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-       UserBean bean = populateBean(request);
-       UserModel model = getModel();
-       
-       model.forgetPassword(bean.getLogin());
-       if (bean != null) {
+		UserBean bean = populateBean(request);
+		UserModel model = getModel();
+
+		bean = model.forgetPassword(bean.getLogin());
+		if (bean != null) {
 			ServletUtility.setSuccessMessage("your password has been recovered check your email", request);
 		} else {
 			ServletUtility.setErrorMessage("your email is incorrect", request);
 		}
-       
-		super.doPost(request, response);
+
+		ServletUtility.forward(getView(), request, response);
 	}
 
 	@Override

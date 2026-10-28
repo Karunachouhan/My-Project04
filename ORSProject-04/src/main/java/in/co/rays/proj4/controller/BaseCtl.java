@@ -123,6 +123,8 @@ public abstract class BaseCtl<B extends BaseBean, M extends BaseModel> extends H
 		getMessageSource(request);
 		
 		System.out.println("service method");
+		
+		preload(request);
 
 		if (request.getMethod().equals("POST") && validate(request) == false) {
 			ServletUtility.forward(getView(), request, response);

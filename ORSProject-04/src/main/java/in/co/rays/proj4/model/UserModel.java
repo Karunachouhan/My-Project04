@@ -133,7 +133,7 @@ public class UserModel extends BaseModel<UserBean> {
 				sql.append(" and password like '" + bean.getPassword() + "%'");
 			}
 			if (bean.getDob() != null) {
-				sql.append(" and dob = " + new java.sql.Date(bean.getDob().getTime()));
+				sql.append(" and dob = '" + new java.sql.Date(bean.getDob().getTime()) + "'");
 			}
 			if (bean.getMobileNo() != null && bean.getMobileNo().length() > 10) {
 				sql.append(" and mobie_no like '" + bean.getMobileNo() + "%'");

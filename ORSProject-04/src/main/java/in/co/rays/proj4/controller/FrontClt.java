@@ -36,6 +36,7 @@ public class FrontClt implements Filter {
 			ServletUtility.setErrorMessage("session has been expired please re-login", req);
 			ServletUtility.forward(ORSView.LOGIN_VIEW, req, res);
 			return;
+			
 		}
 		chain.doFilter(request, response); // call next config filter/controller in the chain
 	}
