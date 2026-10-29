@@ -1,6 +1,5 @@
 package in.co.rays.proj4.util;
 
-import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.sql.Timestamp;
 import java.time.LocalDate;
@@ -76,6 +75,16 @@ public class DataUtility {
 		}
 	}
 
+	public static double getDouble(String val) {
+
+		if (DataValidator.isDouble(val)) {
+			return Double.parseDouble(val);
+		} else {
+			return 0;
+		}
+
+	}
+
 	/**
 	 * Parses a date string (MM/dd/yyyy) into a Date
 	 */
@@ -145,10 +154,9 @@ public class DataUtility {
 	/**
 	 * Converts an exception's stack trace into a String
 	 */
-	public static String exceptionToString(Exception e) {
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		e.printStackTrace(new PrintStream(baos));
-		return baos.toString();
-	}
-
+	/*
+	 * public static String exceptionToString(Exception e) { ByteArrayOutputStream
+	 * baos = new ByteArrayOutputStream(); e.printStackTrace(new PrintStream(baos));
+	 * return baos.toString(); }
+	 */
 }

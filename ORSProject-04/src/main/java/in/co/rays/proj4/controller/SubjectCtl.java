@@ -1,6 +1,10 @@
 package in.co.rays.proj4.controller;
 
+import java.util.List;
+
+import in.co.rays.proj4.bean.CourseBean;
 import in.co.rays.proj4.bean.SubjectBean;
+import in.co.rays.proj4.model.CourseModel;
 import in.co.rays.proj4.model.SubjectModel;
 import in.co.rays.proj4.util.DataUtility;
 import in.co.rays.proj4.util.DataValidator;
@@ -10,7 +14,13 @@ import jakarta.servlet.http.HttpServletRequest;
 
 @WebServlet("/ctl/SubjectCtl")
 public class SubjectCtl extends BaseCtl<SubjectBean, SubjectModel> {
-
+    
+	@Override
+	protected void preload(HttpServletRequest request) {
+		CourseModel cmodel = new CourseModel();
+		List<CourseBean> courseList = cmodel.search(null, 0, 0);
+		request.setAttribute("courseList", courseList);
+	}
 	@Override
 	protected boolean validate(HttpServletRequest request) {
 		boolean pass = true;
@@ -35,7 +45,7 @@ public class SubjectCtl extends BaseCtl<SubjectBean, SubjectModel> {
 	@Override
 	protected SubjectBean populateBean(HttpServletRequest request) {
 		SubjectBean bean = new SubjectBean();
-
+       
 		bean.setName(DataUtility.getString(request.getParameter("name")));
 		bean.setDescription(DataUtility.getString(request.getParameter("description")));
 		bean.setCourseId(DataUtility.getLong(request.getParameter("courseId")));

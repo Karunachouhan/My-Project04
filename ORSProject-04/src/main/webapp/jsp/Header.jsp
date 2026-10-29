@@ -45,6 +45,9 @@
 	<a href="<%=ORSView.CHANGE_PASSWORD_CTL%>">ChangePassword</a> |
 	<a href="<%=ORSView.HOSPITAL_CTL %>">Add Hospital</a> |
 	<a href="<%=ORSView.HOSPITAL_LIST_CTL %>">Hospital List</a> |
+	<a href="<%=ORSView.ATM_CTL %>">Add ATM</a> |
+	<a href="<%=ORSView.ATM_LIST_CTL %>">ATM List</a> |
+	
 	
 	<a href="<%=ORSView.LOGIN_CTL + "?operation=logout"%>">Logout</a> |
 	<%

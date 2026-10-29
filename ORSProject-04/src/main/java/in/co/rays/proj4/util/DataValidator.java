@@ -45,6 +45,20 @@ public class DataValidator {
 		}
 		return false;
 	}
+	
+	public static boolean isDouble(String val) {
+
+	    if (isNotNull(val)) {
+	        try {
+	            Double.parseDouble(val);
+	            return true;
+	        } catch (NumberFormatException e) {
+	            return false;
+	        }
+	    }
+
+	    return false;
+	}
 
 	/**
 	 * Checks if value is Long
