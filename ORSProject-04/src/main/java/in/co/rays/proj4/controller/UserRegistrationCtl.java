@@ -2,6 +2,7 @@ package in.co.rays.proj4.controller;
 
 import java.io.IOException;
 
+import in.co.rays.proj4.bean.BaseBean;
 import in.co.rays.proj4.bean.UserBean;
 import in.co.rays.proj4.exception.DuplicateRecordException;
 import in.co.rays.proj4.model.UserModel;
@@ -99,6 +100,10 @@ public class UserRegistrationCtl extends BaseCtl<UserBean, UserModel> {
 				ServletUtility.setErrorMessage("Login id already exist", request);
 			}
 		}
+
+		// field allready fill 
+		bean = populateBean(request);
+		ServletUtility.setBean(bean, request);
 
 		ServletUtility.forward(getView(), request, response);
 	}

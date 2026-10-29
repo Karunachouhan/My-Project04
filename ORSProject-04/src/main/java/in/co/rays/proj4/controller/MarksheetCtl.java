@@ -1,5 +1,7 @@
 package in.co.rays.proj4.controller;
 
+import java.util.List;
+
 import in.co.rays.proj4.bean.MarksheetBean;
 import in.co.rays.proj4.model.MarksheetModel;
 import in.co.rays.proj4.util.DataUtility;
@@ -53,6 +55,13 @@ public class MarksheetCtl extends BaseCtl<MarksheetBean, MarksheetModel> {
 
 		return bean;
 
+	}
+	
+	@Override
+	protected void preload(HttpServletRequest request) {
+		MarksheetModel model = new MarksheetModel();
+		List<MarksheetBean> marksheetList =  model.search(null, 0, 0);
+		request.setAttribute("marksheetList", marksheetList);
 	}
 
 	@Override

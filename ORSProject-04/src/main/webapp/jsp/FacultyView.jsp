@@ -1,4 +1,7 @@
-<%@page import="com.ctc.wstx.util.DataUtil"%>
+<%@page import="java.util.HashMap"%>
+<%@page import="in.co.rays.proj4.util.HTMLUtility"%>
+<%@page import="in.co.rays.proj4.bean.FacultyBean"%>
+<%@page import="java.util.List"%>
 <%@page import="in.co.rays.proj4.util.DataUtility"%>
 <%@page import="in.co.rays.proj4.controller.FacultyCtl"%>
 <%@page import="in.co.rays.proj4.util.ServletUtility"%>
@@ -16,6 +19,11 @@
 	<%
 	String succ = ServletUtility.getSuccessMessage(request);
 	String error = ServletUtility.getErrorMessage(request);
+	List<FacultyBean> facultyList = (List) request.getAttribute("facultyList");
+	HashMap<String, String> map = new HashMap<String, String>();
+	map.put("male", "male");
+	map.put("female", "female");
+	map.put("other", "other");
 	%>
 
 	<%@include file="Header.jsp"%>
@@ -27,16 +35,7 @@
 			<table>
 				<tr>
 					<th>College<font color="red">*</font></th>
-					<td><select name='collegeId'>
-							<option selected value=''>------------Select-------------</option>
-							<option value='1'>Chameli Devi College</option>
-							<option value='2'>IPS Academy</option>
-							<option value='3'>Acropolis Institution</option>
-							<option value='4'>IPS college</option>
-							<option value='5'>Sage University</option>
-							<option value='6'>Malwa Institute</option>
-							<option value='7'>Women Polytechnic college</option>
-					</select></td>
+					<td><%=HTMLUtility.getList("collegeId", DataUtility.getStringData(bean.getCollegeId()), facultyList)%>
 					<td style="color: red"><%=ServletUtility.getErrorMessage("roleId", request)%></td>
 				</tr>
 
@@ -82,12 +81,7 @@
 
 				<tr>
 					<th>Gender<font color="red">*</font></th>
-					<td><select name="gender">
-							<option selected value=''>-----Select------</option>
-							<option value="male">Male</option>
-							<option value="female">Female</option>
-							<option value="other">Other</option>
-					</select></td>
+					<td><%=HTMLUtility.getList("gender", DataUtility.getStringData(bean.getGender()), map) %></td>
 					<td style="color: red"><%=ServletUtility.getErrorMessage("gender", request)%></td>
 				</tr>
 

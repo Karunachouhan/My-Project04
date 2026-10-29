@@ -35,6 +35,12 @@ public interface ORSView {
 	public String MARKSHEET_MERIT_LIST_VIEW = PAGE_FOLDER + "/MarksheetMeritListView.jsp";
 	public String PRODUCT_VIEW = PAGE_FOLDER + "/ProductView.jsp";
 	public String PRODUCT_LIST_VIEW = PAGE_FOLDER + "/ProductListView.jsp";
+	
+	public String HOSPITAL_VIEW = PAGE_FOLDER + "/HospitalView.jsp";
+	public String HOSPITAL_LIST_VIEW = PAGE_FOLDER + "/HospitalListView.jsp";
+	public String GYM_VIEW = PAGE_FOLDER + "/GymView.jsp";
+	public String GYM_LIST_VIEW = PAGE_FOLDER + "/GymListView.jsp";
+	
 
 	public String ERROR_CTL = "/ctl/MarksheetCtl";
 
@@ -67,6 +73,14 @@ public interface ORSView {
 	public String FACULTY_LIST_VIEW = PAGE_FOLDER + "/FacultyListView.jsp";
 	public String FACULTY_CTL = APP_CONTEXT + "/ctl/FacultyCtl";
 	public String FACULTY_LIST_CTL = APP_CONTEXT + "/ctl/FacultyListCtl";
+	
+	
+	public String HOSPITAL_CTL = APP_CONTEXT + "/ctl/HospitalCtl";
+	public String HOSPITAL_LIST_CTL = APP_CONTEXT + "/ctl/HospitalListCtl";
+	public String GYM_CTL = APP_CONTEXT + "/ctl/GymCtl";
+	public String GYM_LIST_CTL = APP_CONTEXT + "/ctl/GymListCtl";
+	
+	
 
 	public String STUDENT_REPORT_CTL = APP_CONTEXT + "/ctl/StudentReportCtl";
 	public String COLLEGE_REPORT_CTL = APP_CONTEXT + "/ctl/CollegeReportCtl";

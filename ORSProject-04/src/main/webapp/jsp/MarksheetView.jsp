@@ -1,3 +1,7 @@
+<%@page import="in.co.rays.proj4.util.HTMLUtility"%>
+<%@page import="java.util.HashMap"%>
+<%@page import="in.co.rays.proj4.bean.MarksheetBean"%>
+<%@page import="java.util.List"%>
 <%@page import="in.co.rays.proj4.util.DataUtility"%>
 <%@page import="in.co.rays.proj4.controller.MarksheetCtl"%>
 <%@page import="in.co.rays.proj4.util.ServletUtility"%>
@@ -15,6 +19,11 @@
 	<%
 	String succ = ServletUtility.getSuccessMessage(request);
 	String error = ServletUtility.getErrorMessage(request);
+	List<MarksheetBean> marksheetList = (List) request.getAttribute("marksheetList");
+	HashMap<String, String> map = new HashMap<String, String>();
+	map.put("male", "male");
+	map.put("female", "female");
+	map.put("other", "other");
 	%>
 	<%@include file="Header.jsp"%>
 	<div align="center">
@@ -33,14 +42,9 @@
 
 				<tr>
 					<th>Student Name<font color="red">*</font></th>
-					<td><select name="studentId">
-							<option selected value=''>-----Select------</option>
-							<option value="1">Ram Sharma</option>
-							<option value="2">Siya Rao</option>
-							<option value="3">Megha Lowanshi</option>
-							<option value="4">Aaradhiya Chouhan</option>
-					</select></td>
-					<td style="color: red"><%=ServletUtility.getErrorMessage("studentId", request)%></td>
+					<td><%=HTMLUtility.getList("studentId", DataUtility.getStringData(bean.getStudentId()),marksheetList)%></td>
+						<td style="color: red"><%=ServletUtility.getErrorMessage("studentId", request)%></td>
+				
 				</tr>
 				<tr>
 					<th>Physics<font color="red">*</font></th>

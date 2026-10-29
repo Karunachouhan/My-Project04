@@ -1,5 +1,7 @@
 package in.co.rays.proj4.controller;
 
+import java.util.List;
+
 import in.co.rays.proj4.bean.FacultyBean;
 import in.co.rays.proj4.model.FacultyModel;
 import in.co.rays.proj4.util.DataUtility;
@@ -65,6 +67,13 @@ public class FacultyCtl extends BaseCtl<FacultyBean, FacultyModel> {
       
 		return bean;
 
+	}
+	
+	@Override
+	protected void preload(HttpServletRequest request) {
+		FacultyModel fmodel = new FacultyModel();
+		List<FacultyBean> facultyList = fmodel.search(null, 0, 0);
+		request.setAttribute("facultyList", facultyList);
 	}
 
 	@Override

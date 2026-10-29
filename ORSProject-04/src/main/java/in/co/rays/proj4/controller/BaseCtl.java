@@ -127,6 +127,10 @@ public abstract class BaseCtl<B extends BaseBean, M extends BaseModel> extends H
 		preload(request);
 
 		if (request.getMethod().equals("POST") && validate(request) == false) {
+			
+			//BaseBean bean = populateBean(request);
+			//ServletUtility.setBean(bean, request);
+			
 			ServletUtility.forward(getView(), request, response);
 			return;
 		}

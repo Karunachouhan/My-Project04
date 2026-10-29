@@ -42,8 +42,11 @@
 	<a href="<%=ORSView.SUBJECT_LIST_CTL%>">Subject List</a> |
 	<a href="<%=ORSView.STUDENT_CTL%>">Add Student</a> |
 	<a href="<%=ORSView.STUDENT_LIST_CTL%>">Student List</a> |
-	<a href="<%=ORSView.LOGIN_CTL + "?operation=logout"%>">Logout</a> |
 	<a href="<%=ORSView.CHANGE_PASSWORD_CTL%>">ChangePassword</a> |
+	<a href="<%=ORSView.HOSPITAL_CTL %>">Add Hospital</a> |
+	<a href="<%=ORSView.HOSPITAL_LIST_CTL %>">Hospital List</a> |
+	
+	<a href="<%=ORSView.LOGIN_CTL + "?operation=logout"%>">Logout</a> |
 	<%
 	} else {
 	%>

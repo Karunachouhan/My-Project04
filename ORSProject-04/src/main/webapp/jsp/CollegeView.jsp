@@ -69,6 +69,7 @@
 					<th></th>
 					<td><input type="submit" name="operation"
 						value="<%=CollegeCtl.OP_SAVE%>"></td>
+						</tr>
 			</table>
 		</form>
 	</div>
