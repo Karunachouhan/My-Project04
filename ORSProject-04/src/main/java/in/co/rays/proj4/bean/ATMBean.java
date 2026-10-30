@@ -58,5 +58,7 @@ public class ATMBean extends BaseBean {
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
+		
+		super.setResultSet(rs);
 	}
 }

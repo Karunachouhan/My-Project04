@@ -42,6 +42,8 @@ public interface ORSView {
 	public String GYM_LIST_VIEW = PAGE_FOLDER + "/GymListView.jsp";
 	public String ATM_VIEW = PAGE_FOLDER + "/ATMView.jsp";
 	public String ATM_LIST_VIEW = PAGE_FOLDER + "/ATMListView.jsp";
+	public String RAILWAY_VIEW = PAGE_FOLDER + "/RailwayView.jsp";
+	public String RAILWAY_LIST_VIEW = PAGE_FOLDER + "/RailwayListView.jsp";
 	
 
 	public String ERROR_CTL = "/ctl/MarksheetCtl";
@@ -83,6 +85,8 @@ public interface ORSView {
 	public String GYM_LIST_CTL = APP_CONTEXT + "/ctl/GymListCtl";
 	public String ATM_CTL = APP_CONTEXT + "/ctl/ATMCtl";
 	public String ATM_LIST_CTL = APP_CONTEXT + "/ctl/ATMListCtl";
+	public String RAILWAY_CTL = APP_CONTEXT + "/ctl/RailwayCtl";
+	public String RAILWAY_LIST_CTL = APP_CONTEXT + "/ctl/RailwayListCtl";
 	
 	
 

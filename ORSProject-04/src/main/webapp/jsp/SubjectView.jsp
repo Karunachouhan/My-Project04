@@ -31,7 +31,7 @@
 				<tr>
 					<th>Course Name<font color="red">*</font></th>
 					<td><%=HTMLUtility.getList("courseId", DataUtility.getStringData(bean.getCourseId()), courseList)%></td>
-					<td style="color: red"><%=ServletUtility.getErrorMessage("studentId", request)%></td>
+					<td style="color: red"><%=ServletUtility.getErrorMessage("courseId", request)%></td>
 				</tr>
 
 				<tr>
