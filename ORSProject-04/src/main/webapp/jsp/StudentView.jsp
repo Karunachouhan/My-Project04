@@ -72,6 +72,11 @@
 						placeholder="enter your date of birth" value="<%=DataUtility.getStringData(bean.getDateOfBirth())%>"></td>
 					<td style="color: red"><%=ServletUtility.getErrorMessage("dateOfBirth", request)%></td>
 				</tr>
+				
+				<tr>
+					<td><input type="hidden" name="id" value="<%=bean.getId()%>"></td>
+				</tr>
+				
 
 				<tr>
 					<th></th>

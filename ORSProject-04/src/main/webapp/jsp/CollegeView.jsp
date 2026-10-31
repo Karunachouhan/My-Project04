@@ -47,29 +47,36 @@
 				<tr>
 					<th>State<font color="red">*</font></th>
 					<td><input type="text" name="state"
-						placeholder="enter your state" value="<%=DataUtility.getStringData(bean.getState())%>"></td>
+						placeholder="enter your state"
+						value="<%=DataUtility.getStringData(bean.getState())%>"></td>
 					<td style="color: red"><%=ServletUtility.getErrorMessage("state", request)%></td>
 				</tr>
 
 				<tr>
 					<th>City<font color="red">*</font></th>
 					<td><input type="text" name="city"
-						placeholder="enter your city" value="<%=DataUtility.getStringData(bean.getCity())%>"></td>
+						placeholder="enter your city"
+						value="<%=DataUtility.getStringData(bean.getCity())%>"></td>
 					<td style="color: red"><%=ServletUtility.getErrorMessage("city", request)%></td>
 				</tr>
 
 				<tr>
 					<th>Phone No<font color="red">*</font></th>
 					<td><input type="number" name="phoneNo"
-						placeholder="enter your phone no" value="<%=DataUtility.getStringData(bean.getPhoneNo())%>"></td>
+						placeholder="enter your phone no"
+						value="<%=DataUtility.getStringData(bean.getPhoneNo())%>"></td>
 					<td style="color: red"><%=ServletUtility.getErrorMessage("phoneNo", request)%></td>
+				</tr>
+
+				<tr>
+					<td><input type="hidden" name="id" value="<%=bean.getId()%>"></td>
 				</tr>
 
 				<tr>
 					<th></th>
 					<td><input type="submit" name="operation"
 						value="<%=CollegeCtl.OP_SAVE%>"></td>
-						</tr>
+				</tr>
 			</table>
 		</form>
 	</div>

@@ -81,7 +81,7 @@
 
 				<tr>
 					<th>Gender<font color="red">*</font></th>
-					<td><%=HTMLUtility.getList("gender", DataUtility.getStringData(bean.getGender()), map) %></td>
+					<td><%=HTMLUtility.getList("gender", DataUtility.getStringData(bean.getGender()), map)%></td>
 					<td style="color: red"><%=ServletUtility.getErrorMessage("gender", request)%></td>
 				</tr>
 
@@ -94,6 +94,10 @@
 				</tr>
 
 				<tr>
+					<td><input type="hidden" name="id" value="<%=bean.getId()%>"></td>
+				</tr>
+                  
+                  <tr>
 					<th></th>
 					<td><input type="submit" name="operation"
 						value="<%=FacultyCtl.OP_SAVE%>"></td>

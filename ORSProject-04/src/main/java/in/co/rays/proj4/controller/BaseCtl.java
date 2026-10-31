@@ -101,6 +101,7 @@ public abstract class BaseCtl<B extends BaseBean, M extends BaseModel> extends H
 			throws ServletException, IOException {
 		B bean = populateBean(request);
 		M model = getModel();
+		// Long id = DataUtility.getLong(request.getParameter("id"));
 
 		try {
 			if (bean.getId() > 0) {
@@ -113,24 +114,26 @@ public abstract class BaseCtl<B extends BaseBean, M extends BaseModel> extends H
 		} catch (DuplicateRecordException e) {
 			ServletUtility.setErrorMessage("record already exist", request);
 		}
+
+		ServletUtility.setBean(bean, request);
 		ServletUtility.forward(getView(), request, response);
 	}
 
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		
+
 		getMessageSource(request);
-		
+
 		System.out.println("service method");
-		
+
 		preload(request);
 
 		if (request.getMethod().equals("POST") && validate(request) == false) {
-			
-			//BaseBean bean = populateBean(request);
-			//ServletUtility.setBean(bean, request);
-			
+
+			// BaseBean bean = populateBean(request);
+			// ServletUtility.setBean(bean, request);
+
 			ServletUtility.forward(getView(), request, response);
 			return;
 		}

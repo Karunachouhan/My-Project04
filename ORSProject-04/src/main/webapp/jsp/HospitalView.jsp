@@ -61,6 +61,10 @@
 						value="<%=DataUtility.getStringData(request.getParameter("disease"))%>"></td>
 					<td style="color: red"><%=ServletUtility.getErrorMessage("disease", request)%></td>
 				</tr>
+				
+				<tr>
+					<td><input type="hidden" name="id" value="<%=bean.getId()%>"></td>
+				</tr>
 
 				<tr>
 					<th></th>

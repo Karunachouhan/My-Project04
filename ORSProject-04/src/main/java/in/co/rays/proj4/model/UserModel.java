@@ -50,7 +50,7 @@ public class UserModel extends BaseModel<UserBean> {
 			pstmt.setString(16, bean.getModifiedBy());
 			pstmt.setTimestamp(17, bean.getCreatedDatetime());
 			pstmt.setTimestamp(18, bean.getModifiedDatetime());
-			pstmt.setString(18, bean.getPhoto());
+			pstmt.setString(19, bean.getPhoto());
 			int i = pstmt.executeUpdate();
 
 			conn.commit();

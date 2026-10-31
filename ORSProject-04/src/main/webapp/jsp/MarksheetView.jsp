@@ -69,6 +69,11 @@
 						value="<%=DataUtility.getStringData(bean.getMaths())%>"></td>
 					<td style="color: red"><%=ServletUtility.getErrorMessage("maths", request)%></td>
 				</tr>
+				
+				<tr>
+					<td><input type="hidden" name="id" value="<%=bean.getId()%>"></td>
+				</tr>
+				
 
 				<tr>
 					<th></th>

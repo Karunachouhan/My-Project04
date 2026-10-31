@@ -59,11 +59,11 @@ public abstract class BaseBean implements DropdownListBean {
 	public void setResultSet(ResultSet rs) {
 
 		try {
-          setId(rs.getLong("id"));
-          setCreatedBy(rs.getString("created_by"));
-          setModifiedBy(rs.getString("modified_by"));
-          setCreatedDatetime(rs.getTimestamp("created_datetime"));
-          setModifiedDatetime(rs.getTimestamp("modified_datetime"));
+			setId(rs.getLong("id"));
+			setCreatedBy(rs.getString("created_by"));
+			setModifiedBy(rs.getString("modified_by"));
+			setCreatedDatetime(rs.getTimestamp("created_datetime"));
+			setModifiedDatetime(rs.getTimestamp("modified_datetime"));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

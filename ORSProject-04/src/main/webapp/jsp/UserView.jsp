@@ -128,6 +128,11 @@
 				</tr>
 
 				<tr>
+					<td><input type="hidden" name="id" value="<%=bean.getId()%>"></td>
+				</tr>
+
+
+				<tr>
 					<th></th>
 					<td><input type="submit" name="operation"
 						value="<%=UserCtl.OP_SAVE%>"></td>
