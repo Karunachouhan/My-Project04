@@ -1,4 +1,4 @@
-package in.co.rays.proj4.model;
+ package in.co.rays.proj4.model;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
