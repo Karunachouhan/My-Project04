@@ -11,9 +11,24 @@ import in.co.rays.proj4.util.DataValidator;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
 
+/**
+ * Student Controller class handles student-related operations such as
+ * preloading college data, validating student details, populating StudentBean,
+ * and providing StudentModel and View.
+ * 
+ * @author karunaChouhan
+ * @version 1.0
+ * @Copyright (c) Rays Technologies
+ */
 @WebServlet("/ctl/StudentCtl")
 public class StudentCtl extends BaseCtl<StudentBean, StudentModel> {
-	
+
+	/**
+	 * Preloads the college list from the database and stores it in the request
+	 * attribute for displaying the college dropdown.
+	 * 
+	 * @param request HttpServletRequest object
+	 */
 	@Override
 	protected void preload(HttpServletRequest request) {
 		CollegeModel cmodel = new CollegeModel();
@@ -21,6 +36,13 @@ public class StudentCtl extends BaseCtl<StudentBean, StudentModel> {
 		request.setAttribute("collegeList", collegeList);
 	}
 
+	/**
+	 * Validates the student form input fields. Checks whether college, first name,
+	 * last name, date of birth, mobile number, and email are provided.
+	 * 
+	 * @param request HttpServletRequest object containing form data
+	 * @return true if all fields are valid, otherwise false
+	 */
 	@Override
 	protected boolean validate(HttpServletRequest request) {
 		boolean pass = true;
@@ -52,6 +74,13 @@ public class StudentCtl extends BaseCtl<StudentBean, StudentModel> {
 		return pass;
 	}
 
+	/**
+	 * Populates StudentBean with student details received from the HTTP request
+	 * parameters.
+	 * 
+	 * @param request HttpServletRequest object containing student data
+	 * @return populated StudentBean object
+	 */
 	@Override
 	protected StudentBean populateBean(HttpServletRequest request) {
 		StudentBean bean = new StudentBean();
@@ -66,11 +95,21 @@ public class StudentCtl extends BaseCtl<StudentBean, StudentModel> {
 		return bean;
 	}
 
+	/**
+	 * Creates and returns StudentModel object.
+	 * 
+	 * @return StudentModel object
+	 */
 	@Override
 	public StudentModel getModel() {
 		return new StudentModel();
 	}
 
+	/**
+	 * Returns the Student View page.
+	 * 
+	 * @return Student View path
+	 */
 	@Override
 	public String getView() {
 		return ORSView.STUDENT_VIEW;

@@ -1,3 +1,4 @@
+
 package in.co.rays.proj4.model;
 
 import java.sql.Connection;
@@ -10,8 +11,24 @@ import in.co.rays.proj4.exception.ApplicationException;
 import in.co.rays.proj4.exception.DuplicateRecordException;
 import in.co.rays.proj4.util.JDBCDataSource;
 
+/**
+ * FacultyModel class provides database operations for Faculty records. It
+ * performs insert, update, search and retrieval operations on the st_faculty
+ * table.
+ *
+ * @author karunaChouhan
+ * @version 1.0
+ */
 public class FacultyModel extends BaseModel<FacultyBean> {
 
+	/**
+	 * Adds a new faculty record into the database.
+	 *
+	 * @param bean FacultyBean object containing faculty details
+	 * @return primary key of the inserted faculty
+	 * @throws ApplicationException     if application error occurs
+	 * @throws DuplicateRecordException if email already exists
+	 */
 	@Override
 	public long add(FacultyBean bean) throws ApplicationException, DuplicateRecordException {
 		Connection conn = null;
@@ -59,6 +76,13 @@ public class FacultyModel extends BaseModel<FacultyBean> {
 		return pk;
 	}
 
+	/**
+	 * Updates an existing faculty record in the database.
+	 *
+	 * @param bean FacultyBean object containing updated faculty details
+	 * @throws ApplicationException     if application error occurs
+	 * @throws DuplicateRecordException if email already exists for another faculty
+	 */
 	@Override
 	public void update(FacultyBean bean) throws ApplicationException, DuplicateRecordException {
 		Connection conn = null;
@@ -105,6 +129,12 @@ public class FacultyModel extends BaseModel<FacultyBean> {
 
 	}
 
+	/**
+	 * Generates a dynamic WHERE clause based on FacultyBean search criteria.
+	 *
+	 * @param bean FacultyBean object containing search criteria
+	 * @return dynamically generated WHERE clause
+	 */
 	@Override
 	public String getWhereClause(FacultyBean bean) {
 		StringBuffer sql = new StringBuffer("");
@@ -156,16 +186,32 @@ public class FacultyModel extends BaseModel<FacultyBean> {
 		return sql.toString();
 	}
 
+	/**
+	 * Returns the database table name used by this model.
+	 *
+	 * @return database table name
+	 */
 	@Override
 	public String getTable() {
 		return "st_faculty";
 	}
 
+	/**
+	 * Creates and returns a new FacultyBean object.
+	 *
+	 * @return new FacultyBean instance
+	 */
 	@Override
 	public FacultyBean getBean() {
 		return new FacultyBean();
 	}
 
+	/**
+	 * Finds a faculty record using its unique email address.
+	 *
+	 * @param email email address of the faculty to search
+	 * @return FacultyBean object if found
+	 */
 	public FacultyBean findByEmail(String email) {
 		FacultyBean bean = findByUniqueColumn("email", email);
 		return bean;

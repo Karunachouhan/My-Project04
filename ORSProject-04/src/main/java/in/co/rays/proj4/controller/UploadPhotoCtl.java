@@ -21,16 +21,43 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
 
+/**
+ * UploadPhoto Controller handles uploading, retrieving, and displaying user
+ * profile photos. It supports multipart file upload and displays a default
+ * image when the user photo is not available.
+ * 
+ * @author karunaChouhan
+ * @version 1.0
+ * @Copyright (c) Rays Technologies
+ */
 @WebServlet("/ctl/UploadPhotoCtl")
 @MultipartConfig
 public class UploadPhotoCtl extends HttpServlet {
 
+	/**
+	 * Handles HTTP requests by calling the parent service method.
+	 * 
+	 * @param request  HttpServletRequest object
+	 * @param response HttpServletResponse object
+	 * @throws ServletException if a servlet-related error occurs
+	 * @throws IOException      if an input/output error occurs
+	 */
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		super.service(request, response);
 	}
 
+	/**
+	 * Retrieves and displays the user's profile photo. If the user's photo is
+	 * available, it displays that photo. Otherwise, it displays the default logo
+	 * image.
+	 * 
+	 * @param request  HttpServletRequest object containing user ID
+	 * @param response HttpServletResponse object used to display the image
+	 * @throws ServletException if a servlet-related error occurs
+	 * @throws IOException      if an input/output error occurs
+	 */
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -92,6 +119,16 @@ public class UploadPhotoCtl extends HttpServlet {
 		out.close();
 	}
 
+	/**
+	 * Handles the photo upload request. Reads the uploaded photo, saves it into the
+	 * configured photo directory, updates the user's photo name in the database,
+	 * and displays the appropriate success or error message.
+	 * 
+	 * @param request  HttpServletRequest object containing uploaded photo
+	 * @param response HttpServletResponse object
+	 * @throws ServletException if a servlet-related error occurs
+	 * @throws IOException      if an input/output error occurs
+	 */
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -149,6 +186,11 @@ public class UploadPhotoCtl extends HttpServlet {
 		ServletUtility.forward(getView(), request, response);
 	}
 
+	/**
+	 * Returns the User View page.
+	 * 
+	 * @return User View path
+	 */
 	public String getView() {
 		return ORSView.USER_VIEW;
 	}

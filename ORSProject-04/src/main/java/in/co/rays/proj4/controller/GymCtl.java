@@ -7,9 +7,21 @@ import in.co.rays.proj4.util.DataValidator;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
 
+/**
+ * GymCtl handles gym-related operations such as validating gym details,
+ * populating the GymBean, and managing the gym form view.
+ *
+ * @author karunaChouhan
+ */
 @WebServlet("/ctl/GymCtl")
 public class GymCtl extends BaseCtl<GymBean, GymModel> {
 
+	/**
+	 * Validates the gym details received from the HTTP request.
+	 *
+	 * @param request HttpServletRequest containing gym details
+	 * @return true if validation passes, otherwise false
+	 */
 	@Override
 	protected boolean validate(HttpServletRequest request) {
 		boolean pass = true;
@@ -33,6 +45,13 @@ public class GymCtl extends BaseCtl<GymBean, GymModel> {
 		return pass;
 	}
 
+	/**
+	 * Populates the GymBean object with gym details
+	 * received from the HTTP request.
+	 *
+	 * @param request HttpServletRequest containing gym details
+	 * @return populated GymBean object
+	 */
 	@Override
 	protected GymBean populateBean(HttpServletRequest request) {
 		GymBean bean = new GymBean();
@@ -45,11 +64,21 @@ public class GymCtl extends BaseCtl<GymBean, GymModel> {
 
 	}
 
+	/**
+	 * Creates and returns the GymModel object.
+	 *
+	 * @return GymModel object
+	 */
 	@Override
 	public GymModel getModel() {
 		return new GymModel();
 	}
 
+	/**
+	 * Returns the view page for the gym form.
+	 *
+	 * @return gym view path
+	 */
 	@Override
 	public String getView() {
 		return ORSView.GYM_VIEW;

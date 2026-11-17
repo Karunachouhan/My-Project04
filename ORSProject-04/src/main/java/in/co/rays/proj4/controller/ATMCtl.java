@@ -6,9 +6,23 @@ import in.co.rays.proj4.util.DataUtility;
 import in.co.rays.proj4.util.DataValidator;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
+
+/**
+ * ATMCtl handles HTTP requests related to ATM information.
+ * It validates request parameters, populates the ATMBean,
+ * and provides the ATMModel and corresponding view.
+ *
+ * @author karunaChouhan
+ */
 @WebServlet("/ctl/ATMCtl")
 public class ATMCtl extends BaseCtl<ATMBean, ATMModel> {
 
+	/**
+	 * Validates the ATM form request parameters.
+	 *
+	 * @param request HttpServletRequest containing form data
+	 * @return true if all fields are valid, otherwise false
+	 */
 	@Override
 	protected boolean validate(HttpServletRequest request) {
 		boolean pass = true;
@@ -32,6 +46,12 @@ public class ATMCtl extends BaseCtl<ATMBean, ATMModel> {
 		return pass;
 	}
 
+	/**
+	 * Populates an ATMBean with data received from the HTTP request.
+	 *
+	 * @param request HttpServletRequest containing ATM form data
+	 * @return populated ATMBean object
+	 */
 	@Override
 	protected ATMBean populateBean(HttpServletRequest request) {
 		ATMBean bean = new ATMBean();
@@ -43,11 +63,21 @@ public class ATMCtl extends BaseCtl<ATMBean, ATMModel> {
 		return bean;
 	}
 
+	/**
+	 * Returns a new instance of ATMModel.
+	 *
+	 * @return ATMModel object
+	 */
 	@Override
 	public ATMModel getModel() {
 		return new ATMModel();
 	}
 
+	/**
+	 * Returns the ATM view page.
+	 *
+	 * @return ATM view path
+	 */
 	@Override
 	public String getView() {
 		return ORSView.ATM_VIEW;

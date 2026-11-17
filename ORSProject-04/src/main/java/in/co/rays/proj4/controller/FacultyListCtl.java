@@ -6,9 +6,22 @@ import in.co.rays.proj4.util.DataUtility;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
 
+/**
+ * FacultyListCtl handles listing and searching operations for faculty records.
+ * It extends BaseListCtl to use centralized list functionality.
+ *
+ * @author karunaChouhan
+ */
 @WebServlet("/ctl/FacultyListCtl")
 public class FacultyListCtl extends BaseListCtl<FacultyBean, FacultyModel> {
 
+	/**
+	 * Populates the FacultyBean object with faculty details
+	 * received from the HTTP request.
+	 *
+	 * @param request HttpServletRequest containing faculty details
+	 * @return populated FacultyBean object
+	 */
 	@Override
 	protected FacultyBean populateBean(HttpServletRequest request) {
 		FacultyBean bean = new FacultyBean();
@@ -27,11 +40,21 @@ public class FacultyListCtl extends BaseListCtl<FacultyBean, FacultyModel> {
 
 	}
 
+	/**
+	 * Creates and returns the FacultyModel object.
+	 *
+	 * @return FacultyModel object
+	 */
 	@Override
 	public FacultyModel getModel() {
 		return new FacultyModel();
 	}
 
+	/**
+	 * Returns the view page for displaying the faculty list.
+	 *
+	 * @return faculty list view path
+	 */
 	@Override
 	public String getView() {
 		return ORSView.FACULTY_LIST_VIEW;

@@ -1,3 +1,4 @@
+
 package in.co.rays.proj4.model;
 
 import java.sql.Connection;
@@ -10,8 +11,23 @@ import in.co.rays.proj4.exception.ApplicationException;
 import in.co.rays.proj4.exception.DuplicateRecordException;
 import in.co.rays.proj4.util.JDBCDataSource;
 
+/**
+ * CourseModel class provides database operations for Course records. It
+ * supports adding, updating, searching and retrieving course details.
+ *
+ * @author karunaChouhan
+ * @version 1.0
+ */
 public class CourseModel extends BaseModel<CourseBean> {
 
+	/**
+	 * Adds a new course record into the database.
+	 *
+	 * @param bean CourseBean object containing course details
+	 * @return primary key of the inserted course
+	 * @throws ApplicationException     if application error occurs
+	 * @throws DuplicateRecordException if course name already exists
+	 */
 	@Override
 	public long add(CourseBean bean) throws ApplicationException, DuplicateRecordException {
 		Connection conn = null;
@@ -51,6 +67,13 @@ public class CourseModel extends BaseModel<CourseBean> {
 		return pk;
 	}
 
+	/**
+	 * Updates an existing course record in the database.
+	 *
+	 * @param bean CourseBean object containing updated course details
+	 * @throws ApplicationException     if application error occurs
+	 * @throws DuplicateRecordException if course name already exists
+	 */
 	@Override
 	public void update(CourseBean bean) throws ApplicationException, DuplicateRecordException {
 		Connection conn = null;
@@ -88,6 +111,12 @@ public class CourseModel extends BaseModel<CourseBean> {
 
 	}
 
+	/**
+	 * Generates a dynamic WHERE clause based on CourseBean search criteria.
+	 *
+	 * @param bean CourseBean object containing search criteria
+	 * @return dynamically generated WHERE clause
+	 */
 	@Override
 	public String getWhereClause(CourseBean bean) {
 		StringBuffer sql = new StringBuffer("");
@@ -122,16 +151,32 @@ public class CourseModel extends BaseModel<CourseBean> {
 
 	}
 
+	/**
+	 * Returns the name of the database table used by this model.
+	 *
+	 * @return database table name
+	 */
 	@Override
 	public String getTable() {
 		return "st_course";
 	}
 
+	/**
+	 * Creates and returns a new CourseBean object.
+	 *
+	 * @return new CourseBean instance
+	 */
 	@Override
 	public CourseBean getBean() {
 		return new CourseBean();
 	}
 
+	/**
+	 * Finds a course record using its unique name.
+	 *
+	 * @param name course name to search
+	 * @return CourseBean object if found
+	 */
 	public CourseBean findByName(String name) {
 		CourseBean bean = findByUniqueColumn("name", name);
 		return bean;

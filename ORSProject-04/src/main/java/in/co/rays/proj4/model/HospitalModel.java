@@ -1,17 +1,33 @@
+
 package in.co.rays.proj4.model;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import in.co.rays.proj4.bean.CourseBean;
 import in.co.rays.proj4.bean.HospitalBean;
 import in.co.rays.proj4.exception.ApplicationException;
 import in.co.rays.proj4.exception.DuplicateRecordException;
 import in.co.rays.proj4.util.JDBCDataSource;
 
+/**
+ * HospitalModel class provides database operations for Hospital records. It
+ * performs insert, update, search and retrieval operations on the st_hospital
+ * table.
+ *
+ * @author karunaChouhan
+ * @version 1.0
+ */
 public class HospitalModel extends BaseModel<HospitalBean> {
 
+	/**
+	 * Adds a new hospital record into the database.
+	 *
+	 * @param bean HospitalBean object containing hospital details
+	 * @return primary key of the inserted hospital record
+	 * @throws ApplicationException     if application error occurs
+	 * @throws DuplicateRecordException if hospital name already exists
+	 */
 	@Override
 	public long add(HospitalBean bean) throws ApplicationException, DuplicateRecordException {
 		Connection conn = null;
@@ -51,6 +67,14 @@ public class HospitalModel extends BaseModel<HospitalBean> {
 		return pk;
 	}
 
+	/**
+	 * Updates an existing hospital record in the database.
+	 *
+	 * @param bean HospitalBean object containing updated hospital details
+	 * @throws ApplicationException     if application error occurs
+	 * @throws DuplicateRecordException if hospital name already exists for another
+	 *                                  record
+	 */
 	@Override
 	public void update(HospitalBean bean) throws ApplicationException, DuplicateRecordException {
 		Connection conn = null;
@@ -88,6 +112,12 @@ public class HospitalModel extends BaseModel<HospitalBean> {
 
 	}
 
+	/**
+	 * Generates a dynamic WHERE clause based on HospitalBean search criteria.
+	 *
+	 * @param bean HospitalBean object containing search criteria
+	 * @return dynamically generated WHERE clause
+	 */
 	@Override
 	public String getWhereClause(HospitalBean bean) {
 		StringBuffer sql = new StringBuffer("");
@@ -125,16 +155,32 @@ public class HospitalModel extends BaseModel<HospitalBean> {
 		return sql.toString();
 	}
 
+	/**
+	 * Returns the database table name used by this model.
+	 *
+	 * @return database table name
+	 */
 	@Override
 	public String getTable() {
 		return "st_hospital";
 	}
 
+	/**
+	 * Creates and returns a new HospitalBean object.
+	 *
+	 * @return new HospitalBean instance
+	 */
 	@Override
 	public HospitalBean getBean() {
 		return new HospitalBean();
 	}
 
+	/**
+	 * Finds a hospital record using its unique name.
+	 *
+	 * @param name hospital name to search
+	 * @return HospitalBean object if found
+	 */
 	public HospitalBean findByName(String name) {
 		HospitalBean bean = findByUniqueColumn("name", name);
 		return bean;

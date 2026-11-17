@@ -1,3 +1,4 @@
+
 package in.co.rays.proj4.model;
 
 import java.sql.Connection;
@@ -9,8 +10,23 @@ import in.co.rays.proj4.exception.ApplicationException;
 import in.co.rays.proj4.exception.DuplicateRecordException;
 import in.co.rays.proj4.util.JDBCDataSource;
 
+/**
+ * GymModel class provides database operations for Gym records. It performs
+ * insert, update, search and retrieval operations on the st_gym table.
+ *
+ * @author karunaChouhan
+ * @version 1.0
+ */
 public class GymModel extends BaseModel<GymBean> {
 
+	/**
+	 * Adds a new gym record into the database.
+	 *
+	 * @param bean GymBean object containing gym details
+	 * @return primary key of the inserted gym record
+	 * @throws ApplicationException     if application error occurs
+	 * @throws DuplicateRecordException if gym name already exists
+	 */
 	@Override
 	public long add(GymBean bean) throws ApplicationException, DuplicateRecordException {
 		Connection conn = null;
@@ -44,6 +60,14 @@ public class GymModel extends BaseModel<GymBean> {
 		return pk;
 	}
 
+	/**
+	 * Updates an existing gym record in the database.
+	 *
+	 * @param bean GymBean object containing updated gym details
+	 * @throws ApplicationException     if application error occurs
+	 * @throws DuplicateRecordException if gym name already exists for another
+	 *                                  record
+	 */
 	@Override
 	public void update(GymBean bean) throws ApplicationException, DuplicateRecordException {
 		Connection conn = null;
@@ -77,6 +101,12 @@ public class GymModel extends BaseModel<GymBean> {
 
 	}
 
+	/**
+	 * Generates a dynamic WHERE clause based on GymBean search criteria.
+	 *
+	 * @param bean GymBean object containing search criteria
+	 * @return dynamically generated WHERE clause
+	 */
 	@Override
 	public String getWhereClause(GymBean bean) {
 		StringBuffer sql = new StringBuffer("");
@@ -102,16 +132,32 @@ public class GymModel extends BaseModel<GymBean> {
 
 	}
 
+	/**
+	 * Returns the database table name used by this model.
+	 *
+	 * @return database table name
+	 */
 	@Override
 	public String getTable() {
 		return "st_gym";
 	}
 
+	/**
+	 * Creates and returns a new GymBean object.
+	 *
+	 * @return new GymBean instance
+	 */
 	@Override
 	public GymBean getBean() {
 		return new GymBean();
 	}
 
+	/**
+	 * Finds a gym record using its unique name.
+	 *
+	 * @param name gym name to search
+	 * @return GymBean object if found
+	 */
 	public GymBean findByName(String name) {
 		GymBean bean = findByUniqueColumn("name", name);
 		return bean;

@@ -1,4 +1,5 @@
- package in.co.rays.proj4.model;
+
+package in.co.rays.proj4.model;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,8 +14,24 @@ import in.co.rays.proj4.util.EmailMessage;
 import in.co.rays.proj4.util.EmailUtility;
 import in.co.rays.proj4.util.JDBCDataSource;
 
+/**
+ * UserModel class provides database operations for UserBean. It handles user
+ * registration, authentication, password management, photo updates, and other
+ * user-related operations.
+ *
+ * @author karunaChouhan
+ * @version 1.0
+ */
 public class UserModel extends BaseModel<UserBean> {
 
+	/**
+	 * Adds a new user record to the database.
+	 *
+	 * @param bean UserBean object containing user details
+	 * @return primary key of the inserted record
+	 * @throws ApplicationException     if an application error occurs
+	 * @throws DuplicateRecordException if the login already exists
+	 */
 	@Override
 	public long add(UserBean bean) throws ApplicationException, DuplicateRecordException {
 		Connection conn = null;
@@ -65,6 +82,13 @@ public class UserModel extends BaseModel<UserBean> {
 		return pk;
 	}
 
+	/**
+	 * Updates an existing user record in the database.
+	 *
+	 * @param bean UserBean object containing updated user details
+	 * @throws ApplicationException     if an application error occurs
+	 * @throws DuplicateRecordException if the login belongs to another user
+	 */
 	@Override
 	public void update(UserBean bean) throws ApplicationException, DuplicateRecordException {
 		Connection conn = null;
@@ -112,6 +136,12 @@ public class UserModel extends BaseModel<UserBean> {
 		}
 	}
 
+	/**
+	 * Generates a WHERE clause based on the supplied user bean fields.
+	 *
+	 * @param bean UserBean object containing search criteria
+	 * @return generated WHERE clause as a String
+	 */
 	@Override
 	public String getWhereClause(UserBean bean) {
 		StringBuffer sql = new StringBuffer("");
@@ -176,6 +206,13 @@ public class UserModel extends BaseModel<UserBean> {
 		return sql.toString();
 	}
 
+	/**
+	 * Authenticates a user using login and password.
+	 *
+	 * @param login    user's login ID
+	 * @param password user's password
+	 * @return UserBean if authentication is successful; otherwise null
+	 */
 	public UserBean authenticate(String login, String password) {
 		UserBean bean = findByLogin(login);
 
@@ -186,11 +223,26 @@ public class UserModel extends BaseModel<UserBean> {
 
 	}
 
+	/**
+	 * Finds a user record using the login ID.
+	 *
+	 * @param login user's login ID
+	 * @return matching UserBean object
+	 */
 	public UserBean findByLogin(String login) {
 		UserBean bean = findByUniqueColumn("login", login);
 		return bean;
 	}
 
+	/**
+	 * Changes the user's password after validating the old password and sends a
+	 * password-change email.
+	 *
+	 * @param newPassword new password
+	 * @param oldPassword current password
+	 * @param login       user's login ID
+	 * @return updated UserBean if the password is changed; otherwise null
+	 */
 	public UserBean changePassword(String newPassword, String oldPassword, String login) {
 		UserBean bean = findByLogin(login);
 
@@ -217,6 +269,12 @@ public class UserModel extends BaseModel<UserBean> {
 		return null;
 	}
 
+	/**
+	 * Sends the user's password information to the registered login email.
+	 *
+	 * @param login user's login ID
+	 * @return UserBean if the user is found; otherwise null
+	 */
 	public UserBean forgetPassword(String login) {
 		UserBean bean = findByLogin(login);
 
@@ -241,6 +299,12 @@ public class UserModel extends BaseModel<UserBean> {
 		return null;
 	}
 
+	/**
+	 * Registers a new user and sends registration information by email.
+	 *
+	 * @param bean UserBean object containing registration details
+	 * @return primary key returned by the add method
+	 */
 	public long register(UserBean bean) {
 		long pk = add(bean);
 
@@ -261,33 +325,49 @@ public class UserModel extends BaseModel<UserBean> {
 		return pk;
 	}
 
-	public void updatePhoto(long id,String photo) {
+	/**
+	 * Updates the photo path of a user in the database.
+	 *
+	 * @param id    user ID
+	 * @param photo photo path or file name
+	 */
+	public void updatePhoto(long id, String photo) {
 		Connection conn = null;
-		
+
 		try {
 			conn = JDBCDataSource.getConnection();
 			conn.setAutoCommit(false);
-			
+
 			PreparedStatement pstmt = conn.prepareStatement("update " + getTable() + " set photo = ? where id = ?");
 			pstmt.setString(1, photo);
 			pstmt.setLong(2, id);
 			pstmt.executeUpdate();
 			conn.commit();
 			pstmt.close();
-		}catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			JDBCDataSource.trnRollBack(conn);
-		}finally {
+		} finally {
 			JDBCDataSource.closeConnection(conn);
 		}
 	}
 
+	/**
+	 * Returns the name of the user database table.
+	 *
+	 * @return table name
+	 */
 	@Override
 	public String getTable() {
 
 		return "st_user";
 	}
 
+	/**
+	 * Creates and returns a new UserBean object.
+	 *
+	 * @return new UserBean instance
+	 */
 	@Override
 	public UserBean getBean() {
 

@@ -13,18 +13,67 @@ import in.co.rays.proj4.exception.DatabaseException;
 import in.co.rays.proj4.exception.DuplicateRecordException;
 import in.co.rays.proj4.util.JDBCDataSource;
 
+/**
+ * BaseModel is an abstract class that provides common database operations for
+ * all model classes. It supports adding, updating, deleting, searching, and
+ * retrieving records.
+ *
+ * @param <T> type of Bean extending BaseBean
+ *
+ * @author karunaChouhan
+ * @version 1.0
+ * @Copyright (c) Rays Technologies
+ */
 public abstract class BaseModel<T extends BaseBean> {
 
+	/**
+	 * Adds a new record to the database.
+	 *
+	 * @param bean object containing record details
+	 * @return primary key of the inserted record
+	 * @throws ApplicationException     if an application error occurs
+	 * @throws DuplicateRecordException if a duplicate record exists
+	 */
 	public abstract long add(T bean) throws ApplicationException, DuplicateRecordException;
 
+	/**
+	 * Updates an existing record in the database.
+	 *
+	 * @param bean object containing updated record details
+	 * @throws ApplicationException     if an application error occurs
+	 * @throws DuplicateRecordException if a duplicate record exists
+	 */
 	public abstract void update(T bean) throws ApplicationException, DuplicateRecordException;
 
+	/**
+	 * Generates the WHERE clause based on the provided Bean.
+	 *
+	 * @param bean object containing search criteria
+	 * @return SQL WHERE clause conditions
+	 */
 	public abstract String getWhereClause(T bean);
 
+	/**
+	 * Returns the database table name.
+	 *
+	 * @return name of the database table
+	 */
 	public abstract String getTable();
 
+	/**
+	 * Creates and returns a new Bean object.
+	 *
+	 * @return new Bean instance
+	 */
 	public abstract T getBean();
 
+	/**
+	 * Generates the next primary key for the database table. It retrieves the
+	 * maximum ID and increments it by one.
+	 *
+	 * @return next available primary key
+	 * @throws DatabaseException if a database error occurs
+	 */
 	public long nextPk() throws DatabaseException {
 
 		Connection conn = null;
@@ -50,6 +99,11 @@ public abstract class BaseModel<T extends BaseBean> {
 
 	}
 
+	/**
+	 * Deletes a record from the database using its primary key.
+	 *
+	 * @param id primary key of the record to be deleted
+	 */
 	public void delete(long id) {
 		Connection conn = null;
 
@@ -70,6 +124,12 @@ public abstract class BaseModel<T extends BaseBean> {
 		}
 	}
 
+	/**
+	 * Finds a record using its primary key.
+	 *
+	 * @param id primary key of the record
+	 * @return Bean object if the record is found, otherwise null
+	 */
 	public T findByPk(long id) {
 		Connection conn = null;
 		T bean = null;
@@ -92,6 +152,14 @@ public abstract class BaseModel<T extends BaseBean> {
 		return bean;
 	}
 
+	/**
+	 * Searches records based on the given Bean criteria with pagination.
+	 *
+	 * @param bean     object containing search criteria
+	 * @param pageNo   page number to retrieve
+	 * @param pageSize number of records per page
+	 * @return list of matching Bean objects
+	 */
 	public List<T> search(T bean, int pageNo, int pageSize) {
 		Connection conn = null;
 		List<T> list = new ArrayList<T>();
@@ -127,6 +195,13 @@ public abstract class BaseModel<T extends BaseBean> {
 		return list;
 	}
 
+	/**
+	 * Finds a record using a unique column and its value.
+	 *
+	 * @param column name of the database column
+	 * @param value  value to search for in the specified column
+	 * @return Bean object if a matching record is found, otherwise null
+	 */
 	public T findByUniqueColumn(String column, String value) {
 		Connection conn = null;
 		T bean = null;

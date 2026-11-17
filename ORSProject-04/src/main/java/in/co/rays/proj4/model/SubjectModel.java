@@ -1,3 +1,4 @@
+
 package in.co.rays.proj4.model;
 
 import java.sql.Connection;
@@ -10,8 +11,23 @@ import in.co.rays.proj4.exception.ApplicationException;
 import in.co.rays.proj4.exception.DuplicateRecordException;
 import in.co.rays.proj4.util.JDBCDataSource;
 
+/**
+ * SubjectModel class provides database operations for Subject records. It
+ * supports adding, updating, searching, and retrieving subject records.
+ *
+ * @author karunaChouhan
+ * @version 1.0
+ */
 public class SubjectModel extends BaseModel<SubjectBean> {
 
+	/**
+	 * Adds a new subject record to the database.
+	 *
+	 * @param bean SubjectBean object containing subject details
+	 * @return Primary key of the newly inserted record
+	 * @throws ApplicationException     if a database operation fails
+	 * @throws DuplicateRecordException if the subject name already exists
+	 */
 	@Override
 	public long add(SubjectBean bean) throws ApplicationException, DuplicateRecordException {
 		Connection conn = null;
@@ -50,6 +66,13 @@ public class SubjectModel extends BaseModel<SubjectBean> {
 		return pk;
 	}
 
+	/**
+	 * Updates an existing subject record in the database.
+	 *
+	 * @param bean SubjectBean object containing updated subject details
+	 * @throws ApplicationException     if a database operation fails
+	 * @throws DuplicateRecordException if the subject name already exists
+	 */
 	@Override
 	public void update(SubjectBean bean) throws ApplicationException, DuplicateRecordException {
 		Connection conn = null;
@@ -87,6 +110,12 @@ public class SubjectModel extends BaseModel<SubjectBean> {
 
 	}
 
+	/**
+	 * Builds the WHERE clause dynamically based on the provided subject details.
+	 *
+	 * @param bean SubjectBean object containing search criteria
+	 * @return Generated SQL WHERE clause conditions
+	 */
 	@Override
 	public String getWhereClause(SubjectBean bean) {
 		StringBuffer sql = new StringBuffer();
@@ -120,16 +149,32 @@ public class SubjectModel extends BaseModel<SubjectBean> {
 		return sql.toString();
 	}
 
+	/**
+	 * Returns the database table name for subject records.
+	 *
+	 * @return Name of the subject table
+	 */
 	@Override
 	public String getTable() {
 		return "st_subject";
 	}
 
+	/**
+	 * Creates and returns a new SubjectBean object.
+	 *
+	 * @return New SubjectBean instance
+	 */
 	@Override
 	public SubjectBean getBean() {
 		return new SubjectBean();
 	}
 
+	/**
+	 * Finds a subject record using its name.
+	 *
+	 * @param name Name of the subject
+	 * @return SubjectBean object if found, otherwise null
+	 */
 	public SubjectBean findByName(String name) {
 		SubjectBean bean = findByUniqueColumn("name", name);
 		return bean;

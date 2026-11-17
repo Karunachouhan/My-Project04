@@ -1,3 +1,4 @@
+
 package in.co.rays.proj4.util;
 
 import java.sql.Connection;
@@ -13,6 +14,16 @@ import com.mchange.v2.c3p0.ComboPooledDataSource;
 //2. Provide reliable connection with database
 //3. Provide maximum connection limitation with database
 
+/**
+ * JDBCDataSource class manages database connections using the C3P0 connection
+ * pooling library. It follows the Singleton and Factory design patterns.
+ *
+ * Advantages: 1. Provides connection reusability. 2. Provides reliable database
+ * connections. 3. Provides maximum connection limitation with database.
+ *
+ * @author karunaChouhan
+ * @version 1.0
+ */
 public final class JDBCDataSource {
 
 	private static JDBCDataSource jdbc = null;
@@ -20,11 +31,15 @@ public final class JDBCDataSource {
 
 	private ResourceBundle rb = ResourceBundle.getBundle("in.co.rays.proj4.bundle.System");
 
+	/**
+	 * Private constructor initializes the C3P0 connection pool using database
+	 * configuration properties.
+	 */
 	private JDBCDataSource() {
 
 		// ComboPoolDataSource class provide reliable connection(connection+limitations)
 		// CPDS is a predefine class
-		// It provide four properties
+		// It Provide four properties
 
 		cpds = new ComboPooledDataSource();
 		try {
@@ -41,6 +56,11 @@ public final class JDBCDataSource {
 		}
 	}
 
+	/**
+	 * Returns the singleton instance of JDBCDataSource.
+	 *
+	 * @return JDBCDataSource singleton object
+	 */
 	private static JDBCDataSource getInstance() {
 
 		if (jdbc == null) {
@@ -51,6 +71,11 @@ public final class JDBCDataSource {
 		return jdbc;
 	}
 
+	/**
+	 * Provides a database connection from the connection pool.
+	 *
+	 * @return Connection object if successfully obtained; otherwise null
+	 */
 	public static Connection getConnection() { // factory design pattern
 		try {
 			getInstance();
@@ -61,6 +86,11 @@ public final class JDBCDataSource {
 		return null;
 	}
 
+	/**
+	 * Closes the given database connection.
+	 *
+	 * @param conn Connection object to be closed
+	 */
 	public static void closeConnection(Connection conn) {
 		if (conn != null) {
 			try {
@@ -71,6 +101,11 @@ public final class JDBCDataSource {
 		}
 	}
 
+	/**
+	 * Rolls back the current transaction for the given connection.
+	 *
+	 * @param conn Connection object on which rollback is performed
+	 */
 	public static void trnRollBack(Connection conn) {
 		if (conn != null) {
 			try {

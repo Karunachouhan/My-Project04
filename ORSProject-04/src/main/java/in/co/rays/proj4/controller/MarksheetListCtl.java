@@ -6,9 +6,22 @@ import in.co.rays.proj4.util.DataUtility;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
 
+/**
+ * Controller class for displaying the marksheet list.
+ * It populates the MarksheetBean with request parameters
+ * and provides the model and view for the marksheet list.
+ * 
+ * @author karunaChouhan
+ */
 @WebServlet("/ctl/MarksheetListCtl")
 public class MarksheetListCtl extends BaseListCtl<MarksheetBean, MarksheetModel> {
 
+	/**
+	 * Populates the MarksheetBean with data received from the HTTP request.
+	 * 
+	 * @param request HttpServletRequest containing marksheet details
+	 * @return populated MarksheetBean object
+	 */
 	@Override
 	protected MarksheetBean populateBean(HttpServletRequest request) {
 		MarksheetBean bean = new MarksheetBean();
@@ -23,11 +36,21 @@ public class MarksheetListCtl extends BaseListCtl<MarksheetBean, MarksheetModel>
 		return bean;
 	}
 
+	/**
+	 * Returns the MarksheetModel object.
+	 * 
+	 * @return MarksheetModel instance
+	 */
 	@Override
 	public MarksheetModel getModel() {
 		return new MarksheetModel();
 	}
 
+	/**
+	 * Returns the view name for the marksheet list page.
+	 * 
+	 * @return marksheet list view name
+	 */
 	@Override
 	public String getView() {
 		return ORSView.MARKSHEET_LIST_VIEW;

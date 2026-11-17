@@ -9,9 +9,22 @@ import in.co.rays.proj4.util.DataValidator;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
 
+/**
+ * FacultyCtl handles faculty-related operations such as validation,
+ * populating faculty details, loading faculty data, and managing the faculty view.
+ *
+ * @author karunaChouhan
+ */
 @WebServlet("/ctl/FacultyCtl")
 public class FacultyCtl extends BaseCtl<FacultyBean, FacultyModel> {
 
+	/**
+	 * Validates the faculty details received from the HTTP request.
+	 * Checks whether all required fields are provided.
+	 *
+	 * @param request HttpServletRequest containing faculty details
+	 * @return true if all required fields are valid, otherwise false
+	 */
 	@Override
 	protected boolean validate(HttpServletRequest request) {
 		boolean pass = true;
@@ -52,6 +65,13 @@ public class FacultyCtl extends BaseCtl<FacultyBean, FacultyModel> {
 		return pass;
 	}
 
+	/**
+	 * Populates the FacultyBean object with faculty details
+	 * received from the HTTP request.
+	 *
+	 * @param request HttpServletRequest containing faculty details
+	 * @return populated FacultyBean object
+	 */
 	@Override
 	protected FacultyBean populateBean(HttpServletRequest request) {
 		FacultyBean bean = new FacultyBean();
@@ -64,11 +84,17 @@ public class FacultyCtl extends BaseCtl<FacultyBean, FacultyModel> {
 		bean.setAddress(DataUtility.getString(request.getParameter("address")));
 		bean.setGender(DataUtility.getString(request.getParameter("gender")));
 		bean.setDateOfBirth(DataUtility.getDate(request.getParameter("dob")));
-      
+
 		return bean;
 
 	}
-	
+
+	/**
+	 * Loads the faculty list from the database and stores it
+	 * as a request attribute for use in the view.
+	 *
+	 * @param request HttpServletRequest used to store the faculty list
+	 */
 	@Override
 	protected void preload(HttpServletRequest request) {
 		FacultyModel fmodel = new FacultyModel();
@@ -76,11 +102,21 @@ public class FacultyCtl extends BaseCtl<FacultyBean, FacultyModel> {
 		request.setAttribute("facultyList", facultyList);
 	}
 
+	/**
+	 * Creates and returns the FacultyModel object.
+	 *
+	 * @return FacultyModel object
+	 */
 	@Override
 	public FacultyModel getModel() {
 		return new FacultyModel();
 	}
 
+	/**
+	 * Returns the view page for the faculty form.
+	 *
+	 * @return faculty view path
+	 */
 	@Override
 	public String getView() {
 		return ORSView.FACULTY_VIEW;

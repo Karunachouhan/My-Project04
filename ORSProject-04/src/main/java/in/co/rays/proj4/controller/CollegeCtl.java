@@ -7,9 +7,22 @@ import in.co.rays.proj4.util.DataValidator;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
 
+/**
+ * CollegeCtl handles HTTP requests related to college operations.
+ * It validates college form data, populates the CollegeBean,
+ * and provides the CollegeModel and college view.
+ *
+ * @author karunaChouhan
+ */
 @WebServlet("/ctl/CollegeCtl")
 public class CollegeCtl extends BaseCtl<CollegeBean, CollegeModel> {
 
+	/**
+	 * Validates the college form fields.
+	 *
+	 * @param request HttpServletRequest containing college form data
+	 * @return true if all required fields are valid, otherwise false
+	 */
 	@Override
 	protected boolean validate(HttpServletRequest request) {
 		boolean pass = true;
@@ -38,6 +51,13 @@ public class CollegeCtl extends BaseCtl<CollegeBean, CollegeModel> {
 		return pass;
 	}
 
+	/**
+	 * Populates a CollegeBean with college details received
+	 * from the HTTP request.
+	 *
+	 * @param request HttpServletRequest containing college form data
+	 * @return populated CollegeBean object
+	 */
 	@Override
 	protected CollegeBean populateBean(HttpServletRequest request) {
 		CollegeBean bean = new CollegeBean();
@@ -51,11 +71,21 @@ public class CollegeCtl extends BaseCtl<CollegeBean, CollegeModel> {
 		return bean;
 	}
 
+	/**
+	 * Returns a new instance of CollegeModel.
+	 *
+	 * @return CollegeModel object
+	 */
 	@Override
 	public CollegeModel getModel() {
 		return new CollegeModel();
 	}
 
+	/**
+	 * Returns the college view page.
+	 *
+	 * @return college view path
+	 */
 	@Override
 	public String getView() {
 		return ORSView.COLLEGE_VIEW;

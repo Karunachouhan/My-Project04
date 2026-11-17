@@ -10,8 +10,25 @@ import in.co.rays.proj4.exception.ApplicationException;
 import in.co.rays.proj4.exception.DuplicateRecordException;
 import in.co.rays.proj4.util.JDBCDataSource;
 
+/**
+ * CollegeModel handles database operations related to college records. It
+ * provides functionality to add, update, search, and find college records.
+ *
+ * @author karunaChouhan
+ * @version 1.0
+ * @Copyright (c) Rays Technologies
+ */
 public class CollegeModel extends BaseModel<CollegeBean> {
 
+	/**
+	 * Adds a new college record to the database. Checks whether the college name
+	 * already exists before inserting.
+	 *
+	 * @param bean CollegeBean containing college details
+	 * @return primary key of the inserted college record
+	 * @throws ApplicationException     if an application error occurs
+	 * @throws DuplicateRecordException if the college name already exists
+	 */
 	@Override
 	public long add(CollegeBean bean) throws ApplicationException, DuplicateRecordException {
 		Connection conn = null;
@@ -53,6 +70,14 @@ public class CollegeModel extends BaseModel<CollegeBean> {
 		return pk;
 	}
 
+	/**
+	 * Updates an existing college record in the database. Checks for duplicate
+	 * college names before updating.
+	 *
+	 * @param bean CollegeBean containing updated college details
+	 * @throws ApplicationException     if an application error occurs
+	 * @throws DuplicateRecordException if another record has the same college name
+	 */
 	@Override
 	public void update(CollegeBean bean) throws ApplicationException, DuplicateRecordException {
 		Connection conn = null;
@@ -89,6 +114,12 @@ public class CollegeModel extends BaseModel<CollegeBean> {
 		}
 	}
 
+	/**
+	 * Creates a dynamic WHERE clause based on the provided CollegeBean fields.
+	 *
+	 * @param bean CollegeBean containing search criteria
+	 * @return SQL WHERE clause conditions as a String
+	 */
 	@Override
 	public String getWhereClause(CollegeBean bean) {
 
@@ -130,17 +161,33 @@ public class CollegeModel extends BaseModel<CollegeBean> {
 		return sql.toString();
 	}
 
+	/**
+	 * Returns the name of the college database table.
+	 *
+	 * @return college table name
+	 */
 	@Override
 	public String getTable() {
 
 		return "st_college";
 	}
 
+	/**
+	 * Creates and returns a new CollegeBean object.
+	 *
+	 * @return new CollegeBean instance
+	 */
 	@Override
 	public CollegeBean getBean() {
 		return new CollegeBean();
 	}
 
+	/**
+	 * Finds a college record using its name.
+	 *
+	 * @param name name of the college to search
+	 * @return CollegeBean if a matching record is found, otherwise null
+	 */
 	public CollegeBean findByName(String name) {
 		CollegeBean bean = findByUniqueColumn("name", name);
 		return bean;

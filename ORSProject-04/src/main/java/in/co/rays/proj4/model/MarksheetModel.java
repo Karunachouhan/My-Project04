@@ -1,3 +1,4 @@
+
 package in.co.rays.proj4.model;
 
 import java.sql.Connection;
@@ -10,8 +11,23 @@ import in.co.rays.proj4.exception.ApplicationException;
 import in.co.rays.proj4.exception.DuplicateRecordException;
 import in.co.rays.proj4.util.JDBCDataSource;
 
+/**
+ * MarksheetModel class provides database operations for Marksheet records.
+ * It supports adding, updating, searching, and retrieving marksheet records.
+ *
+ * @author karunaChouhan
+ * @version 1.0
+ */
 public class MarksheetModel extends BaseModel<MarksheetBean> {
 
+	/**
+	 * Adds a new marksheet record to the database.
+	 *
+	 * @param bean MarksheetBean object containing marksheet details
+	 * @return Primary key of the newly inserted record
+	 * @throws ApplicationException if a database operation fails
+	 * @throws DuplicateRecordException if the roll number already exists
+	 */
 	@Override
 	public long add(MarksheetBean bean) throws ApplicationException, DuplicateRecordException {
 		Connection conn = null;
@@ -56,6 +72,13 @@ public class MarksheetModel extends BaseModel<MarksheetBean> {
 		return pk;
 	}
 
+	/**
+	 * Updates an existing marksheet record in the database.
+	 *
+	 * @param bean MarksheetBean object containing updated marksheet details
+	 * @throws ApplicationException if a database operation fails
+	 * @throws DuplicateRecordException if the roll number already exists
+	 */
 	@Override
 	public void update(MarksheetBean bean) throws ApplicationException, DuplicateRecordException {
 		Connection conn = null;
@@ -99,6 +122,12 @@ public class MarksheetModel extends BaseModel<MarksheetBean> {
 
 	}
 
+	/**
+	 * Builds the WHERE clause dynamically based on the provided marksheet details.
+	 *
+	 * @param bean MarksheetBean object containing search criteria
+	 * @return Generated SQL WHERE clause conditions
+	 */
 	@Override
 	public String getWhereClause(MarksheetBean bean) {
 		StringBuffer sql = new StringBuffer("");
@@ -141,16 +170,32 @@ public class MarksheetModel extends BaseModel<MarksheetBean> {
 		return sql.toString();
 	}
 
+	/**
+	 * Returns the database table name for marksheet records.
+	 *
+	 * @return Name of the marksheet table
+	 */
 	@Override
 	public String getTable() {
 		return "st_marksheet";
 	}
 
+	/**
+	 * Creates and returns a new MarksheetBean object.
+	 *
+	 * @return New MarksheetBean instance
+	 */
 	@Override
 	public MarksheetBean getBean() {
 		return new MarksheetBean();
 	}
 
+	/**
+	 * Finds a marksheet record using its roll number.
+	 *
+	 * @param rollNo Roll number of the student
+	 * @return MarksheetBean object if found, otherwise null
+	 */
 	public MarksheetBean findByRollno(String rollNo) {
 		MarksheetBean bean = findByUniqueColumn("roll_no", rollNo);
 		return bean;

@@ -14,11 +14,29 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+/**
+ * UserRegistrationCtl handles the registration of new users. It validates user
+ * input, populates the UserBean, registers the user, and forwards the request
+ * to the registration view.
+ *
+ * @author karunaChouhan
+ * @version 1.0
+ * @Copyright (c) Rays Technologies
+ */
 @WebServlet("/UserRegistrationCtl")
 public class UserRegistrationCtl extends BaseCtl<UserBean, UserModel> {
 
+	/**
+	 * Operation constant used for user sign-up.
+	 */
 	public static final String OP_SIGN_UP = "SignUp";
 
+	/**
+	 * Validates the user registration form fields.
+	 *
+	 * @param request HttpServletRequest containing user registration details
+	 * @return true if all fields are valid, otherwise false
+	 */
 	@Override
 	protected boolean validate(HttpServletRequest request) {
 
@@ -64,6 +82,12 @@ public class UserRegistrationCtl extends BaseCtl<UserBean, UserModel> {
 		return pass;
 	}
 
+	/**
+	 * Populates the UserBean with registration details received from the request.
+	 *
+	 * @param request HttpServletRequest containing user registration details
+	 * @return populated UserBean object
+	 */
 	@Override
 	protected UserBean populateBean(HttpServletRequest request) {
 		UserBean bean = new UserBean();
@@ -82,6 +106,16 @@ public class UserRegistrationCtl extends BaseCtl<UserBean, UserModel> {
 
 	}
 
+	/**
+	 * Processes the user registration form submission. Registers the user and sets
+	 * success or error messages. Finally, forwards the request to the registration
+	 * view.
+	 *
+	 * @param request  HttpServletRequest containing registration data
+	 * @param response HttpServletResponse used to send the response
+	 * @throws ServletException if a servlet-related error occurs
+	 * @throws IOException      if an input/output error occurs
+	 */
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -101,18 +135,28 @@ public class UserRegistrationCtl extends BaseCtl<UserBean, UserModel> {
 			}
 		}
 
-		// field allready fill 
+		// field allready fill
 		bean = populateBean(request);
 		ServletUtility.setBean(bean, request);
 
 		ServletUtility.forward(getView(), request, response);
 	}
 
+	/**
+	 * Returns the UserModel object.
+	 *
+	 * @return new UserModel instance
+	 */
 	@Override
 	public UserModel getModel() {
 		return new UserModel();
 	}
 
+	/**
+	 * Returns the registration view page.
+	 *
+	 * @return registration view path
+	 */
 	@Override
 	public String getView() {
 		return ORSView.USER_REGISTRATION_VIEW;

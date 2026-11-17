@@ -6,9 +6,23 @@ import in.co.rays.proj4.util.DataUtility;
 import in.co.rays.proj4.util.DataValidator;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
+
+/**
+ * Controller class for handling railway information.
+ * It validates railway details, populates the RailwayBean,
+ * and provides the model and view for the railway form.
+ *
+ * @author karunaChouhan
+ */
 @WebServlet("/ctl/RailwayCtl")
 public class RailwayCtl extends BaseCtl<RailwayBean, RailwayModel> {
 
+	/**
+	 * Validates the railway details submitted through the request.
+	 *
+	 * @param request HttpServletRequest containing railway details
+	 * @return true if all required fields are valid, otherwise false
+	 */
 	@Override
 	protected boolean validate(HttpServletRequest request) {
 		Boolean pass = true;
@@ -32,6 +46,12 @@ public class RailwayCtl extends BaseCtl<RailwayBean, RailwayModel> {
 		return pass;
 	}
 
+	/**
+	 * Populates the RailwayBean with railway details from the request.
+	 *
+	 * @param request HttpServletRequest containing railway information
+	 * @return populated RailwayBean object
+	 */
 	@Override
 	protected RailwayBean populateBean(HttpServletRequest request) {
 		RailwayBean bean = new RailwayBean();
@@ -44,11 +64,21 @@ public class RailwayCtl extends BaseCtl<RailwayBean, RailwayModel> {
 		return bean;
 	}
 
+	/**
+	 * Returns the RailwayModel object.
+	 *
+	 * @return RailwayModel instance
+	 */
 	@Override
 	public RailwayModel getModel() {
 		return new RailwayModel();
 	}
 
+	/**
+	 * Returns the view name for the railway form.
+	 *
+	 * @return railway view name
+	 */
 	@Override
 	public String getView() {
 		return ORSView.RAILWAY_VIEW;

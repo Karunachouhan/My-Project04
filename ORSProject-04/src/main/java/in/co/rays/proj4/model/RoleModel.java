@@ -1,3 +1,4 @@
+
 package in.co.rays.proj4.model;
 
 import java.sql.Connection;
@@ -9,8 +10,23 @@ import in.co.rays.proj4.exception.ApplicationException;
 import in.co.rays.proj4.exception.DuplicateRecordException;
 import in.co.rays.proj4.util.JDBCDataSource;
 
+/**
+ * RoleModel class provides database operations for Role records. It supports
+ * adding, updating, searching, and retrieving role records.
+ *
+ * @author karunaChouhan
+ * @version 1.0
+ */
 public class RoleModel extends BaseModel<RoleBean> {
 
+	/**
+	 * Adds a new role record to the database.
+	 *
+	 * @param bean RoleBean object containing role details
+	 * @return Primary key of the newly inserted record
+	 * @throws ApplicationException     if a database operation fails
+	 * @throws DuplicateRecordException if the role name already exists
+	 */
 	@Override
 	public long add(RoleBean bean) throws ApplicationException, DuplicateRecordException {
 		Connection conn = null;
@@ -48,6 +64,13 @@ public class RoleModel extends BaseModel<RoleBean> {
 		return pk;
 	}
 
+	/**
+	 * Updates an existing role record in the database.
+	 *
+	 * @param bean RoleBean object containing updated role details
+	 * @throws ApplicationException     if a database operation fails
+	 * @throws DuplicateRecordException if the role name already exists
+	 */
 	@Override
 	public void update(RoleBean bean) throws ApplicationException, DuplicateRecordException {
 
@@ -84,6 +107,12 @@ public class RoleModel extends BaseModel<RoleBean> {
 		}
 	}
 
+	/**
+	 * Builds the WHERE clause dynamically based on the provided role details.
+	 *
+	 * @param bean RoleBean object containing search criteria
+	 * @return Generated SQL WHERE clause conditions
+	 */
 	@Override
 	public String getWhereClause(RoleBean bean) {
 		StringBuffer sql = new StringBuffer("");
@@ -115,18 +144,34 @@ public class RoleModel extends BaseModel<RoleBean> {
 		return sql.toString();
 	}
 
+	/**
+	 * Returns the database table name for role records.
+	 *
+	 * @return Name of the role table
+	 */
 	@Override
 	public String getTable() {
 
 		return "st_role";
 	}
 
+	/**
+	 * Creates and returns a new RoleBean object.
+	 *
+	 * @return New RoleBean instance
+	 */
 	@Override
 	public RoleBean getBean() {
 
 		return new RoleBean();
 	}
 
+	/**
+	 * Finds a role record using its name.
+	 *
+	 * @param name Name of the role
+	 * @return RoleBean object if found, otherwise null
+	 */
 	public RoleBean findByName(String name) {
 		RoleBean bean = findByUniqueColumn("name", name);
 		return bean;

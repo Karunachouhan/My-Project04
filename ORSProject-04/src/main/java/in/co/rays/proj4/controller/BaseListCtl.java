@@ -11,8 +11,27 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+/**
+ * BaseListCtl is an abstract controller class used to handle
+ * list operations such as searching, deleting, and pagination.
+ *
+ * It provides common functionality for all list controllers.
+ *
+ * @param <B> type of Bean extending BaseBean
+ * @param <M> type of Model extending BaseModel
+ * @author karunaChouhan
+ */
 public abstract class BaseListCtl<B extends BaseBean, M extends BaseModel> extends BaseCtl<B, M> {
 
+	/**
+	 * Handles HTTP GET requests.
+	 * Retrieves records from the model and forwards them to the list view.
+	 *
+	 * @param request HttpServletRequest containing client request data
+	 * @param response HttpServletResponse used to send the response
+	 * @throws ServletException if a servlet-related error occurs
+	 * @throws IOException if an input/output error occurs
+	 */
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -34,6 +53,16 @@ public abstract class BaseListCtl<B extends BaseBean, M extends BaseModel> exten
 
 	}
 
+	/**
+	 * Handles HTTP POST requests.
+	 * Performs operations such as deleting records, navigating between pages,
+	 * and searching records based on the submitted operation.
+	 *
+	 * @param request HttpServletRequest containing form data
+	 * @param response HttpServletResponse used to send the response
+	 * @throws ServletException if a servlet-related error occurs
+	 * @throws IOException if an input/output error occurs
+	 */
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {

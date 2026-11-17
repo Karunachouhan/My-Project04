@@ -1,17 +1,32 @@
+
 package in.co.rays.proj4.model;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import in.co.rays.proj4.bean.LibraryBean;
 import in.co.rays.proj4.bean.RailwayBean;
 import in.co.rays.proj4.exception.ApplicationException;
 import in.co.rays.proj4.exception.DuplicateRecordException;
 import in.co.rays.proj4.util.JDBCDataSource;
 
-public class RailwayModel extends BaseModel<RailwayBean>{
+/**
+ * RailwayModel class provides database operations for Railway records. It
+ * supports adding, updating, searching, and retrieving railway records.
+ *
+ * @author karunaChouhan
+ * @version 1.0
+ */
+public class RailwayModel extends BaseModel<RailwayBean> {
 
+	/**
+	 * Adds a new railway record to the database.
+	 *
+	 * @param bean RailwayBean object containing railway details
+	 * @return Primary key of the newly inserted record
+	 * @throws ApplicationException     if a database operation fails
+	 * @throws DuplicateRecordException if a duplicate record exists
+	 */
 	@Override
 	public long add(RailwayBean bean) throws ApplicationException, DuplicateRecordException {
 		Connection conn = null;
@@ -45,6 +60,13 @@ public class RailwayModel extends BaseModel<RailwayBean>{
 		return pk;
 	}
 
+	/**
+	 * Updates an existing railway record in the database.
+	 *
+	 * @param bean RailwayBean object containing updated railway details
+	 * @throws ApplicationException     if a database operation fails
+	 * @throws DuplicateRecordException if a duplicate record exists
+	 */
 	@Override
 	public void update(RailwayBean bean) throws ApplicationException, DuplicateRecordException {
 		Connection conn = null;
@@ -76,6 +98,12 @@ public class RailwayModel extends BaseModel<RailwayBean>{
 		}
 	}
 
+	/**
+	 * Builds the WHERE clause dynamically based on the provided railway details.
+	 *
+	 * @param bean RailwayBean object containing search criteria
+	 * @return Generated SQL WHERE clause conditions
+	 */
 	@Override
 	public String getWhereClause(RailwayBean bean) {
 		StringBuffer sql = new StringBuffer("");
@@ -87,13 +115,13 @@ public class RailwayModel extends BaseModel<RailwayBean>{
 			if (bean.getPassengerName() != null && bean.getPassengerName().length() > 0) {
 				sql.append(" and passenger_name like '" + bean.getPassengerName() + "%'");
 			}
-			if (bean.getTrainNo()> 0) {
+			if (bean.getTrainNo() > 0) {
 				sql.append(" and train_no = " + bean.getTrainNo());
 			}
 			if (bean.getSeatNo() > 0) {
 				sql.append(" and seat_no = " + bean.getSeatNo());
 			}
-			if (bean.getJourneyDate() != null && bean.getJourneyDate().length()>0) {
+			if (bean.getJourneyDate() != null && bean.getJourneyDate().length() > 0) {
 				sql.append(" and journey_date like '" + bean.getJourneyDate() + "%'");
 			}
 			if (bean.getCreatedBy() != null && bean.getCreatedBy().length() > 0) {
@@ -113,11 +141,21 @@ public class RailwayModel extends BaseModel<RailwayBean>{
 
 	}
 
+	/**
+	 * Returns the database table name for railway records.
+	 *
+	 * @return Name of the railway table
+	 */
 	@Override
 	public String getTable() {
 		return "railway";
 	}
 
+	/**
+	 * Creates and returns a new RailwayBean object.
+	 *
+	 * @return New RailwayBean instance
+	 */
 	@Override
 	public RailwayBean getBean() {
 		return new RailwayBean();

@@ -1,3 +1,4 @@
+
 package in.co.rays.proj4.controller;
 
 import java.io.IOException;
@@ -11,142 +12,291 @@ import in.co.rays.proj4.util.DataValidator;
 import in.co.rays.proj4.util.MessageSource;
 import in.co.rays.proj4.util.ServletUtility;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.ServletSecurityElement;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+/**
+ * Base Controller class that provides common functionality for all
+ * controllers in the ORS project.
+ *
+ * This class follows the MVC architecture and acts as a common parent
+ * controller for handling HTTP requests, validating input data,
+ * populating beans, managing database operations and forwarding requests
+ * to the appropriate JSP views.
+ *
+ * It uses Java Generics to work with different Bean and Model classes.
+ *
+ * @param <B> Bean class that extends BaseBean
+ * @param <M> Model class that extends BaseModel
+ * @author karunaChouhan
+ */
 public abstract class BaseCtl<B extends BaseBean, M extends BaseModel> extends HttpServlet {
 
-	public static final String OP_SAVE = "Save";
-	public static final String OP_CANCEL = "Cancel";
-	public static final String OP_DELETE = "Delete";
-	public static final String OP_LIST = "List";
-	public static final String OP_SEARCH = "Search";
-	public static final String OP_VIEW = "View";
-	public static final String OP_NEXT = "Next";
-	public static final String OP_PREVIOUS = "Previous";
-	public static final String OP_NEW = "New";
-	public static final String OP_GO = "Go";
-	public static final String OP_BACK = "Back";
-	public static final String OP_LOG_OUT = "Logout";
+    /** Operation constant for saving a record. */
+    public static final String OP_SAVE = "Save";
 
-	public static final String HAS_ERROR = "haserror";
-	public static final String MESSAGE = "message";
+    /** Operation constant for cancelling an operation. */
+    public static final String OP_CANCEL = "Cancel";
 
-	public static final String MSG_SUCCESS = "success";
-	public static final String MSG_ERROR = "error";
+    /** Operation constant for deleting a record. */
+    public static final String OP_DELETE = "Delete";
 
-	// check input data enter by user
-	protected boolean validate(HttpServletRequest request) {
-		return true;
-	}
+    /** Operation constant for displaying the list of records. */
+    public static final String OP_LIST = "List";
 
-	// data loaded at the time of HTML page loaded in drop-down list
-	protected void preload(HttpServletRequest request) {
-	}
+    /** Operation constant for searching records. */
+    public static final String OP_SEARCH = "Search";
 
-	// get data from view using request.getParameter() method and set into the bean
-	protected B populateBean(HttpServletRequest request) {
-		return null;
-	}
+    /** Operation constant for viewing a particular record. */
+    public static final String OP_VIEW = "View";
 
-	// set createdBy, modifiedBy, createdDateTime and modifiedDateTime into bean
-	protected BaseBean populateDTO(BaseBean dto, HttpServletRequest request) {
+    /** Operation constant for navigating to the next page. */
+    public static final String OP_NEXT = "Next";
 
-		String createdBy = request.getParameter("createdBy");
-		String modifiedBy = null;
-		UserBean userbean = (UserBean) request.getSession().getAttribute("user");
+    /** Operation constant for navigating to the previous page. */
+    public static final String OP_PREVIOUS = "Previous";
 
-		if (userbean == null) {
-			createdBy = "root";
-			modifiedBy = "root";
-		} else {
-			modifiedBy = userbean.getLogin();
-			// If record is created first time
-			if ("null".equalsIgnoreCase(createdBy) || DataValidator.isNull(createdBy)) {
-				createdBy = modifiedBy;
-			}
-		}
-		dto.setCreatedBy(createdBy);
-		dto.setModifiedBy(modifiedBy);
-		long cdt = DataUtility.getLong(request.getParameter("createdDatetime"));
-		if (cdt > 0) {
-			dto.setCreatedDatetime(DataUtility.getTimestamp(cdt));
-		} else {
-			dto.setCreatedDatetime(DataUtility.getCurrentTimestamp());
-		}
-		dto.setModifiedDatetime(DataUtility.getCurrentTimestamp());
-		return dto;
-	}
+    /** Operation constant for creating a new record. */
+    public static final String OP_NEW = "New";
 
-	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+    /** Operation constant for navigating to a particular page. */
+    public static final String OP_GO = "Go";
 
-		long id = DataUtility.getLong(request.getParameter("id"));
-		M model = getModel();
+    /** Operation constant for going back to the previous page. */
+    public static final String OP_BACK = "Back";
 
-		if (id > 0) {
-			BaseBean bean = model.findByPk(id);
-			ServletUtility.setBean(bean, request);
-		}
+    /** Operation constant for logging out the user. */
+    public static final String OP_LOG_OUT = "Logout";
 
-		ServletUtility.forward(getView(), request, response);
+    /** Request attribute key used to indicate whether validation errors exist. */
+    public static final String HAS_ERROR = "haserror";
 
-	}
+    /** Request attribute key used to store messages. */
+    public static final String MESSAGE = "message";
 
-	@Override
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		B bean = populateBean(request);
-		M model = getModel();
-		// Long id = DataUtility.getLong(request.getParameter("id"));
+    /** Message type indicating successful execution. */
+    public static final String MSG_SUCCESS = "success";
 
-		try {
-			if (bean.getId() > 0) {
-				model.update(bean);
-				ServletUtility.setSuccessMessage("record updated successfully", request);
-			} else {
-				model.add(bean);
-				ServletUtility.setSuccessMessage("record saved successfully ", request);
-			}
-		} catch (DuplicateRecordException e) {
-			ServletUtility.setErrorMessage("record already exist", request);
-		}
+    /** Message type indicating an error. */
+    public static final String MSG_ERROR = "error";
 
-		ServletUtility.setBean(bean, request);
-		ServletUtility.forward(getView(), request, response);
-	}
+    /**
+     * Validates the input data submitted by the user.
+     *
+     * Child controllers can override this method to implement
+     * their own validation logic.
+     *
+     * @param request HttpServletRequest containing user input data
+     * @return true if the input data is valid, otherwise false
+     */
+    protected boolean validate(HttpServletRequest request) {
+        return true;
+    }
 
-	@Override
-	protected void service(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+    /**
+     * Loads predefined data required by the view.
+     *
+     * Child controllers can override this method to load data
+     * such as dropdown lists before displaying the JSP page.
+     *
+     * @param request HttpServletRequest object containing request information
+     */
+    protected void preload(HttpServletRequest request) {
+    }
 
-		getMessageSource(request);
+    /**
+     * Retrieves data submitted through the view and populates
+     * the corresponding Bean object.
+     *
+     * Child controllers override this method to get form parameters
+     * and set them into their respective Bean properties.
+     *
+     * @param request HttpServletRequest containing form data
+     * @return populated Bean object
+     */
+    protected B populateBean(HttpServletRequest request) {
+        return null;
+    }
 
-		System.out.println("service method");
+    /**
+     * Populates common audit information into the Bean object.
+     *
+     * It sets createdBy, modifiedBy, createdDatetime and modifiedDatetime.
+     * If the user is not logged in, root is considered the default user.
+     * If the record is being created for the first time, createdBy
+     * is set to the login ID of the currently logged-in user.
+     *
+     * @param dto BaseBean object in which audit information is populated
+     * @param request HttpServletRequest containing session and request data
+     * @return updated BaseBean object
+     */
+    protected BaseBean populateDTO(BaseBean dto, HttpServletRequest request) {
 
-		preload(request);
+        String createdBy = request.getParameter("createdBy");
+        String modifiedBy = null;
+        UserBean userbean = (UserBean) request.getSession().getAttribute("user");
 
-		if (request.getMethod().equals("POST") && validate(request) == false) {
+        if (userbean == null) {
+            createdBy = "root";
+            modifiedBy = "root";
+        } else {
+            modifiedBy = userbean.getLogin();
+            // If record is created first time
+            if ("null".equalsIgnoreCase(createdBy) || DataValidator.isNull(createdBy)) {
+                createdBy = modifiedBy;
+            }
+        }
+        dto.setCreatedBy(createdBy);
+        dto.setModifiedBy(modifiedBy);
+        long cdt = DataUtility.getLong(request.getParameter("createdDatetime"));
+        if (cdt > 0) {
+            dto.setCreatedDatetime(DataUtility.getTimestamp(cdt));
+        } else {
+            dto.setCreatedDatetime(DataUtility.getCurrentTimestamp());
+        }
+        dto.setModifiedDatetime(DataUtility.getCurrentTimestamp());
+        return dto;
+    }
 
-			// BaseBean bean = populateBean(request);
-			// ServletUtility.setBean(bean, request);
+    /**
+     * Handles HTTP GET requests.
+     *
+     * It retrieves the record ID from the request. If the ID is greater
+     * than zero, it fetches the corresponding record from the database
+     * using the Model class and stores the Bean in the request.
+     * Finally, it forwards the request to the appropriate JSP view.
+     *
+     * @param request HttpServletRequest object containing request data
+     * @param response HttpServletResponse object used to send the response
+     * @throws ServletException if a servlet-related error occurs
+     * @throws IOException if an input or output error occurs
+     */
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
 
-			ServletUtility.forward(getView(), request, response);
-			return;
-		}
+        long id = DataUtility.getLong(request.getParameter("id"));
+        M model = getModel();
 
-		super.service(request, response);
-	}
+        if (id > 0) {
+            BaseBean bean = model.findByPk(id);
+            ServletUtility.setBean(bean, request);
+        }
 
-	public abstract M getModel();
+        ServletUtility.forward(getView(), request, response);
 
-	public abstract String getView();
+    }
 
-	public MessageSource getMessageSource(HttpServletRequest request) {
-		MessageSource messageSource = MessageSource.getInstance();
-		return messageSource;
-	}
+    /**
+     * Handles HTTP POST requests.
+     *
+     * It populates the Bean object from the submitted form data.
+     * If the Bean ID is greater than zero, the existing record is updated.
+     * Otherwise, a new record is inserted into the database.
+     *
+     * It also handles duplicate record exceptions, sets success or error
+     * messages, stores the Bean in the request and forwards the request
+     * to the corresponding JSP view.
+     *
+     * @param request HttpServletRequest object containing submitted form data
+     * @param response HttpServletResponse object used to send the response
+     * @throws ServletException if a servlet-related error occurs
+     * @throws IOException if an input or output error occurs
+     */
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        B bean = populateBean(request);
+        M model = getModel();
+        // Long id = DataUtility.getLong(request.getParameter("id"));
+
+        try {
+            if (bean.getId() > 0) {
+                model.update(bean);
+                ServletUtility.setSuccessMessage("record updated successfully", request);
+            } else {
+                model.add(bean);
+                ServletUtility.setSuccessMessage("record saved successfully ", request);
+            }
+        } catch (DuplicateRecordException e) {
+            ServletUtility.setErrorMessage("record already exist", request);
+        }
+
+        ServletUtility.setBean(bean, request);
+        ServletUtility.forward(getView(), request, response);
+    }
+
+    /**
+     * Handles the complete HTTP request processing lifecycle.
+     *
+     * This method is called before doGet() or doPost().
+     * It performs the following operations:
+     *
+     * 1. Initializes the MessageSource.
+     * 2. Loads predefined data using preload().
+     * 3. Validates the submitted data for POST requests.
+     * 4. If validation fails, forwards the request to the view.
+     * 5. Otherwise, passes control to the parent service() method
+     *    for further HTTP request processing.
+     *
+     * @param request HttpServletRequest object containing request information
+     * @param response HttpServletResponse object used to send the response
+     * @throws ServletException if a servlet-related error occurs
+     * @throws IOException if an input or output error occurs
+     */
+    @Override
+    protected void service(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        getMessageSource(request);
+
+        System.out.println("service method");
+
+        preload(request);
+
+        if (request.getMethod().equals("POST") && validate(request) == false) {
+
+            // BaseBean bean = populateBean(request);
+            // ServletUtility.setBean(bean, request);
+
+            ServletUtility.forward(getView(), request, response);
+            return;
+        }
+
+        super.service(request, response);
+    }
+
+    /**
+     * Returns the Model object associated with the child controller.
+     *
+     * Every child controller must implement this method to provide
+     * its respective Model class object.
+     *
+     * @return Model object extending BaseModel
+     */
+    public abstract M getModel();
+
+    /**
+     * Returns the JSP view path associated with the child controller.
+     *
+     * Every child controller must implement this method to specify
+     * the JSP page to which the request should be forwarded.
+     *
+     * @return JSP view path
+     */
+    public abstract String getView();
+
+    /**
+     * Returns the MessageSource instance used for managing
+     * application messages and language resources.
+     *
+     * @param request HttpServletRequest object containing request information
+     * @return MessageSource instance
+     */
+    public MessageSource getMessageSource(HttpServletRequest request) {
+        MessageSource messageSource = MessageSource.getInstance();
+        return messageSource;
+    }
 }

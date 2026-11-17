@@ -1,3 +1,4 @@
+
 package in.co.rays.proj4.model;
 
 import java.sql.Connection;
@@ -9,8 +10,23 @@ import in.co.rays.proj4.exception.ApplicationException;
 import in.co.rays.proj4.exception.DuplicateRecordException;
 import in.co.rays.proj4.util.JDBCDataSource;
 
+/**
+ * LibraryModel class provides database operations for Library records. It
+ * supports adding, updating, searching, and retrieving library records.
+ *
+ * @author karunaChouhan
+ * @version 1.0
+ */
 public class LibraryModel extends BaseModel<LibraryBean> {
 
+	/**
+	 * Adds a new library record to the database.
+	 *
+	 * @param bean LibraryBean object containing library details
+	 * @return Primary key of the newly inserted record
+	 * @throws ApplicationException     if a database operation fails
+	 * @throws DuplicateRecordException if the library title already exists
+	 */
 	@Override
 	public long add(LibraryBean bean) throws ApplicationException, DuplicateRecordException {
 		Connection conn = null;
@@ -50,6 +66,13 @@ public class LibraryModel extends BaseModel<LibraryBean> {
 		return pk;
 	}
 
+	/**
+	 * Updates an existing library record in the database.
+	 *
+	 * @param bean LibraryBean object containing updated library details
+	 * @throws ApplicationException     if a database operation fails
+	 * @throws DuplicateRecordException if the library title already exists
+	 */
 	@Override
 	public void update(LibraryBean bean) throws ApplicationException, DuplicateRecordException {
 		Connection conn = null;
@@ -87,6 +110,12 @@ public class LibraryModel extends BaseModel<LibraryBean> {
 		}
 	}
 
+	/**
+	 * Builds the WHERE clause dynamically based on the provided library details.
+	 *
+	 * @param bean LibraryBean object containing search criteria
+	 * @return Generated SQL WHERE clause conditions
+	 */
 	@Override
 	public String getWhereClause(LibraryBean bean) {
 		StringBuffer sql = new StringBuffer("");
@@ -124,16 +153,32 @@ public class LibraryModel extends BaseModel<LibraryBean> {
 
 	}
 
+	/**
+	 * Returns the database table name for library records.
+	 *
+	 * @return Name of the library table
+	 */
 	@Override
 	public String getTable() {
 		return "st_library";
 	}
 
+	/**
+	 * Creates and returns a new LibraryBean object.
+	 *
+	 * @return New LibraryBean instance
+	 */
 	@Override
 	public LibraryBean getBean() {
 		return new LibraryBean();
 	}
 
+	/**
+	 * Finds a library record using its title.
+	 *
+	 * @param title Title of the library record
+	 * @return LibraryBean object if found, otherwise null
+	 */
 	public LibraryBean findByTitle(String title) {
 		LibraryBean bean = findByUniqueColumn("title", title);
 		return bean;

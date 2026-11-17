@@ -9,8 +9,25 @@ import in.co.rays.proj4.exception.ApplicationException;
 import in.co.rays.proj4.exception.DuplicateRecordException;
 import in.co.rays.proj4.util.JDBCDataSource;
 
+/**
+ * ATMModel handles database operations related to ATM records. It provides
+ * functionality to add, update, search, and retrieve ATM records.
+ *
+ * @author karunaChouhan
+ * @version 1.0
+ * @Copyright (c) Rays Technologies
+ */
 public class ATMModel extends BaseModel<ATMBean> {
 
+	/**
+	 * Adds a new ATM record to the database. Checks whether the bank name already
+	 * exists before inserting the record.
+	 *
+	 * @param bean ATMBean containing ATM details
+	 * @return primary key of the inserted ATM record
+	 * @throws ApplicationException     if an application error occurs
+	 * @throws DuplicateRecordException if the bank name already exists
+	 */
 	@Override
 	public long add(ATMBean bean) throws ApplicationException, DuplicateRecordException {
 		Connection conn = null;
@@ -50,6 +67,14 @@ public class ATMModel extends BaseModel<ATMBean> {
 		return pk;
 	}
 
+	/**
+	 * Updates an existing ATM record in the database. Checks for duplicate bank
+	 * names before updating the record.
+	 *
+	 * @param bean ATMBean containing updated ATM details
+	 * @throws ApplicationException     if an application error occurs
+	 * @throws DuplicateRecordException if another record has the same bank name
+	 */
 	@Override
 	public void update(ATMBean bean) throws ApplicationException, DuplicateRecordException {
 		Connection conn = null;
@@ -86,6 +111,12 @@ public class ATMModel extends BaseModel<ATMBean> {
 		}
 	}
 
+	/**
+	 * Creates a dynamic WHERE clause based on the provided ATMBean fields.
+	 *
+	 * @param bean ATMBean containing search criteria
+	 * @return SQL WHERE clause conditions as a String
+	 */
 	@Override
 	public String getWhereClause(ATMBean bean) {
 		StringBuffer sql = new StringBuffer("");
@@ -123,16 +154,32 @@ public class ATMModel extends BaseModel<ATMBean> {
 		return sql.toString();
 	}
 
+	/**
+	 * Returns the name of the database table.
+	 *
+	 * @return ATM table name
+	 */
 	@Override
 	public String getTable() {
 		return "atm";
 	}
 
+	/**
+	 * Creates and returns a new ATMBean object.
+	 *
+	 * @return new ATMBean instance
+	 */
 	@Override
 	public ATMBean getBean() {
 		return new ATMBean();
 	}
 
+	/**
+	 * Finds an ATM record using its bank name.
+	 *
+	 * @param bank_name name of the bank to search
+	 * @return ATMBean if a matching record is found, otherwise null
+	 */
 	public ATMBean findByName(String bank_name) {
 		ATMBean bean = findByUniqueColumn("bank_name", bank_name);
 		return bean;
