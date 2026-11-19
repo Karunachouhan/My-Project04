@@ -49,7 +49,6 @@
 						All</th>
 					<th>S No.</th>
 					<th>Roll No.</th>
-					<th>Student Id</th>
 					<th>Name</th>
 					<th>Physics</th>
 					<th>Chemistry</th>
@@ -65,7 +64,6 @@
 						value="<%=bean.getId()%>"></td>
 					<th><%=index++%></th>
 					<th><%=bean.getRollNo()%></th>
-					<th><%=bean.getStudentId()%></th>
 					<th><%=bean.getName()%></th>
 					<th><%=bean.getPhysics()%></th>
 					<th><%=bean.getChemistry()%></th>

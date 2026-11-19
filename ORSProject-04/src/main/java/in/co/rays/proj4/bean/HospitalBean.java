@@ -17,8 +17,6 @@ public class HospitalBean extends BaseBean {
 
 	private static Logger log = Logger.getLogger(HospitalBean.class);
 
-	private long id;
-
 	private String name;
 
 	private int age;
@@ -26,27 +24,6 @@ public class HospitalBean extends BaseBean {
 	private String bloodGroup;
 
 	private String disease;
-
-	/**
-	 * Returns the patient ID.
-	 *
-	 * @return patient ID
-	 */
-	public long getId() {
-		log.debug("HospitalBean.getId() started");
-		return id;
-	}
-
-	/**
-	 * Sets the patient ID.
-	 *
-	 * @param id patient ID
-	 */
-	public void setId(long id) {
-		log.debug("HospitalBean.setId() started");
-		this.id = id;
-		log.info("Patient ID set successfully");
-	}
 
 	/**
 	 * Returns the name of the patient.

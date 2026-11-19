@@ -1,5 +1,7 @@
 package in.co.rays.proj4.controller;
 
+import org.apache.log4j.Logger;
+
 import in.co.rays.proj4.bean.CollegeBean;
 import in.co.rays.proj4.model.CollegeModel;
 import in.co.rays.proj4.util.DataUtility;
@@ -17,6 +19,8 @@ import jakarta.servlet.http.HttpServletRequest;
 @WebServlet("/ctl/CollegeCtl")
 public class CollegeCtl extends BaseCtl<CollegeBean, CollegeModel> {
 
+	private static Logger log = Logger.getLogger(CollegeCtl.class);
+
 	/**
 	 * Validates the college form fields.
 	 *
@@ -25,29 +29,43 @@ public class CollegeCtl extends BaseCtl<CollegeBean, CollegeModel> {
 	 */
 	@Override
 	protected boolean validate(HttpServletRequest request) {
+		log.debug("CollegeCtl validate method started");
+
 		boolean pass = true;
 
 		if (DataValidator.isNull(request.getParameter("name"))) {
 			request.setAttribute("name", "college name is required");
+			log.warn("College name is required");
 			pass = false;
 		}
 		if (DataValidator.isNull(request.getParameter("address"))) {
 			request.setAttribute("address", "address is required");
+			log.warn("College address is required");
 			pass = false;
 		}
 		if (DataValidator.isNull(request.getParameter("state"))) {
 			request.setAttribute("state", "state is required");
+			log.warn("College state is required");
 			pass = false;
 		}
 		if (DataValidator.isNull(request.getParameter("city"))) {
 			request.setAttribute("city", "city is required");
+			log.warn("College city is required");
 			pass = false;
 		}
 		if (DataValidator.isNull(request.getParameter("phoneNo"))) {
 			request.setAttribute("phoneNo", "phone no is required");
+			log.warn("College phone number is required");
 			pass = false;
 		}
 
+		if (pass) {
+			log.info("College form validation successful");
+		} else {
+			log.error("College form validation failed");
+		}
+
+		log.debug("CollegeCtl validate method completed");
 		return pass;
 	}
 
@@ -60,13 +78,21 @@ public class CollegeCtl extends BaseCtl<CollegeBean, CollegeModel> {
 	 */
 	@Override
 	protected CollegeBean populateBean(HttpServletRequest request) {
+		log.debug("CollegeCtl populateBean method started");
+
 		CollegeBean bean = new CollegeBean();
 
+		bean.setId(DataUtility.getLong(request.getParameter("id")));
 		bean.setName(DataUtility.getString(request.getParameter("name")));
 		bean.setAddress(DataUtility.getString(request.getParameter("address")));
 		bean.setState(DataUtility.getString(request.getParameter("state")));
 		bean.setCity(DataUtility.getString(request.getParameter("city")));
 		bean.setPhoneNo(DataUtility.getString(request.getParameter("phoneNo")));
+
+		populateDTO(bean, request);
+
+		log.info("CollegeBean populated successfully");
+		log.debug("CollegeCtl populateBean method completed");
 
 		return bean;
 	}
@@ -78,7 +104,14 @@ public class CollegeCtl extends BaseCtl<CollegeBean, CollegeModel> {
 	 */
 	@Override
 	public CollegeModel getModel() {
-		return new CollegeModel();
+		log.debug("CollegeCtl getModel method started");
+
+		CollegeModel model = new CollegeModel();
+
+		log.info("CollegeModel object created successfully");
+		log.debug("CollegeCtl getModel method completed");
+
+		return model;
 	}
 
 	/**
@@ -88,6 +121,10 @@ public class CollegeCtl extends BaseCtl<CollegeBean, CollegeModel> {
 	 */
 	@Override
 	public String getView() {
+		log.debug("CollegeCtl getView method started");
+		log.info("College view returned successfully");
+		log.debug("CollegeCtl getView method completed");
+
 		return ORSView.COLLEGE_VIEW;
 	}
 }

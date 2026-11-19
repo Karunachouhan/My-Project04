@@ -1,5 +1,7 @@
 package in.co.rays.proj4.controller;
 
+import org.apache.log4j.Logger;
+
 import in.co.rays.proj4.bean.UserBean;
 import in.co.rays.proj4.model.UserModel;
 import in.co.rays.proj4.util.DataUtility;
@@ -18,6 +20,8 @@ import jakarta.servlet.http.HttpServletRequest;
 @WebServlet("/ctl/UserListCtl")
 public class UserListCtl extends BaseListCtl<UserBean, UserModel> {
 
+	private static Logger log = Logger.getLogger(UserListCtl.class);
+
 	/**
 	 * Populates UserBean with user details received from the HTTP request
 	 * parameters.
@@ -27,6 +31,9 @@ public class UserListCtl extends BaseListCtl<UserBean, UserModel> {
 	 */
 	@Override
 	protected UserBean populateBean(HttpServletRequest request) {
+
+		log.debug("UserListCtl populateBean started");
+
 		UserBean bean = new UserBean();
 
 		bean.setFirstName(DataUtility.getString(request.getParameter("firstName")));
@@ -36,6 +43,9 @@ public class UserListCtl extends BaseListCtl<UserBean, UserModel> {
 		bean.setConfirmPassword(DataUtility.getString(request.getParameter("confirmPassword")));
 		bean.setGender(DataUtility.getString(request.getParameter("gender")));
 		bean.setDob(DataUtility.getDate(request.getParameter("dob")));
+
+		log.debug("UserListCtl populateBean completed");
+
 		return bean;
 	}
 
@@ -46,7 +56,14 @@ public class UserListCtl extends BaseListCtl<UserBean, UserModel> {
 	 */
 	@Override
 	public UserModel getModel() {
-		return new UserModel();
+
+		log.debug("UserListCtl getModel started");
+
+		UserModel model = new UserModel();
+
+		log.debug("UserListCtl getModel completed");
+
+		return model;
 	}
 
 	/**
@@ -56,6 +73,13 @@ public class UserListCtl extends BaseListCtl<UserBean, UserModel> {
 	 */
 	@Override
 	public String getView() {
-		return ORSView.USER_LIST_VIEW;
+
+		log.debug("UserListCtl getView started");
+
+		String view = ORSView.USER_LIST_VIEW;
+
+		log.debug("UserListCtl getView completed");
+
+		return view;
 	}
 }

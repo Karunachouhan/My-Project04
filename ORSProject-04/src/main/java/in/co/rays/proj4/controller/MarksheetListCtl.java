@@ -6,6 +6,8 @@ import in.co.rays.proj4.util.DataUtility;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
 
+import org.apache.log4j.Logger;
+
 /**
  * Controller class for displaying the marksheet list.
  * It populates the MarksheetBean with request parameters
@@ -16,6 +18,8 @@ import jakarta.servlet.http.HttpServletRequest;
 @WebServlet("/ctl/MarksheetListCtl")
 public class MarksheetListCtl extends BaseListCtl<MarksheetBean, MarksheetModel> {
 
+	private static Logger log = Logger.getLogger(MarksheetListCtl.class);
+
 	/**
 	 * Populates the MarksheetBean with data received from the HTTP request.
 	 * 
@@ -24,6 +28,9 @@ public class MarksheetListCtl extends BaseListCtl<MarksheetBean, MarksheetModel>
 	 */
 	@Override
 	protected MarksheetBean populateBean(HttpServletRequest request) {
+
+		log.debug("MarksheetListCtl populateBean method started");
+
 		MarksheetBean bean = new MarksheetBean();
 
 		bean.setRollNo(DataUtility.getString(request.getParameter("rollId")));
@@ -32,6 +39,9 @@ public class MarksheetListCtl extends BaseListCtl<MarksheetBean, MarksheetModel>
 		bean.setPhysics(DataUtility.getInt(request.getParameter("physics")));
 		bean.setChemistry(DataUtility.getInt(request.getParameter("chemistry")));
 		bean.setMaths(DataUtility.getInt(request.getParameter("maths")));
+
+		log.info("MarksheetBean populated successfully");
+		log.debug("MarksheetListCtl populateBean method completed");
 
 		return bean;
 	}
@@ -43,6 +53,9 @@ public class MarksheetListCtl extends BaseListCtl<MarksheetBean, MarksheetModel>
 	 */
 	@Override
 	public MarksheetModel getModel() {
+
+		log.debug("MarksheetListCtl getModel method called");
+
 		return new MarksheetModel();
 	}
 
@@ -53,6 +66,9 @@ public class MarksheetListCtl extends BaseListCtl<MarksheetBean, MarksheetModel>
 	 */
 	@Override
 	public String getView() {
+
+		log.debug("MarksheetListCtl getView method called");
+
 		return ORSView.MARKSHEET_LIST_VIEW;
 	}
 

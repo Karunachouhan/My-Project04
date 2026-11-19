@@ -2,7 +2,8 @@ package in.co.rays.proj4.controller;
 
 import java.io.IOException;
 
-import in.co.rays.proj4.bean.BaseBean;
+import org.apache.log4j.Logger;
+
 import in.co.rays.proj4.bean.UserBean;
 import in.co.rays.proj4.exception.DuplicateRecordException;
 import in.co.rays.proj4.model.UserModel;
@@ -26,6 +27,8 @@ import jakarta.servlet.http.HttpServletResponse;
 @WebServlet("/UserRegistrationCtl")
 public class UserRegistrationCtl extends BaseCtl<UserBean, UserModel> {
 
+	private static Logger log = Logger.getLogger(UserRegistrationCtl.class);
+
 	/**
 	 * Operation constant used for user sign-up.
 	 */
@@ -40,44 +43,57 @@ public class UserRegistrationCtl extends BaseCtl<UserBean, UserModel> {
 	@Override
 	protected boolean validate(HttpServletRequest request) {
 
+		log.debug("UserRegistrationCtl validate started");
+
 		boolean pass = true;
 
 		if (DataValidator.isNull(request.getParameter("firstName"))) {
+			log.warn("First name is required");
 			request.setAttribute("firstName", "firstName is required");
 			pass = false;
 		}
 		if (DataValidator.isNull(request.getParameter("lastName"))) {
+			log.warn("Last name is required");
 			request.setAttribute("lastName", "lastName is required");
 			pass = false;
 		}
 		if (DataValidator.isNull(request.getParameter("login"))) {
+			log.warn("Login is required");
 			request.setAttribute("login", "login is required");
 			pass = false;
 		} else if (!DataValidator.isEmail(request.getParameter("login"))) {
+			log.warn("Invalid login email format");
 			request.setAttribute("login", "login is not in valid formate");
 			pass = false;
 		}
 		if (DataValidator.isNull(request.getParameter("password"))) {
+			log.warn("Password is required");
 			request.setAttribute("password", "password is required");
 			pass = false;
 		}
 		if (DataValidator.isNull(request.getParameter("confirmPassword"))) {
+			log.warn("Confirm password is required");
 			request.setAttribute("confirmPassword", "confirmPassword is required");
 			pass = false;
 		}
 		if (DataValidator.isNull(request.getParameter("gender"))) {
+			log.warn("Gender is required");
 			request.setAttribute("gender", "gender is required");
 			pass = false;
 		}
 		if (DataValidator.isNull(request.getParameter("dob"))) {
+			log.warn("Date of birth is required");
 			request.setAttribute("dob", "dob is required");
 			pass = false;
 		}
 		if (!request.getParameter("password").equals(request.getParameter("confirmPassword"))
 				&& !"".equals(request.getParameter("confirmPassword"))) {
+			log.warn("Password and confirm password do not match");
 			request.setAttribute("confirmPassword", "Confirm  Password  should not be matched.");
 			pass = false;
 		}
+
+		log.debug("UserRegistrationCtl validate completed with result: " + pass);
 
 		return pass;
 	}
@@ -90,6 +106,9 @@ public class UserRegistrationCtl extends BaseCtl<UserBean, UserModel> {
 	 */
 	@Override
 	protected UserBean populateBean(HttpServletRequest request) {
+
+		log.debug("UserRegistrationCtl populateBean started");
+
 		UserBean bean = new UserBean();
 
 		bean.setFirstName(DataUtility.getString(request.getParameter("firstName")));
@@ -102,8 +121,10 @@ public class UserRegistrationCtl extends BaseCtl<UserBean, UserModel> {
 		bean.setRoleId(2L);
 
 		populateDTO(bean, request);
-		return bean;
 
+		log.debug("UserRegistrationCtl populateBean completed");
+
+		return bean;
 	}
 
 	/**
@@ -120,17 +141,23 @@ public class UserRegistrationCtl extends BaseCtl<UserBean, UserModel> {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
+		log.debug("UserRegistrationCtl doPost started");
+
 		String op = DataUtility.getString(request.getParameter("operation"));
 
 		UserBean bean = populateBean(request);
 		UserModel model = getModel();
 
 		if (OP_SIGN_UP.equalsIgnoreCase(op)) {
+			log.info("User registration request received");
+
 			try {
 				model.register(bean);
 				// model.add(bean);
+				log.info("User registered successfully");
 				ServletUtility.setSuccessMessage("User is registered, Login now", request);
 			} catch (DuplicateRecordException e) {
+				log.warn("User registration failed because login ID already exists");
 				ServletUtility.setErrorMessage("Login id already exist", request);
 			}
 		}
@@ -140,6 +167,8 @@ public class UserRegistrationCtl extends BaseCtl<UserBean, UserModel> {
 		ServletUtility.setBean(bean, request);
 
 		ServletUtility.forward(getView(), request, response);
+
+		log.debug("UserRegistrationCtl doPost completed");
 	}
 
 	/**
@@ -149,6 +178,9 @@ public class UserRegistrationCtl extends BaseCtl<UserBean, UserModel> {
 	 */
 	@Override
 	public UserModel getModel() {
+
+		log.debug("UserRegistrationCtl getModel called");
+
 		return new UserModel();
 	}
 
@@ -159,6 +191,9 @@ public class UserRegistrationCtl extends BaseCtl<UserBean, UserModel> {
 	 */
 	@Override
 	public String getView() {
+
+		log.debug("UserRegistrationCtl getView called");
+
 		return ORSView.USER_REGISTRATION_VIEW;
 	}
 

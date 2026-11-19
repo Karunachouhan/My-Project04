@@ -14,6 +14,8 @@ import jakarta.servlet.ServletResponse;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
 
+import org.apache.log4j.Logger;
+
 /**
  * LanguageFilter is a servlet filter used to manage the application language.
  * It checks the language parameter in the request and updates the locale
@@ -24,6 +26,8 @@ import jakarta.servlet.http.HttpServletRequest;
 @WebFilter("/*")
 public class LanguageFilter implements Filter {
 
+	private static Logger log = Logger.getLogger(LanguageFilter.class);
+
 	/**
 	 * Initializes the language filter.
 	 *
@@ -32,6 +36,9 @@ public class LanguageFilter implements Filter {
 	 */
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
+
+		log.debug("LanguageFilter init method started");
+		log.info("LanguageFilter initialized successfully");
 
 	}
 
@@ -49,15 +56,25 @@ public class LanguageFilter implements Filter {
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
+
+		log.debug("LanguageFilter doFilter method started");
+
 		HttpServletRequest req = (HttpServletRequest) request;
 		MessageSource messagesource = MessageSource.getInstance();
 
 		String lang = DataUtility.getString(req.getParameter("lang"));
+
 		if (DataValidator.isNotNull(lang)) {
+			log.info("Language parameter received. Updating application locale");
 			messagesource.setLocale(lang);
+			log.info("Application locale updated successfully");
+		} else {
+			log.debug("No language parameter received. Using default locale");
 		}
 
 		chain.doFilter(req, response);
+
+		log.debug("LanguageFilter doFilter method completed");
 
 	}
 
@@ -66,6 +83,9 @@ public class LanguageFilter implements Filter {
 	 */
 	@Override
 	public void destroy() {
+
+		log.debug("LanguageFilter destroy method started");
+		log.info("LanguageFilter destroyed successfully");
 
 	}
 

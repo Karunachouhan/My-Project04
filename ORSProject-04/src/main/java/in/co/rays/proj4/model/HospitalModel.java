@@ -90,7 +90,7 @@ public class HospitalModel extends BaseModel<HospitalBean> {
 			conn.setAutoCommit(false);
 
 			PreparedStatement pstmt = conn.prepareStatement("Update " + getTable()
-					+ " set name=? ,age=? ,bloodGroup=? ,disease=? ,created_by=? ,modified_by=? ,created_datetime=? ,modified_datetime=? where id=?");
+					+ " set name=? ,age=? ,blood_group=? ,disease=? ,created_by=? ,modified_by=? ,created_datetime=? ,modified_datetime=? where id=?");
 			pstmt.setString(1, bean.getName());
 			pstmt.setInt(2, bean.getAge());
 			pstmt.setString(3, bean.getBloodGroup());

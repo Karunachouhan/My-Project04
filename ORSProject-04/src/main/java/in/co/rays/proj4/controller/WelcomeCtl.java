@@ -1,4 +1,7 @@
+
 package in.co.rays.proj4.controller;
+
+import org.apache.log4j.Logger;
 
 import in.co.rays.proj4.model.BaseModel;
 import jakarta.servlet.annotation.WebServlet;
@@ -14,6 +17,8 @@ import jakarta.servlet.annotation.WebServlet;
 @WebServlet("/WelcomeCtl")
 public class WelcomeCtl extends BaseCtl {
 
+	private static Logger log = Logger.getLogger(WelcomeCtl.class);
+
 	/**
 	 * Returns the BaseModel object.
 	 *
@@ -21,6 +26,13 @@ public class WelcomeCtl extends BaseCtl {
 	 */
 	@Override
 	public BaseModel getModel() {
+
+		log.debug("WelcomeCtl getModel() started");
+
+		log.debug("No model required for welcome page");
+
+		log.debug("WelcomeCtl getModel() completed");
+
 		return null;
 	}
 
@@ -31,6 +43,13 @@ public class WelcomeCtl extends BaseCtl {
 	 */
 	@Override
 	public String getView() {
+
+		log.debug("WelcomeCtl getView() started");
+
+		log.debug("Returning welcome page view: " + ORSView.WELCOME_VIEW);
+
+		log.debug("WelcomeCtl getView() completed");
+
 		return ORSView.WELCOME_VIEW;
 	}
 

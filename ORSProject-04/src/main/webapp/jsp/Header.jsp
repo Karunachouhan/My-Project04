@@ -120,8 +120,6 @@
                 <a href="<%=ORSView.STUDENT_LIST_CTL%>">Student List</a> |
                 <a href="<%=ORSView.SUBJECT_CTL%>">Add Subject</a> |
                 <a href="<%=ORSView.SUBJECT_LIST_CTL%>">Subject List</a> |
-                <a href="<%=ORSView.PRODUCT_CTL%>">Add Product</a> |
-                <a href="<%=ORSView.PRODUCT_LIST_CTL%>">Product List</a> |
                 <a href="<%=ORSView.HOSPITAL_CTL%>">Add Hospital</a> |
                 <a href="<%=ORSView.HOSPITAL_LIST_CTL%>">Hospital List</a> |
                 <a href="<%=ORSView.ATM_CTL%>">Add ATM</a> |

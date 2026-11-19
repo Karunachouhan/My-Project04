@@ -2,6 +2,8 @@ package in.co.rays.proj4.controller;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import in.co.rays.proj4.bean.CourseBean;
 import in.co.rays.proj4.bean.SubjectBean;
 import in.co.rays.proj4.model.CourseModel;
@@ -23,6 +25,8 @@ import jakarta.servlet.http.HttpServletRequest;
 @WebServlet("/ctl/SubjectCtl")
 public class SubjectCtl extends BaseCtl<SubjectBean, SubjectModel> {
 
+	private static Logger log = Logger.getLogger(SubjectCtl.class);
+
 	/**
 	 * Preloads the course list from the database and stores it
 	 * in the request attribute for displaying the course dropdown.
@@ -31,9 +35,14 @@ public class SubjectCtl extends BaseCtl<SubjectBean, SubjectModel> {
 	 */
 	@Override
 	protected void preload(HttpServletRequest request) {
+
+		log.debug("SubjectCtl preload method started");
+
 		CourseModel cmodel = new CourseModel();
 		List<CourseBean> courseList = cmodel.search(null, 0, 0);
 		request.setAttribute("courseList", courseList);
+
+		log.debug("SubjectCtl preload method completed");
 	}
 
 	/**
@@ -45,22 +54,25 @@ public class SubjectCtl extends BaseCtl<SubjectBean, SubjectModel> {
 	 */
 	@Override
 	protected boolean validate(HttpServletRequest request) {
+
+		log.debug("SubjectCtl validate method started");
+
 		boolean pass = true;
 
-		if (DataValidator.isNull(request.getParameter("name"))) {
-			request.setAttribute("name", "name is required");
-			pass = false;
-		}
-
 		if (DataValidator.isNull(request.getParameter("description"))) {
+			log.warn("Subject description is missing");
 			request.setAttribute("description", "description is required");
 			pass = false;
 		}
 
 		if (DataValidator.isNull(request.getParameter("courseId"))) {
+			log.warn("Course ID is missing");
 			request.setAttribute("courseId", "courseId is required");
 			pass = false;
 		}
+
+		log.debug("SubjectCtl validate method completed with result: " + pass);
+
 		return pass;
 	}
 
@@ -73,11 +85,19 @@ public class SubjectCtl extends BaseCtl<SubjectBean, SubjectModel> {
 	 */
 	@Override
 	protected SubjectBean populateBean(HttpServletRequest request) {
+
+		log.debug("SubjectCtl populateBean method started");
+
 		SubjectBean bean = new SubjectBean();
 
+		bean.setId(DataUtility.getLong(request.getParameter("id")));
 		bean.setName(DataUtility.getString(request.getParameter("name")));
 		bean.setDescription(DataUtility.getString(request.getParameter("description")));
 		bean.setCourseId(DataUtility.getLong(request.getParameter("courseId")));
+
+		populateDTO(bean, request);
+
+		log.debug("SubjectCtl populateBean method completed");
 
 		return bean;
 	}
@@ -89,6 +109,9 @@ public class SubjectCtl extends BaseCtl<SubjectBean, SubjectModel> {
 	 */
 	@Override
 	public SubjectModel getModel() {
+
+		log.debug("SubjectCtl getModel method called");
+
 		return new SubjectModel();
 	}
 
@@ -99,6 +122,9 @@ public class SubjectCtl extends BaseCtl<SubjectBean, SubjectModel> {
 	 */
 	@Override
 	public String getView() {
+
+		log.debug("SubjectCtl getView method called");
+
 		return ORSView.SUBJECT_VIEW;
 	}
 

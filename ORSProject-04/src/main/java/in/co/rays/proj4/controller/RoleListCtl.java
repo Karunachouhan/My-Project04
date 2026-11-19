@@ -1,5 +1,7 @@
 package in.co.rays.proj4.controller;
 
+import org.apache.log4j.Logger;
+
 import in.co.rays.proj4.bean.RoleBean;
 import in.co.rays.proj4.model.RoleModel;
 import in.co.rays.proj4.util.DataUtility;
@@ -18,6 +20,8 @@ import jakarta.servlet.http.HttpServletRequest;
 @WebServlet("/ctl/RoleListCtl")
 public class RoleListCtl extends BaseListCtl<RoleBean, RoleModel> {
 
+	private static Logger log = Logger.getLogger(RoleListCtl.class);
+
 	/**
 	 * Populates RoleBean with data received from the request.
 	 * 
@@ -26,10 +30,15 @@ public class RoleListCtl extends BaseListCtl<RoleBean, RoleModel> {
 	 */
 	@Override
 	protected RoleBean populateBean(HttpServletRequest request) {
+
+		log.debug("RoleListCtl populateBean method started");
+
 		RoleBean bean = new RoleBean();
 
 		bean.setName(DataUtility.getString(request.getParameter("name")));
 		bean.setDescription(DataUtility.getString(request.getParameter("description")));
+
+		log.debug("RoleListCtl populateBean method completed");
 
 		return bean;
 	}
@@ -41,6 +50,9 @@ public class RoleListCtl extends BaseListCtl<RoleBean, RoleModel> {
 	 */
 	@Override
 	public RoleModel getModel() {
+
+		log.debug("RoleListCtl getModel method called");
+
 		return new RoleModel();
 	}
 
@@ -51,6 +63,9 @@ public class RoleListCtl extends BaseListCtl<RoleBean, RoleModel> {
 	 */
 	@Override
 	public String getView() {
+
+		log.debug("RoleListCtl getView method called");
+
 		return ORSView.ROLE_LIST_VIEW;
 	}
 }

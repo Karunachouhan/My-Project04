@@ -1,5 +1,7 @@
 package in.co.rays.proj4.controller;
 
+import org.apache.log4j.Logger;
+
 import in.co.rays.proj4.bean.RailwayBean;
 import in.co.rays.proj4.model.RailwayModel;
 import in.co.rays.proj4.util.DataUtility;
@@ -16,6 +18,8 @@ import jakarta.servlet.http.HttpServletRequest;
 @WebServlet("/ctl/RailwayListCtl")
 public class RailwayListCtl extends BaseListCtl<RailwayBean, RailwayModel> {
 
+	private static Logger log = Logger.getLogger(RailwayListCtl.class);
+
 	/**
 	 * Populates the RailwayBean with railway details received
 	 * from the HTTP request.
@@ -25,12 +29,17 @@ public class RailwayListCtl extends BaseListCtl<RailwayBean, RailwayModel> {
 	 */
 	@Override
 	protected RailwayBean populateBean(HttpServletRequest request) {
+
+		log.debug("RailwayListCtl populateBean method started");
+
 		RailwayBean bean = new RailwayBean();
 
 		bean.setPassengerName(DataUtility.getString(request.getParameter("passengerName")));
 		bean.setTrainNo(DataUtility.getInt(request.getParameter("trainNo")));
 		bean.setSeatNo(DataUtility.getInt(request.getParameter("seatNo")));
 		bean.setJourneyDate(DataUtility.getString(request.getParameter("journeyDate")));
+
+		log.debug("RailwayListCtl populateBean method completed");
 
 		return bean;
 	}
@@ -42,6 +51,9 @@ public class RailwayListCtl extends BaseListCtl<RailwayBean, RailwayModel> {
 	 */
 	@Override
 	public RailwayModel getModel() {
+
+		log.debug("RailwayListCtl getModel method called");
+
 		return new RailwayModel();
 	}
 
@@ -52,6 +64,9 @@ public class RailwayListCtl extends BaseListCtl<RailwayBean, RailwayModel> {
 	 */
 	@Override
 	public String getView() {
+
+		log.debug("RailwayListCtl getView method called");
+
 		return ORSView.RAILWAY_LIST_VIEW;
 	}
 

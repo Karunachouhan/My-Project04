@@ -353,6 +353,41 @@ public class UserModel extends BaseModel<UserBean> {
 	}
 
 	/**
+	 * Updates user profile details.
+	 *
+	 * @param bean UserBean containing profile information
+	 */
+	public void updateProfile(UserBean bean) {
+
+		Connection conn = null;
+
+		try {
+			conn = JDBCDataSource.getConnection();
+			conn.setAutoCommit(false);
+
+			PreparedStatement pstmt = conn.prepareStatement(
+					"UPDATE " + getTable() + " SET first_name=?, last_name=?, gender=?, dob=? WHERE id=?");
+
+			pstmt.setString(1, bean.getFirstName());
+			pstmt.setString(2, bean.getLastName());
+			pstmt.setString(3, bean.getGender());
+			pstmt.setDate(4, new java.sql.Date(bean.getDob().getTime()));
+			pstmt.setLong(5, bean.getId());
+
+			int i = pstmt.executeUpdate();
+			conn.commit();
+			System.out.println("Data updated successfully " + i + " row affected");
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			JDBCDataSource.trnRollBack(conn);
+
+		} finally {
+			JDBCDataSource.closeConnection(conn);
+		}
+	}
+
+	/**
 	 * Returns the name of the user database table.
 	 *
 	 * @return table name

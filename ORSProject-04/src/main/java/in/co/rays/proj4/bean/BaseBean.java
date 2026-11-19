@@ -18,6 +18,7 @@ import org.apache.log4j.Logger;
 public abstract class BaseBean implements DropdownListBean {
 
 	private static Logger log = Logger.getLogger(BaseBean.class);
+	
 	protected long id;
 	protected String createdBy;
 	protected String modifiedBy;

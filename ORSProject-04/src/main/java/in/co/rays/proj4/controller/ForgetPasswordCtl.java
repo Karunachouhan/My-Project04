@@ -2,6 +2,8 @@ package in.co.rays.proj4.controller;
 
 import java.io.IOException;
 
+import org.apache.log4j.Logger;
+
 import in.co.rays.proj4.bean.UserBean;
 import in.co.rays.proj4.model.UserModel;
 import in.co.rays.proj4.util.DataUtility;
@@ -22,6 +24,8 @@ import jakarta.servlet.http.HttpServletResponse;
 @WebServlet("/ForgetPasswordCtl")
 public class ForgetPasswordCtl extends BaseCtl<UserBean, UserModel> {
 
+	private static Logger log = Logger.getLogger(ForgetPasswordCtl.class);
+
 	/**
 	 * Validates the login ID provided by the user.
 	 *
@@ -30,12 +34,23 @@ public class ForgetPasswordCtl extends BaseCtl<UserBean, UserModel> {
 	 */
 	@Override
 	protected boolean validate(HttpServletRequest request) {
+		log.debug("ForgetPasswordCtl validate method started");
+
 		boolean pass = true;
 
 		if (DataValidator.isNull(request.getParameter("login"))) {
 			request.setAttribute("login", "login id is required");
+			log.warn("Login ID is required");
 			pass = false;
 		}
+
+		if (pass) {
+			log.info("Login ID validation successful");
+		} else {
+			log.error("Login ID validation failed");
+		}
+
+		log.debug("ForgetPasswordCtl validate method completed");
 		return pass;
 	}
 
@@ -48,9 +63,14 @@ public class ForgetPasswordCtl extends BaseCtl<UserBean, UserModel> {
 	 */
 	@Override
 	protected UserBean populateBean(HttpServletRequest request) {
+		log.debug("ForgetPasswordCtl populateBean method started");
+
 		UserBean bean = new UserBean();
 
 		bean.setLogin(DataUtility.getString(request.getParameter("login")));
+
+		log.info("UserBean populated successfully");
+		log.debug("ForgetPasswordCtl populateBean method completed");
 
 		return bean;
 	}
@@ -68,17 +88,26 @@ public class ForgetPasswordCtl extends BaseCtl<UserBean, UserModel> {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		log.debug("ForgetPasswordCtl doPost method started");
+
 		UserBean bean = populateBean(request);
 		UserModel model = getModel();
 
+		log.info("Calling forgetPassword method");
 		bean = model.forgetPassword(bean.getLogin());
+
 		if (bean != null) {
+			log.info("Password recovery request processed successfully");
 			ServletUtility.setSuccessMessage("your password has been recovered check your email", request);
 		} else {
+			log.warn("Password recovery failed: user not found");
 			ServletUtility.setErrorMessage("your email is incorrect", request);
 		}
 
+		log.debug("Forwarding to forgot password view");
 		ServletUtility.forward(getView(), request, response);
+
+		log.debug("ForgetPasswordCtl doPost method completed");
 	}
 
 	/**
@@ -88,7 +117,14 @@ public class ForgetPasswordCtl extends BaseCtl<UserBean, UserModel> {
 	 */
 	@Override
 	public UserModel getModel() {
-		return new UserModel();
+		log.debug("ForgetPasswordCtl getModel method started");
+
+		UserModel model = new UserModel();
+
+		log.info("UserModel object created successfully");
+		log.debug("ForgetPasswordCtl getModel method completed");
+
+		return model;
 	}
 
 	/**
@@ -98,6 +134,10 @@ public class ForgetPasswordCtl extends BaseCtl<UserBean, UserModel> {
 	 */
 	@Override
 	public String getView() {
+		log.debug("ForgetPasswordCtl getView method started");
+		log.info("Forgot password view returned successfully");
+		log.debug("ForgetPasswordCtl getView method completed");
+
 		return ORSView.FORGET_PASSWORD_VIEW;
 	}
 

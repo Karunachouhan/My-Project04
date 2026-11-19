@@ -23,7 +23,7 @@
 
 		<h3 style="color: green"><%=succ%></h3>
 		<h3 style="color: red"><%=error%></h3>
-		<form action="<%=ORSView.COURSE_CTL%>" method="post">
+		<form action="<%=ORSView.COLLEGE_CTL%>" method="post">
 
 			<table>
 

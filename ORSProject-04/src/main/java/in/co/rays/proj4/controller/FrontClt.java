@@ -2,6 +2,8 @@ package in.co.rays.proj4.controller;
 
 import java.io.IOException;
 
+import org.apache.log4j.Logger;
+
 import in.co.rays.proj4.util.ServletUtility;
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
@@ -24,6 +26,9 @@ import jakarta.servlet.http.HttpSession;
  */
 @WebFilter("/ctl/*")
 public class FrontClt implements Filter {
+
+	private static Logger log = Logger.getLogger(FrontClt.class);
+
 	// front control design pattern is used to prevent/stop any user to access
 	// application without login
 
@@ -35,7 +40,8 @@ public class FrontClt implements Filter {
 	 */
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
-
+		log.debug("FrontClt filter initialization started");
+		log.info("FrontClt filter initialized successfully");
 	}
 
 	/**
@@ -51,18 +57,33 @@ public class FrontClt implements Filter {
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
+
+		log.debug("FrontClt doFilter method started");
+
 		HttpServletRequest req = (HttpServletRequest) request;
 		HttpServletResponse res = (HttpServletResponse) response;
 
 		HttpSession session = req.getSession();
 
+		log.debug("Checking user session");
+
 		if (session.getAttribute("user") == null) {
+			log.warn("User session expired or user is not logged in");
+
 			ServletUtility.setErrorMessage("session has been expired please re-login", req);
 			ServletUtility.forward(ORSView.LOGIN_VIEW, req, res);
+
+			log.info("Request forwarded to login page");
 			return;
 
 		}
+
+		log.info("User session is valid");
+		log.debug("Passing request to next filter or controller");
+
 		chain.doFilter(request, response); // call next config filter/controller in the chain
+
+		log.debug("FrontClt doFilter method completed");
 	}
 
 	/**
@@ -70,6 +91,7 @@ public class FrontClt implements Filter {
 	 */
 	@Override
 	public void destroy() {
-
+		log.debug("FrontClt filter destroy method started");
+		log.info("FrontClt filter destroyed successfully");
 	}
 }

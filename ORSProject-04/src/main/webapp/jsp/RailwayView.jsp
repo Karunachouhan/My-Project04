@@ -25,7 +25,11 @@
 		<form action="<%=ORSView.RAILWAY_CTL%>" method="post">
 
 			<table>
-
+                
+                <tr>
+					<td><input type="hidden" name="id" value="<%=bean.getId()%>"></td>
+				</tr>
+                
 				<tr>
 					<th>Name<font color="red">*</font></th>
 					<td><input type="text" name="passengerName"
@@ -61,12 +65,7 @@
 						value="<%=DataUtility.getStringData(bean.getJourneyDate())%>"></td>
 					<td style="color: red"><%=ServletUtility.getErrorMessage("journeyDate", request)%></td>
 				</tr>
-				
-				<tr>
-					<td><input type="hidden" name="id" value="<%=bean.getId()%>"></td>
-				</tr>
-				
-
+		
 				<tr>
 					<th></th>
 					<td><input type="submit" name="operation"

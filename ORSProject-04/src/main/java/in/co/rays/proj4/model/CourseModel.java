@@ -80,7 +80,7 @@ public class CourseModel extends BaseModel<CourseBean> {
 
 		CourseBean existBean = findByName(bean.getName());
 
-		if (existBean != null) {
+		if (existBean != null && existBean.getId()!=bean.getId()) {
 			throw new DuplicateRecordException("course name already exist");
 		}
 

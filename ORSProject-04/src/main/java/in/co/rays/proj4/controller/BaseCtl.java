@@ -1,7 +1,8 @@
-
 package in.co.rays.proj4.controller;
 
 import java.io.IOException;
+
+import org.apache.log4j.Logger;
 
 import in.co.rays.proj4.bean.BaseBean;
 import in.co.rays.proj4.bean.UserBean;
@@ -32,6 +33,8 @@ import jakarta.servlet.http.HttpServletResponse;
  * @author karunaChouhan
  */
 public abstract class BaseCtl<B extends BaseBean, M extends BaseModel> extends HttpServlet {
+
+    private static Logger log = Logger.getLogger(BaseCtl.class);
 
     /** Operation constant for saving a record. */
     public static final String OP_SAVE = "Save";
@@ -91,6 +94,8 @@ public abstract class BaseCtl<B extends BaseBean, M extends BaseModel> extends H
      * @return true if the input data is valid, otherwise false
      */
     protected boolean validate(HttpServletRequest request) {
+        log.debug("BaseCtl validate method started");
+        log.debug("BaseCtl validate method completed");
         return true;
     }
 
@@ -103,6 +108,8 @@ public abstract class BaseCtl<B extends BaseBean, M extends BaseModel> extends H
      * @param request HttpServletRequest object containing request information
      */
     protected void preload(HttpServletRequest request) {
+        log.debug("BaseCtl preload method started");
+        log.debug("BaseCtl preload method completed");
     }
 
     /**
@@ -116,6 +123,8 @@ public abstract class BaseCtl<B extends BaseBean, M extends BaseModel> extends H
      * @return populated Bean object
      */
     protected B populateBean(HttpServletRequest request) {
+        log.debug("BaseCtl populateBean method called");
+        log.warn("populateBean method is not implemented in BaseCtl");
         return null;
     }
 
@@ -133,29 +142,45 @@ public abstract class BaseCtl<B extends BaseBean, M extends BaseModel> extends H
      */
     protected BaseBean populateDTO(BaseBean dto, HttpServletRequest request) {
 
+        log.debug("BaseCtl populateDTO method started");
+
         String createdBy = request.getParameter("createdBy");
         String modifiedBy = null;
         UserBean userbean = (UserBean) request.getSession().getAttribute("user");
 
         if (userbean == null) {
+            log.warn("No logged-in user found, using root as default user");
             createdBy = "root";
             modifiedBy = "root";
         } else {
             modifiedBy = userbean.getLogin();
+            log.info("Audit information populated for logged-in user");
+
             // If record is created first time
             if ("null".equalsIgnoreCase(createdBy) || DataValidator.isNull(createdBy)) {
                 createdBy = modifiedBy;
+                log.debug("CreatedBy set from logged-in user");
             }
         }
+
         dto.setCreatedBy(createdBy);
         dto.setModifiedBy(modifiedBy);
+
         long cdt = DataUtility.getLong(request.getParameter("createdDatetime"));
+
         if (cdt > 0) {
             dto.setCreatedDatetime(DataUtility.getTimestamp(cdt));
+            log.debug("Existing created datetime assigned");
         } else {
             dto.setCreatedDatetime(DataUtility.getCurrentTimestamp());
+            log.debug("Current created datetime assigned");
         }
+
         dto.setModifiedDatetime(DataUtility.getCurrentTimestamp());
+
+        log.info("Audit information populated successfully");
+        log.debug("BaseCtl populateDTO method completed");
+
         return dto;
     }
 
@@ -176,16 +201,22 @@ public abstract class BaseCtl<B extends BaseBean, M extends BaseModel> extends H
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+        log.debug("BaseCtl doGet method started");
+
         long id = DataUtility.getLong(request.getParameter("id"));
         M model = getModel();
 
         if (id > 0) {
+            log.info("Fetching record for ID: " + id);
             BaseBean bean = model.findByPk(id);
             ServletUtility.setBean(bean, request);
+            log.info("Record fetched successfully");
         }
 
+        log.debug("Forwarding request to view");
         ServletUtility.forward(getView(), request, response);
 
+        log.debug("BaseCtl doGet method completed");
     }
 
     /**
@@ -208,24 +239,34 @@ public abstract class BaseCtl<B extends BaseBean, M extends BaseModel> extends H
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+        log.debug("BaseCtl doPost method started");
+
         B bean = populateBean(request);
         M model = getModel();
-        // Long id = DataUtility.getLong(request.getParameter("id"));
+        Long id = DataUtility.getLong(request.getParameter("id"));
 
         try {
             if (bean.getId() > 0) {
+                log.info("Updating existing record with ID: " + bean.getId());
                 model.update(bean);
                 ServletUtility.setSuccessMessage("record updated successfully", request);
+                log.info("Record updated successfully");
             } else {
+                log.info("Adding new record");
                 model.add(bean);
                 ServletUtility.setSuccessMessage("record saved successfully ", request);
+                log.info("Record saved successfully");
             }
         } catch (DuplicateRecordException e) {
+            log.warn("Duplicate record found");
+            log.error("DuplicateRecordException occurred", e);
             ServletUtility.setErrorMessage("record already exist", request);
         }
 
         ServletUtility.setBean(bean, request);
         ServletUtility.forward(getView(), request, response);
+
+        log.debug("BaseCtl doPost method completed");
     }
 
     /**
@@ -250,6 +291,8 @@ public abstract class BaseCtl<B extends BaseBean, M extends BaseModel> extends H
     protected void service(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+        log.debug("BaseCtl service method started");
+
         getMessageSource(request);
 
         System.out.println("service method");
@@ -258,14 +301,20 @@ public abstract class BaseCtl<B extends BaseBean, M extends BaseModel> extends H
 
         if (request.getMethod().equals("POST") && validate(request) == false) {
 
+            log.warn("Request validation failed");
+
             // BaseBean bean = populateBean(request);
             // ServletUtility.setBean(bean, request);
 
             ServletUtility.forward(getView(), request, response);
+            log.debug("Request forwarded because validation failed");
             return;
         }
 
+        log.debug("Passing request to parent service method");
         super.service(request, response);
+
+        log.debug("BaseCtl service method completed");
     }
 
     /**
@@ -296,7 +345,14 @@ public abstract class BaseCtl<B extends BaseBean, M extends BaseModel> extends H
      * @return MessageSource instance
      */
     public MessageSource getMessageSource(HttpServletRequest request) {
+
+        log.debug("BaseCtl getMessageSource method started");
+
         MessageSource messageSource = MessageSource.getInstance();
+
+        log.info("MessageSource instance retrieved successfully");
+        log.debug("BaseCtl getMessageSource method completed");
+
         return messageSource;
     }
 }

@@ -15,6 +15,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
+import org.apache.log4j.Logger;
+
 /**
  * LoginCtl handles user login and logout operations.
  * It validates user credentials, authenticates users, stores user and role
@@ -24,6 +26,8 @@ import jakarta.servlet.http.HttpSession;
  */
 @WebServlet("/LoginCtl")
 public class LoginCtl extends BaseCtl<UserBean, UserModel> {
+
+	private static Logger log = Logger.getLogger(LoginCtl.class);
 
 	/**
 	 * Operation constant used to identify the sign-in action.
@@ -40,17 +44,23 @@ public class LoginCtl extends BaseCtl<UserBean, UserModel> {
 	@Override
 	protected boolean validate(HttpServletRequest request) {
 
+		log.debug("LoginCtl validate method started");
+
 		boolean pass = true;
 
 		if (DataValidator.isNull(request.getParameter("login"))) {
 			request.setAttribute("login", "login is required");
+			log.warn("Login ID is missing");
 			pass = false;
 		}
 
 		if (DataValidator.isNull(request.getParameter("password"))) {
 			request.setAttribute("password", "password is required");
+			log.warn("Password is missing");
 			pass = false;
 		}
+
+		log.debug("LoginCtl validate method completed");
 
 		return pass;
 
@@ -66,10 +76,16 @@ public class LoginCtl extends BaseCtl<UserBean, UserModel> {
 	@Override
 	protected UserBean populateBean(HttpServletRequest request) {
 
-		UserBean bean = new UserBean();
+		log.debug("LoginCtl populateBean method started");
 
+		UserBean bean = new UserBean();
+        bean.setId(DataUtility.getLong(request.getParameter("id")));
 		bean.setLogin(DataUtility.getString(request.getParameter("login")));
 		bean.setPassword(DataUtility.getString(request.getParameter("password")));
+
+		populateDTO(bean, request);
+
+		log.debug("LoginCtl populateBean method completed");
 
 		return bean;
 	}
@@ -88,15 +104,20 @@ public class LoginCtl extends BaseCtl<UserBean, UserModel> {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
+		log.debug("LoginCtl doGet method started");
+
 		String op = request.getParameter("operation");
 
 		if (op != null) {
 			HttpSession session = request.getSession();
 			ServletUtility.setSuccessMessage("user logout successfully", request);
 			session.invalidate();
+			log.info("User logged out successfully");
 		}
 
 		ServletUtility.forward(getView(), request, response);
+
+		log.debug("LoginCtl doGet method completed");
 
 	}
 
@@ -114,6 +135,8 @@ public class LoginCtl extends BaseCtl<UserBean, UserModel> {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
+		log.debug("LoginCtl doPost method started");
+
 		String op = DataUtility.getString(request.getParameter("operation"));
 		HttpSession session = request.getSession();
 
@@ -123,22 +146,34 @@ public class LoginCtl extends BaseCtl<UserBean, UserModel> {
 
 		if (OP_SIGN_IN.equalsIgnoreCase(op)) {
 
+			log.info("User login authentication started");
+
 			bean = model.authenticate(bean.getLogin(), bean.getPassword());
 
 			if (bean != null) {
 
+				log.info("User authenticated successfully");
+
 				session.setAttribute("user", bean);
 				RoleBean rbean = rmodel.findByPk(bean.getRoleId());
 				session.setAttribute("role", rbean.getName());
+
+				log.info("User and role information stored in session");
+
 				ServletUtility.redirect(ORSView.WELCOME_CTL, request, response);
+
+				log.debug("LoginCtl doPost method completed");
 				return;
 
 			} else {
+				log.warn("User authentication failed");
 				ServletUtility.setErrorMessage("Invalid login or password", request);
 			}
 		}
 
 		ServletUtility.forward(getView(), request, response);
+
+		log.debug("LoginCtl doPost method completed");
 
 	}
 
@@ -149,6 +184,9 @@ public class LoginCtl extends BaseCtl<UserBean, UserModel> {
 	 */
 	@Override
 	public UserModel getModel() {
+
+		log.debug("LoginCtl getModel method called");
+
 		return new UserModel();
 	}
 
@@ -159,6 +197,9 @@ public class LoginCtl extends BaseCtl<UserBean, UserModel> {
 	 */
 	@Override
 	public String getView() {
+
+		log.debug("LoginCtl getView method called");
+
 		return ORSView.LOGIN_VIEW;
 	}
 

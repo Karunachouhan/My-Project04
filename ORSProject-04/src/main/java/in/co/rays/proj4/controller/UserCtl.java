@@ -2,6 +2,8 @@ package in.co.rays.proj4.controller;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import in.co.rays.proj4.bean.RoleBean;
 import in.co.rays.proj4.bean.UserBean;
 import in.co.rays.proj4.model.RoleModel;
@@ -23,6 +25,8 @@ import jakarta.servlet.http.HttpServletRequest;
 @WebServlet("/ctl/UserCtl")
 public class UserCtl extends BaseCtl<UserBean, UserModel> {
 
+	private static Logger log = Logger.getLogger(UserCtl.class);
+
 	/**
 	 * Validates the user form input fields. Checks whether first name, last name,
 	 * login, password, gender, date of birth, and role ID are provided.
@@ -32,36 +36,49 @@ public class UserCtl extends BaseCtl<UserBean, UserModel> {
 	 */
 	@Override
 	protected boolean validate(HttpServletRequest request) {
+
+		log.debug("UserCtl validate method started");
+
 		boolean pass = true;
 
 		if (DataValidator.isNull(request.getParameter("firstName"))) {
+			log.warn("First name is missing");
 			request.setAttribute("firstName", "first name is required");
 			pass = false;
 		}
 		if (DataValidator.isNull(request.getParameter("lastName"))) {
+			log.warn("Last name is missing");
 			request.setAttribute("lastName", "last name is required");
 			pass = false;
 		}
 		if (DataValidator.isNull(request.getParameter("login"))) {
+			log.warn("Login is missing");
 			request.setAttribute("login", "login is required");
 			pass = false;
 		}
 		if (DataValidator.isNull(request.getParameter("password"))) {
+			log.warn("Password is missing");
 			request.setAttribute("password", "password is required");
 			pass = false;
 		}
 		if (DataValidator.isNull(request.getParameter("gender"))) {
+			log.warn("Gender is missing");
 			request.setAttribute("gender", "gender is required");
 			pass = false;
 		}
 		if (DataValidator.isNull(request.getParameter("dob"))) {
+			log.warn("Date of birth is missing");
 			request.setAttribute("dob", "dob is required");
 			pass = false;
 		}
 		if (DataValidator.isNull(request.getParameter("roleId"))) {
+			log.warn("Role ID is missing");
 			request.setAttribute("roleId", "role is required");
 			pass = false;
 		}
+
+		log.debug("UserCtl validate method completed with result: " + pass);
+
 		return pass;
 	}
 
@@ -74,6 +91,9 @@ public class UserCtl extends BaseCtl<UserBean, UserModel> {
 	 */
 	@Override
 	protected UserBean populateBean(HttpServletRequest request) {
+
+		log.debug("UserCtl populateBean method started");
+
 		UserBean bean = new UserBean();
 
 		bean.setId(DataUtility.getLong(request.getParameter("id")));
@@ -86,6 +106,10 @@ public class UserCtl extends BaseCtl<UserBean, UserModel> {
 		bean.setDob(DataUtility.getDate(request.getParameter("dob")));
 		bean.setRoleId(DataUtility.getLong(request.getParameter("roleId")));
 
+		populateDTO(bean, request);
+
+		log.debug("UserCtl populateBean method completed");
+
 		return bean;
 	}
 
@@ -97,9 +121,14 @@ public class UserCtl extends BaseCtl<UserBean, UserModel> {
 	 */
 	@Override
 	protected void preload(HttpServletRequest request) {
+
+		log.debug("UserCtl preload method started");
+
 		RoleModel rmodel = new RoleModel();
 		List<RoleBean> roleList = rmodel.search(null, 0, 0);
 		request.setAttribute("roleList", roleList);
+
+		log.debug("UserCtl preload method completed");
 	}
 
 	/**
@@ -109,6 +138,9 @@ public class UserCtl extends BaseCtl<UserBean, UserModel> {
 	 */
 	@Override
 	public UserModel getModel() {
+
+		log.debug("UserCtl getModel method called");
+
 		return new UserModel();
 	}
 
@@ -119,6 +151,9 @@ public class UserCtl extends BaseCtl<UserBean, UserModel> {
 	 */
 	@Override
 	public String getView() {
+
+		log.debug("UserCtl getView method called");
+
 		return ORSView.USER_VIEW;
 	}
 }

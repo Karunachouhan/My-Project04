@@ -1,6 +1,7 @@
 <%@page import="in.co.rays.proj4.util.HTMLUtility"%>
 <%@page import="java.util.HashMap"%>
 <%@page import="javax.management.relation.RoleList"%>
+<%@page import="in.co.rays.proj4.bean.RoleBean"%>
 <%@page import="java.util.List"%>
 <%@page import="in.co.rays.proj4.util.DataUtility"%>
 <%@page import="in.co.rays.proj4.controller.UserCtl"%>
@@ -21,8 +22,8 @@
 	String error = ServletUtility.getErrorMessage(request);
 	List<RoleList> roleList = (List) request.getAttribute("roleList");
 	HashMap<String, String> map = new HashMap<String, String>();
-	map.put("male", "male");
-	map.put("female", "female");
+	map.put("Male", "Male");
+	map.put("Female", "Female");
 	%>
 
 	<%@ include file="Header.jsp"%>

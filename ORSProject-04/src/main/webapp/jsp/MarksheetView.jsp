@@ -1,3 +1,4 @@
+<%@page import="in.co.rays.proj4.bean.StudentBean"%>
 <%@page import="in.co.rays.proj4.util.HTMLUtility"%>
 <%@page import="java.util.HashMap"%>
 <%@page import="in.co.rays.proj4.bean.MarksheetBean"%>
@@ -19,11 +20,7 @@
 	<%
 	String succ = ServletUtility.getSuccessMessage(request);
 	String error = ServletUtility.getErrorMessage(request);
-	List<MarksheetBean> marksheetList = (List) request.getAttribute("marksheetList");
-	HashMap<String, String> map = new HashMap<String, String>();
-	map.put("male", "male");
-	map.put("female", "female");
-	map.put("other", "other");
+	List<StudentBean> studentList = (List) request.getAttribute("studentList");
 	%>
 	<%@include file="Header.jsp"%>
 	<div align="center">
@@ -42,7 +39,7 @@
 
 				<tr>
 					<th>Student Name<font color="red">*</font></th>
-					<td><%=HTMLUtility.getList("studentId", DataUtility.getStringData(bean.getStudentId()),marksheetList)%></td>
+					<td><%=HTMLUtility.getList("studentId", DataUtility.getStringData(bean.getStudentId()),studentList)%></td>
 						<td style="color: red"><%=ServletUtility.getErrorMessage("studentId", request)%></td>
 				
 				</tr>

@@ -24,7 +24,11 @@
 		<h3 style="color: green"><%=succ%></h3>
 		<h3 style="color: red"><%=error%></h3>
 		<form action="<%=ORSView.ATM_CTL%>" method="post">
-		<table>
+			<table>
+				<tr>
+					<td><input type="hidden" name="id" value="<%=bean.getId()%>"></td>
+				</tr>
+				
 				<tr>
 					<th>Location<font color="red">*</font></th>
 					<td><input type="text" name="location"
@@ -35,19 +39,19 @@
 
 				<tr>
 					<th>Bank Name<font color="red">*</font></th>
-					<td><input type="text" name="bank_name"
+					<td><input type="text" name="bankName"
 						placeholder="enter your bank name"
 						value="<%=DataUtility.getStringData(bean.getBankName())%>"></td>
-					<td style="color: red"><%=ServletUtility.getErrorMessage("bank_name", request)%>
+					<td style="color: red"><%=ServletUtility.getErrorMessage("bankName", request)%>
 					</td>
 				</tr>
 
 				<tr>
 					<th>Cash Available<font color="red">*</font></th>
-					<td><input type="number" name="cash_available"
+					<td><input type="number" name="cashAvailable"
 						placeholder="enter available cash"
 						value="<%=DataUtility.getStringData(bean.getCashAvailable())%>"></td>
-					<td style="color: red"><%=ServletUtility.getErrorMessage("cash_available", request)%></td>
+					<td style="color: red"><%=ServletUtility.getErrorMessage("cashAvailable", request)%></td>
 				</tr>
 
 				<tr>

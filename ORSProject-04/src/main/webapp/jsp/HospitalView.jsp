@@ -34,7 +34,7 @@
 					<th>Name<font color="red">*</font></th>
 					<td><input type="text" name="name"
 						placeholder="enter your name"
-						value="<%=DataUtility.getStringData(request.getParameter("name"))%>"></td>
+						value="<%=DataUtility.getStringData(bean.getName())%>"></td>
 					<td style="color: red"><%=ServletUtility.getErrorMessage("name", request)%></td>
 				</tr>
 
@@ -42,7 +42,7 @@
 					<th>Age<font color="red">*</font></th>
 					<td><input type="number" name="age"
 						placeholder="enter your age"
-						value="<%=DataUtility.getStringData(request.getParameter("age"))%>"></td>
+						value="<%=DataUtility.getStringData(bean.getAge())%>"></td>
 					<td style="color: red"><%=ServletUtility.getErrorMessage("age", request)%></td>
 				</tr>
 
@@ -50,7 +50,7 @@
 					<th>Blood Group<font color="red">*</font></th>
 					<td><input type="text" name="bloodGroup"
 						placeholder="enter your blood group"
-						value="<%=DataUtility.getStringData(request.getParameter("bloodGroup"))%>"></td>
+						value="<%=DataUtility.getStringData(bean.getBloodGroup())%>"></td>
 					<td style="color: red"><%=ServletUtility.getErrorMessage("bloodGroup", request)%></td>
 				</tr>
 
@@ -58,7 +58,7 @@
 					<th>Disease<font color="red">*</font></th>
 					<td><input type="text" name="disease"
 						placeholder="enter your disease"
-						value="<%=DataUtility.getStringData(request.getParameter("disease"))%>"></td>
+						value="<%=DataUtility.getStringData(bean.getDisease())%>"></td>
 					<td style="color: red"><%=ServletUtility.getErrorMessage("disease", request)%></td>
 				</tr>
 				

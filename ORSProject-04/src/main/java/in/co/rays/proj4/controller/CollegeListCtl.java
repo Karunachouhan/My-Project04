@@ -1,5 +1,7 @@
 package in.co.rays.proj4.controller;
 
+import org.apache.log4j.Logger;
+
 import in.co.rays.proj4.bean.CollegeBean;
 import in.co.rays.proj4.model.CollegeModel;
 import in.co.rays.proj4.util.DataUtility;
@@ -16,6 +18,8 @@ import jakarta.servlet.http.HttpServletRequest;
 @WebServlet("/ctl/CollegeListCtl")
 public class CollegeListCtl extends BaseListCtl<CollegeBean, CollegeModel> {
 
+	private static Logger log = Logger.getLogger(CollegeListCtl.class);
+
 	/**
 	 * Populates the CollegeBean object with college details
 	 * received from the HTTP request.
@@ -25,6 +29,8 @@ public class CollegeListCtl extends BaseListCtl<CollegeBean, CollegeModel> {
 	 */
 	@Override
 	protected CollegeBean populateBean(HttpServletRequest request) {
+		log.debug("CollegeListCtl populateBean method started");
+
 		CollegeBean bean = new CollegeBean();
 
 		bean.setName(DataUtility.getString(request.getParameter("name")));
@@ -32,6 +38,9 @@ public class CollegeListCtl extends BaseListCtl<CollegeBean, CollegeModel> {
 		bean.setState(DataUtility.getString(request.getParameter("state")));
 		bean.setCity(DataUtility.getString(request.getParameter("city")));
 		bean.setPhoneNo(DataUtility.getString(request.getParameter("phoneNo")));
+
+		log.info("CollegeBean populated successfully");
+		log.debug("CollegeListCtl populateBean method completed");
 
 		return bean;
 	}
@@ -43,7 +52,14 @@ public class CollegeListCtl extends BaseListCtl<CollegeBean, CollegeModel> {
 	 */
 	@Override
 	public CollegeModel getModel() {
-		return new CollegeModel();
+		log.debug("CollegeListCtl getModel method started");
+
+		CollegeModel model = new CollegeModel();
+
+		log.info("CollegeModel object created successfully");
+		log.debug("CollegeListCtl getModel method completed");
+
+		return model;
 	}
 
 	/**
@@ -53,6 +69,10 @@ public class CollegeListCtl extends BaseListCtl<CollegeBean, CollegeModel> {
 	 */
 	@Override
 	public String getView() {
+		log.debug("CollegeListCtl getView method started");
+		log.info("College list view returned successfully");
+		log.debug("CollegeListCtl getView method completed");
+
 		return ORSView.COLLEGE_LIST_VIEW;
 	}
 }

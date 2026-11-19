@@ -1,5 +1,7 @@
 package in.co.rays.proj4.controller;
 
+import org.apache.log4j.Logger;
+
 import in.co.rays.proj4.bean.StudentBean;
 import in.co.rays.proj4.model.StudentModel;
 import in.co.rays.proj4.util.DataUtility;
@@ -18,6 +20,8 @@ import jakarta.servlet.http.HttpServletRequest;
 @WebServlet("/ctl/StudentListCtl")
 public class StudentListCtl extends BaseListCtl<StudentBean, StudentModel> {
 
+	private static Logger log = Logger.getLogger(StudentListCtl.class);
+
 	/**
 	 * Populates StudentBean with student details received
 	 * from the HTTP request parameters.
@@ -27,6 +31,9 @@ public class StudentListCtl extends BaseListCtl<StudentBean, StudentModel> {
 	 */
 	@Override
 	protected StudentBean populateBean(HttpServletRequest request) {
+
+		log.debug("StudentListCtl populateBean method started");
+
 		StudentBean bean = new StudentBean();
 
 		bean.setCollegeId(DataUtility.getLong(request.getParameter("collegeId")));
@@ -35,6 +42,8 @@ public class StudentListCtl extends BaseListCtl<StudentBean, StudentModel> {
 		bean.setDateOfBirth(DataUtility.getDate(request.getParameter("dateOfBirth")));
 		bean.setMobileNo(DataUtility.getString(request.getParameter("mobileNo")));
 		bean.setEmail(DataUtility.getString(request.getParameter("email")));
+
+		log.debug("StudentListCtl populateBean method completed");
 
 		return bean;
 	}
@@ -46,6 +55,9 @@ public class StudentListCtl extends BaseListCtl<StudentBean, StudentModel> {
 	 */
 	@Override
 	public StudentModel getModel() {
+
+		log.debug("StudentListCtl getModel method called");
+
 		return new StudentModel();
 	}
 
@@ -56,6 +68,9 @@ public class StudentListCtl extends BaseListCtl<StudentBean, StudentModel> {
 	 */
 	@Override
 	public String getView() {
+
+		log.debug("StudentListCtl getView method called");
+
 		return ORSView.STUDENT_LIST_VIEW;
 	}
 

@@ -93,15 +93,33 @@ public abstract class BaseReportCtl<B extends BaseBean> extends HttpServlet {
      * @throws Exception             if JasperReports compilation fails
      */
     public JasperReport getCompiledReport(String reportTemplatePath) throws Exception {
+
+        log.debug("BaseReportCtl getCompiledReport method started");
+
         synchronized (getServletContext()) {
+
             JasperReport cached = (JasperReport) getServletContext().getAttribute(getCompiledReportKey());
-            if (cached != null)
+
+            if (cached != null) {
+                log.info("Compiled JasperReport found in cache");
                 return cached;
+            }
+
+            log.debug("Compiling JasperReport template: " + reportTemplatePath);
+
             try (InputStream jrxml = getClass().getResourceAsStream(reportTemplatePath)) {
-                if (jrxml == null)
+
+                if (jrxml == null) {
+                    log.error("Report template not found: " + reportTemplatePath);
                     throw new IllegalStateException("Report template not found: " + reportTemplatePath);
+                }
+
                 JasperReport compiled = JasperCompileManager.compileReport(jrxml);
+
                 getServletContext().setAttribute(getCompiledReportKey(), compiled);
+
+                log.info("JasperReport compiled and cached successfully");
+
                 return compiled;
             }
         }
@@ -122,23 +140,51 @@ public abstract class BaseReportCtl<B extends BaseBean> extends HttpServlet {
     private void generateReport(HttpServletResponse response, List<B> list, String reportTemplatePath,
             String reportType)
             throws Exception {
+
+        log.debug("BaseReportCtl generateReport method started");
+
         JasperReport jasperReport = getCompiledReport(reportTemplatePath);
+
         Map<String, Object> params = new HashMap<>();
+
         JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(list);
+
+        log.debug("Filling JasperReport with data");
+
         JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, dataSource);
+
+        log.info("JasperReport filled successfully");
+
         if (DOC.equals(reportType)) {
+
+            log.info("Generating Word document report");
+
             response.setContentType("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
             response.setHeader("Content-Disposition", "inline; filename=\"" + getClass().getSimpleName() + ".docx\"");
+
             JRDocxExporter exporter = new JRDocxExporter();
+
             exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
             exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(response.getOutputStream()));
             exporter.setConfiguration(new SimpleDocxReportConfiguration());
+
             exporter.exportReport();
+
+            log.info("Word document report generated successfully");
+
         } else {
+
+            log.info("Generating PDF report");
+
             response.setContentType("application/pdf");
             response.setHeader("Content-Disposition", "inline; filename=\"" + getClass().getSimpleName() + ".pdf\"");
+
             JasperExportManager.exportReportToPdfStream(jasperPrint, response.getOutputStream());
+
+            log.info("PDF report generated successfully");
         }
+
+        log.debug("BaseReportCtl generateReport method completed");
     }
 
     /**
@@ -153,17 +199,35 @@ public abstract class BaseReportCtl<B extends BaseBean> extends HttpServlet {
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
+        log.debug("BaseReportCtl doGet method started");
+
         try {
+
             List<B> list = getList();
+
+            log.info("Report data fetched successfully");
+
             String reportType = request.getParameter("type");
+
             if (!DOC.equals(reportType)) {
                 reportType = PDF;
             }
+
+            log.info("Requested report type: " + reportType);
+
             generateReport(response, list, getView(), reportType);
+
+            log.info("Report generated successfully");
+
         } catch (Exception e) {
+
             log.error(getClass().getSimpleName() + " report generation failed", e);
+
             throw new ServletException("Failed to generate report: " + e.getMessage(), e);
         }
+
+        log.debug("BaseReportCtl doGet method completed");
     }
 
     /**
@@ -177,7 +241,12 @@ public abstract class BaseReportCtl<B extends BaseBean> extends HttpServlet {
      */
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
+        log.debug("BaseReportCtl doPost method started");
+
         doGet(request, response);
+
+        log.debug("BaseReportCtl doPost method completed");
     }
 
 }

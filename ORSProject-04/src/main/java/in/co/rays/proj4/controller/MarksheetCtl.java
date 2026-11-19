@@ -3,11 +3,15 @@ package in.co.rays.proj4.controller;
 import java.util.List;
 
 import in.co.rays.proj4.bean.MarksheetBean;
+import in.co.rays.proj4.bean.StudentBean;
 import in.co.rays.proj4.model.MarksheetModel;
+import in.co.rays.proj4.model.StudentModel;
 import in.co.rays.proj4.util.DataUtility;
 import in.co.rays.proj4.util.DataValidator;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
+
+import org.apache.log4j.Logger;
 
 /**
  * MarksheetCtl handles marksheet-related operations such as validating
@@ -18,6 +22,8 @@ import jakarta.servlet.http.HttpServletRequest;
 @WebServlet("/ctl/MarksheetCtl")
 public class MarksheetCtl extends BaseCtl<MarksheetBean, MarksheetModel> {
 
+	private static Logger log = Logger.getLogger(MarksheetCtl.class);
+
 	/**
 	 * Validates the marksheet details received from the HTTP request.
 	 * Checks whether roll number, student ID, name, and subject marks are provided.
@@ -27,31 +33,45 @@ public class MarksheetCtl extends BaseCtl<MarksheetBean, MarksheetModel> {
 	 */
 	@Override
 	protected boolean validate(HttpServletRequest request) {
+
+		log.debug("MarksheetCtl validate method started");
+
 		boolean pass = true;
+
 		if (DataValidator.isNull(request.getParameter("rollNo"))) {
 			request.setAttribute("rollNo", "Roll No is required");
+			log.warn("Roll number is missing");
 			pass = false;
 		}
 		if (DataValidator.isNull(request.getParameter("studentId"))) {
 			request.setAttribute("studentId", "Student id is required");
-			pass = false;
-		}
-		if (DataValidator.isNull(request.getParameter("name"))) {
-			request.setAttribute("name", "Name is required");
+			log.warn("Student ID is missing");
 			pass = false;
 		}
 		if (DataValidator.isNull(request.getParameter("physics"))) {
 			request.setAttribute("physics", "physics marks is required");
+			log.warn("Physics marks are missing");
 			pass = false;
 		}
 		if (DataValidator.isNull(request.getParameter("chemistry"))) {
 			request.setAttribute("chemistry", "chemistry marks is required");
+			log.warn("Chemistry marks are missing");
 			pass = false;
 		}
 		if (DataValidator.isNull(request.getParameter("maths"))) {
 			request.setAttribute("maths", "Maths marks is required");
+			log.warn("Maths marks are missing");
 			pass = false;
 		}
+
+		if (pass) {
+			log.info("Marksheet validation successful");
+		} else {
+			log.warn("Marksheet validation failed");
+		}
+
+		log.debug("MarksheetCtl validate method completed");
+
 		return pass;
 	}
 
@@ -64,14 +84,23 @@ public class MarksheetCtl extends BaseCtl<MarksheetBean, MarksheetModel> {
 	 */
 	@Override
 	protected MarksheetBean populateBean(HttpServletRequest request) {
+
+		log.debug("MarksheetCtl populateBean method started");
+
 		MarksheetBean bean = new MarksheetBean();
 
+		bean.setId(DataUtility.getLong(request.getParameter("id")));
 		bean.setRollNo(DataUtility.getString(request.getParameter("rollNo")));
 		bean.setStudentId(DataUtility.getLong(request.getParameter("studentId")));
 		bean.setName(DataUtility.getString(request.getParameter("name")));
 		bean.setPhysics(DataUtility.getInt(request.getParameter("physics")));
 		bean.setChemistry(DataUtility.getInt(request.getParameter("chemistry")));
 		bean.setMaths(DataUtility.getInt(request.getParameter("maths")));
+
+		populateDTO(bean, request);
+
+		log.info("MarksheetBean populated successfully");
+		log.debug("MarksheetCtl populateBean method completed");
 
 		return bean;
 
@@ -85,9 +114,15 @@ public class MarksheetCtl extends BaseCtl<MarksheetBean, MarksheetModel> {
 	 */
 	@Override
 	protected void preload(HttpServletRequest request) {
-		MarksheetModel model = new MarksheetModel();
-		List<MarksheetBean> marksheetList =  model.search(null, 0, 0);
-		request.setAttribute("marksheetList", marksheetList);
+
+		log.debug("MarksheetCtl preload method started");
+
+		StudentModel model = new StudentModel();
+		List<StudentBean> studentList =  model.search(null, 0, 0);
+		request.setAttribute("studentList", studentList);
+
+		log.info("Student list loaded successfully");
+		log.debug("MarksheetCtl preload method completed");
 	}
 
 	/**
@@ -97,6 +132,9 @@ public class MarksheetCtl extends BaseCtl<MarksheetBean, MarksheetModel> {
 	 */
 	@Override
 	public MarksheetModel getModel() {
+
+		log.debug("MarksheetCtl getModel method called");
+
 		return new MarksheetModel();
 	}
 
@@ -107,6 +145,9 @@ public class MarksheetCtl extends BaseCtl<MarksheetBean, MarksheetModel> {
 	 */
 	@Override
 	public String getView() {
+
+		log.debug("MarksheetCtl getView method called");
+
 		return ORSView.MARKSHEET_VIEW;
 	}
 

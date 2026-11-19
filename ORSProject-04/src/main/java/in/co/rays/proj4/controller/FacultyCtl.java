@@ -2,6 +2,8 @@ package in.co.rays.proj4.controller;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import in.co.rays.proj4.bean.FacultyBean;
 import in.co.rays.proj4.model.FacultyModel;
 import in.co.rays.proj4.util.DataUtility;
@@ -18,6 +20,8 @@ import jakarta.servlet.http.HttpServletRequest;
 @WebServlet("/ctl/FacultyCtl")
 public class FacultyCtl extends BaseCtl<FacultyBean, FacultyModel> {
 
+	private static Logger log = Logger.getLogger(FacultyCtl.class);
+
 	/**
 	 * Validates the faculty details received from the HTTP request.
 	 * Checks whether all required fields are provided.
@@ -27,41 +31,58 @@ public class FacultyCtl extends BaseCtl<FacultyBean, FacultyModel> {
 	 */
 	@Override
 	protected boolean validate(HttpServletRequest request) {
+		log.debug("FacultyCtl validate method started");
+
 		boolean pass = true;
 
 		if (DataValidator.isNull(request.getParameter("collegeId"))) {
 			request.setAttribute("collegeId", "College is required");
+			log.warn("College is required");
 			pass = false;
 		}
 		if (DataValidator.isNull(request.getParameter("firstName"))) {
 			request.setAttribute("firstName", "First name is required");
+			log.warn("First name is required");
 			pass = false;
 		}
 		if (DataValidator.isNull(request.getParameter("lastName"))) {
 			request.setAttribute("lastName", "Last name is required");
+			log.warn("Last name is required");
 			pass = false;
 		}
 		if (DataValidator.isNull(request.getParameter("email"))) {
 			request.setAttribute("email", "Email is required");
+			log.warn("Email is required");
 			pass = false;
 		}
 		if (DataValidator.isNull(request.getParameter("mobileNo"))) {
 			request.setAttribute("mobileNo", "Mobile number is required");
+			log.warn("Mobile number is required");
 			pass = false;
 		}
 		if (DataValidator.isNull(request.getParameter("address"))) {
 			request.setAttribute("address", "Address is required");
+			log.warn("Address is required");
 			pass = false;
 		}
 		if (DataValidator.isNull(request.getParameter("gender"))) {
 			request.setAttribute("gender", "Gender is required");
+			log.warn("Gender is required");
 			pass = false;
 		}
 		if (DataValidator.isNull(request.getParameter("dob"))) {
 			request.setAttribute("dob", "Dob is required");
+			log.warn("Date of birth is required");
 			pass = false;
 		}
 
+		if (pass) {
+			log.info("Faculty form validation successful");
+		} else {
+			log.error("Faculty form validation failed");
+		}
+
+		log.debug("FacultyCtl validate method completed");
 		return pass;
 	}
 
@@ -74,8 +95,11 @@ public class FacultyCtl extends BaseCtl<FacultyBean, FacultyModel> {
 	 */
 	@Override
 	protected FacultyBean populateBean(HttpServletRequest request) {
+		log.debug("FacultyCtl populateBean method started");
+
 		FacultyBean bean = new FacultyBean();
 
+		bean.setId(DataUtility.getLong(request.getParameter("id")));
 		bean.setCollegeId(DataUtility.getInt(request.getParameter("collegeId")));
 		bean.setFirstName(DataUtility.getString(request.getParameter("firstName")));
 		bean.setLastName(DataUtility.getString(request.getParameter("lastName")));
@@ -84,6 +108,11 @@ public class FacultyCtl extends BaseCtl<FacultyBean, FacultyModel> {
 		bean.setAddress(DataUtility.getString(request.getParameter("address")));
 		bean.setGender(DataUtility.getString(request.getParameter("gender")));
 		bean.setDateOfBirth(DataUtility.getDate(request.getParameter("dob")));
+
+		populateDTO(bean, request);
+
+		log.info("FacultyBean populated successfully");
+		log.debug("FacultyCtl populateBean method completed");
 
 		return bean;
 
@@ -97,9 +126,14 @@ public class FacultyCtl extends BaseCtl<FacultyBean, FacultyModel> {
 	 */
 	@Override
 	protected void preload(HttpServletRequest request) {
+		log.debug("FacultyCtl preload method started");
+
 		FacultyModel fmodel = new FacultyModel();
 		List<FacultyBean> facultyList = fmodel.search(null, 0, 0);
 		request.setAttribute("facultyList", facultyList);
+
+		log.info("Faculty list loaded successfully");
+		log.debug("FacultyCtl preload method completed");
 	}
 
 	/**
@@ -109,7 +143,14 @@ public class FacultyCtl extends BaseCtl<FacultyBean, FacultyModel> {
 	 */
 	@Override
 	public FacultyModel getModel() {
-		return new FacultyModel();
+		log.debug("FacultyCtl getModel method started");
+
+		FacultyModel model = new FacultyModel();
+
+		log.info("FacultyModel object created successfully");
+		log.debug("FacultyCtl getModel method completed");
+
+		return model;
 	}
 
 	/**
@@ -119,6 +160,10 @@ public class FacultyCtl extends BaseCtl<FacultyBean, FacultyModel> {
 	 */
 	@Override
 	public String getView() {
+		log.debug("FacultyCtl getView method started");
+		log.info("Faculty view returned successfully");
+		log.debug("FacultyCtl getView method completed");
+
 		return ORSView.FACULTY_VIEW;
 	}
 }
