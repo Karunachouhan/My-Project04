@@ -5,6 +5,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+import org.apache.log4j.Logger;
+
 import in.co.rays.proj4.bean.RailwayBean;
 import in.co.rays.proj4.exception.ApplicationException;
 import in.co.rays.proj4.exception.DuplicateRecordException;
@@ -19,6 +21,9 @@ import in.co.rays.proj4.util.JDBCDataSource;
  */
 public class RailwayModel extends BaseModel<RailwayBean> {
 
+	/** Logger for RailwayModel class. */
+	private static final Logger log = Logger.getLogger(RailwayModel.class);
+
 	/**
 	 * Adds a new railway record to the database.
 	 *
@@ -29,13 +34,19 @@ public class RailwayModel extends BaseModel<RailwayBean> {
 	 */
 	@Override
 	public long add(RailwayBean bean) throws ApplicationException, DuplicateRecordException {
+		log.debug("RailwayModel add method started");
+
 		Connection conn = null;
 		long pk = 0;
 
 		try {
 			pk = nextPk();
+			log.debug("Generated primary key: " + pk);
+
 			conn = JDBCDataSource.getConnection();
 			conn.setAutoCommit(false);
+
+			log.debug("Preparing insert query for railway record");
 
 			PreparedStatement pstmt = conn.prepareStatement("insert into " + getTable() + " values(?,?,?,?,?,?,?,?,?)");
 			pstmt.setLong(1, pk);
@@ -50,13 +61,17 @@ public class RailwayModel extends BaseModel<RailwayBean> {
 
 			int i = pstmt.executeUpdate();
 			conn.commit();
-			System.out.println("Record inserted successfully " + i + " row affected");
+
+			log.info("Record inserted successfully " + i + " row affected");
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error("SQL Exception while inserting railway record", e);
 			JDBCDataSource.trnRollBack(conn);
 		} finally {
+			log.debug("Closing database connection");
 			JDBCDataSource.closeConnection(conn);
 		}
+
+		log.debug("RailwayModel add method ended");
 		return pk;
 	}
 
@@ -69,11 +84,15 @@ public class RailwayModel extends BaseModel<RailwayBean> {
 	 */
 	@Override
 	public void update(RailwayBean bean) throws ApplicationException, DuplicateRecordException {
+		log.debug("RailwayModel update method started");
+
 		Connection conn = null;
 
 		try {
 			conn = JDBCDataSource.getConnection();
 			conn.setAutoCommit(false);
+
+			log.debug("Preparing update query for railway record");
 
 			PreparedStatement pstmt = conn.prepareStatement("update " + getTable()
 					+ " set passengerName = ?, trainNo = ?, seatNo = ?, journeyDate = ?, created_by = ?, modified_by = ?, created_datetime = ?, modified_datetime = ? where id = ?");
@@ -89,13 +108,17 @@ public class RailwayModel extends BaseModel<RailwayBean> {
 
 			int i = pstmt.executeUpdate();
 			conn.commit();
-			System.out.println("Record updated successfully " + i + " row affected");
+
+			log.info("Record updated successfully " + i + " row affected");
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error("SQL Exception while updating railway record", e);
 			JDBCDataSource.trnRollBack(conn);
 		} finally {
+			log.debug("Closing database connection");
 			JDBCDataSource.closeConnection(conn);
 		}
+
+		log.debug("RailwayModel update method ended");
 	}
 
 	/**
@@ -106,6 +129,8 @@ public class RailwayModel extends BaseModel<RailwayBean> {
 	 */
 	@Override
 	public String getWhereClause(RailwayBean bean) {
+		log.debug("RailwayModel getWhereClause method started");
+
 		StringBuffer sql = new StringBuffer("");
 
 		if (bean != null) {
@@ -137,6 +162,10 @@ public class RailwayModel extends BaseModel<RailwayBean> {
 				sql.append(" and modified_datetime like'" + bean.getModifiedDatetime() + "'");
 			}
 		}
+
+		log.debug("Generated WHERE clause: " + sql.toString());
+		log.debug("RailwayModel getWhereClause method ended");
+
 		return sql.toString();
 
 	}
@@ -148,6 +177,7 @@ public class RailwayModel extends BaseModel<RailwayBean> {
 	 */
 	@Override
 	public String getTable() {
+		log.debug("RailwayModel getTable method called");
 		return "railway";
 	}
 
@@ -158,6 +188,7 @@ public class RailwayModel extends BaseModel<RailwayBean> {
 	 */
 	@Override
 	public RailwayBean getBean() {
+		log.debug("RailwayModel getBean method called");
 		return new RailwayBean();
 	}
 

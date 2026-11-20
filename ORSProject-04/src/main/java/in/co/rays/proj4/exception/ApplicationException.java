@@ -1,5 +1,7 @@
 package in.co.rays.proj4.exception;
 
+import org.apache.log4j.Logger;
+
 /**
  * ApplicationException is a custom unchecked exception used to handle
  * application-specific errors.
@@ -10,6 +12,8 @@ package in.co.rays.proj4.exception;
  */
 public class ApplicationException extends RuntimeException {
 
+	private static Logger log = Logger.getLogger(ApplicationException.class);
+
 	/**
 	 * Constructs an ApplicationException with the specified error message.
 	 *
@@ -19,6 +23,11 @@ public class ApplicationException extends RuntimeException {
 
 		super(msg);
 
+		log.debug("ApplicationException constructor started");
+
+		log.error("ApplicationException occurred: " + msg);
+
+		log.debug("ApplicationException constructor ended");
 	}
 
 }

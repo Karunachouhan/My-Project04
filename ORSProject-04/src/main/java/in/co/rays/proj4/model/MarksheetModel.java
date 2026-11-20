@@ -5,6 +5,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+import org.apache.log4j.Logger;
+
 import in.co.rays.proj4.bean.MarksheetBean;
 import in.co.rays.proj4.bean.StudentBean;
 import in.co.rays.proj4.exception.ApplicationException;
@@ -20,6 +22,8 @@ import in.co.rays.proj4.util.JDBCDataSource;
  */
 public class MarksheetModel extends BaseModel<MarksheetBean> {
 
+	private static final Logger log = Logger.getLogger(MarksheetModel.class);
+
 	/**
 	 * Adds a new marksheet record to the database.
 	 *
@@ -30,12 +34,16 @@ public class MarksheetModel extends BaseModel<MarksheetBean> {
 	 */
 	@Override
 	public long add(MarksheetBean bean) throws ApplicationException, DuplicateRecordException {
+
+		log.debug("MarksheetModel add method started");
+
 		Connection conn = null;
 		long pk = 0;
 
 		MarksheetBean existBean = findByRollno(bean.getRollNo());
 
 		if (existBean != null) {
+			log.warn("Marksheet roll number already exists: " + bean.getRollNo());
 			throw new DuplicateRecordException("rollno already exist");
 		}
 
@@ -44,8 +52,14 @@ public class MarksheetModel extends BaseModel<MarksheetBean> {
 
 		try {
 			pk = nextPk();
+
+			log.debug("Generated marksheet primary key: " + pk);
+
 			conn = JDBCDataSource.getConnection();
 			conn.setAutoCommit(false);
+
+			log.debug("Preparing insert query for marksheet");
+
 			PreparedStatement pstmt = conn
 					.prepareStatement("insert into " + getTable() + " values(?,?,?,?,?,?,?,?,?,?,?)");
 			pstmt.setLong(1, pk);
@@ -62,13 +76,19 @@ public class MarksheetModel extends BaseModel<MarksheetBean> {
 
 			int i = pstmt.executeUpdate();
 			conn.commit();
-			System.out.println("Data inserted successfully " + i + " row affected");
+
+			log.info("Marksheet data inserted successfully. " + i + " row affected");
+
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error("Exception occurred while inserting marksheet record", e);
 			JDBCDataSource.trnRollBack(conn);
 		} finally {
+			log.debug("Closing marksheet database connection");
 			JDBCDataSource.closeConnection(conn);
 		}
+
+		log.debug("MarksheetModel add method ended");
+
 		return pk;
 	}
 
@@ -81,11 +101,15 @@ public class MarksheetModel extends BaseModel<MarksheetBean> {
 	 */
 	@Override
 	public void update(MarksheetBean bean) throws ApplicationException, DuplicateRecordException {
+
+		log.debug("MarksheetModel update method started");
+
 		Connection conn = null;
 
 		MarksheetBean existBean = findByRollno(bean.getRollNo());
 
 		if (existBean != null && existBean.getId() != bean.getId()) {
+			log.warn("Marksheet roll number already exists: " + bean.getRollNo());
 			throw new DuplicateRecordException("rollno already exist");
 		}
 
@@ -95,6 +119,8 @@ public class MarksheetModel extends BaseModel<MarksheetBean> {
 		try {
 			conn = JDBCDataSource.getConnection();
 			conn.setAutoCommit(false);
+
+			log.debug("Preparing update query for marksheet");
 
 			PreparedStatement pstmt = conn.prepareStatement("update " + getTable()
 					+ " set roll_no=?, student_id=?, name=?, physics=?, chemistry=?, maths=?, created_by=?, modified_by=?, modified_datetime=?, created_datetime=? where id = ?");
@@ -112,14 +138,18 @@ public class MarksheetModel extends BaseModel<MarksheetBean> {
 
 			int i = pstmt.executeUpdate();
 			conn.commit();
-			System.out.println("Data updated successfully " + i + " row affected");
+
+			log.info("Marksheet data updated successfully. " + i + " row affected");
+
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error("Exception occurred while updating marksheet record", e);
 			JDBCDataSource.trnRollBack(conn);
 		} finally {
+			log.debug("Closing marksheet database connection");
 			JDBCDataSource.closeConnection(conn);
 		}
 
+		log.debug("MarksheetModel update method ended");
 	}
 
 	/**
@@ -130,6 +160,9 @@ public class MarksheetModel extends BaseModel<MarksheetBean> {
 	 */
 	@Override
 	public String getWhereClause(MarksheetBean bean) {
+
+		log.debug("MarksheetModel getWhereClause method started");
+
 		StringBuffer sql = new StringBuffer("");
 
 		if (bean != null) {
@@ -167,6 +200,10 @@ public class MarksheetModel extends BaseModel<MarksheetBean> {
 				sql.append(" and modified_datetime like'" + bean.getModifiedDatetime() + "'");
 			}
 		}
+
+		log.debug("Generated WHERE clause: " + sql.toString());
+		log.debug("MarksheetModel getWhereClause method ended");
+
 		return sql.toString();
 	}
 
@@ -177,6 +214,7 @@ public class MarksheetModel extends BaseModel<MarksheetBean> {
 	 */
 	@Override
 	public String getTable() {
+		log.debug("MarksheetModel getTable method called");
 		return "st_marksheet";
 	}
 
@@ -187,6 +225,7 @@ public class MarksheetModel extends BaseModel<MarksheetBean> {
 	 */
 	@Override
 	public MarksheetBean getBean() {
+		log.debug("MarksheetModel getBean method called");
 		return new MarksheetBean();
 	}
 
@@ -197,7 +236,19 @@ public class MarksheetModel extends BaseModel<MarksheetBean> {
 	 * @return MarksheetBean object if found, otherwise null
 	 */
 	public MarksheetBean findByRollno(String rollNo) {
+
+		log.debug("MarksheetModel findByRollno method started");
+
 		MarksheetBean bean = findByUniqueColumn("roll_no", rollNo);
+
+		if (bean != null) {
+			log.info("Marksheet record found for roll number: " + rollNo);
+		} else {
+			log.warn("Marksheet record not found for roll number: " + rollNo);
+		}
+
+		log.debug("MarksheetModel findByRollno method ended");
+
 		return bean;
 	}
 

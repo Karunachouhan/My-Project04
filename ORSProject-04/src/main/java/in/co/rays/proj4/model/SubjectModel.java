@@ -5,6 +5,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+import org.apache.log4j.Logger;
+
 import in.co.rays.proj4.bean.CollegeBean;
 import in.co.rays.proj4.bean.SubjectBean;
 import in.co.rays.proj4.exception.ApplicationException;
@@ -20,6 +22,9 @@ import in.co.rays.proj4.util.JDBCDataSource;
  */
 public class SubjectModel extends BaseModel<SubjectBean> {
 
+	/** Logger for SubjectModel class. */
+	private static final Logger log = Logger.getLogger(SubjectModel.class);
+
 	/**
 	 * Adds a new subject record to the database.
 	 *
@@ -30,19 +35,26 @@ public class SubjectModel extends BaseModel<SubjectBean> {
 	 */
 	@Override
 	public long add(SubjectBean bean) throws ApplicationException, DuplicateRecordException {
+		log.debug("SubjectModel add method started");
+
 		Connection conn = null;
 		long pk = 0;
 
 		SubjectBean existBean = findByName(bean.getName());
 
 		if (existBean != null) {
+			log.warn("Subject name already exists: " + bean.getName());
 			throw new DuplicateRecordException("college name already exist");
 		}
 
 		try {
 			pk = nextPk();
+			log.debug("Generated primary key: " + pk);
+
 			conn = JDBCDataSource.getConnection();
 			conn.setAutoCommit(false);
+
+			log.debug("Preparing insert query for subject record");
 
 			PreparedStatement pstmt = conn.prepareStatement("insert into " + getTable() + " values(?,?,?,?,?,?,?,?)");
 			pstmt.setLong(1, pk);
@@ -56,13 +68,17 @@ public class SubjectModel extends BaseModel<SubjectBean> {
 
 			int i = pstmt.executeUpdate();
 			conn.commit();
-			System.out.println("Data inserted successfully " + i + " row affected");
+
+			log.info("Data inserted successfully " + i + " row affected");
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error("SQL Exception while inserting subject record", e);
 			JDBCDataSource.trnRollBack(conn);
 		} finally {
+			log.debug("Closing database connection");
 			JDBCDataSource.closeConnection(conn);
 		}
+
+		log.debug("SubjectModel add method ended");
 		return pk;
 	}
 
@@ -75,17 +91,22 @@ public class SubjectModel extends BaseModel<SubjectBean> {
 	 */
 	@Override
 	public void update(SubjectBean bean) throws ApplicationException, DuplicateRecordException {
+		log.debug("SubjectModel update method started");
+
 		Connection conn = null;
 
 		SubjectBean existBean = findByName(bean.getName());
 
 		if (existBean != null && existBean.getId() != bean.getId()) {
+			log.warn("Subject name already exists: " + bean.getName());
 			throw new DuplicateRecordException("college name already exist");
 		}
 
 		try {
 			conn = JDBCDataSource.getConnection();
 			conn.setAutoCommit(false);
+
+			log.debug("Preparing update query for subject record");
 
 			PreparedStatement pstmt = conn.prepareStatement("update " + getTable()
 					+ " set name=?, description=?, course_id=?, created_by=?, modified_by=?, created_datetime=?, modified_datetime=? where id=?");
@@ -100,14 +121,17 @@ public class SubjectModel extends BaseModel<SubjectBean> {
 
 			int i = pstmt.executeUpdate();
 			conn.commit();
-			System.out.println("Data inserted successfully " + i + " row affected");
+
+			log.info("Data updated successfully " + i + " row affected");
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error("SQL Exception while updating subject record", e);
 			JDBCDataSource.trnRollBack(conn);
 		} finally {
+			log.debug("Closing database connection");
 			JDBCDataSource.closeConnection(conn);
 		}
 
+		log.debug("SubjectModel update method ended");
 	}
 
 	/**
@@ -118,6 +142,8 @@ public class SubjectModel extends BaseModel<SubjectBean> {
 	 */
 	@Override
 	public String getWhereClause(SubjectBean bean) {
+		log.debug("SubjectModel getWhereClause method started");
+
 		StringBuffer sql = new StringBuffer();
 
 		if (bean != null) {
@@ -146,6 +172,10 @@ public class SubjectModel extends BaseModel<SubjectBean> {
 				sql.append(" and modified_datetime like'" + bean.getModifiedDatetime() + "'");
 			}
 		}
+
+		log.debug("Generated WHERE clause: " + sql.toString());
+		log.debug("SubjectModel getWhereClause method ended");
+
 		return sql.toString();
 	}
 
@@ -156,6 +186,7 @@ public class SubjectModel extends BaseModel<SubjectBean> {
 	 */
 	@Override
 	public String getTable() {
+		log.debug("SubjectModel getTable method called");
 		return "st_subject";
 	}
 
@@ -166,6 +197,7 @@ public class SubjectModel extends BaseModel<SubjectBean> {
 	 */
 	@Override
 	public SubjectBean getBean() {
+		log.debug("SubjectModel getBean method called");
 		return new SubjectBean();
 	}
 
@@ -176,7 +208,17 @@ public class SubjectModel extends BaseModel<SubjectBean> {
 	 * @return SubjectBean object if found, otherwise null
 	 */
 	public SubjectBean findByName(String name) {
+		log.debug("SubjectModel findByName method started: " + name);
+
 		SubjectBean bean = findByUniqueColumn("name", name);
+
+		if (bean != null) {
+			log.info("Subject found with name: " + name);
+		} else {
+			log.warn("Subject not found with name: " + name);
+		}
+
+		log.debug("SubjectModel findByName method ended");
 		return bean;
 	}
 

@@ -1,9 +1,10 @@
-
 package in.co.rays.proj4.model;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+
+import org.apache.log4j.Logger;
 
 import in.co.rays.proj4.bean.CollegeBean;
 import in.co.rays.proj4.bean.CourseBean;
@@ -20,6 +21,8 @@ import in.co.rays.proj4.util.JDBCDataSource;
  */
 public class CourseModel extends BaseModel<CourseBean> {
 
+	private static Logger log = Logger.getLogger(CourseModel.class);
+
 	/**
 	 * Adds a new course record into the database.
 	 *
@@ -30,17 +33,23 @@ public class CourseModel extends BaseModel<CourseBean> {
 	 */
 	@Override
 	public long add(CourseBean bean) throws ApplicationException, DuplicateRecordException {
+
+		log.debug("CourseModel add method started");
+
 		Connection conn = null;
 		long pk = 0;
 
 		CourseBean existBean = findByName(bean.getName());
 
 		if (existBean != null) {
+			log.warn("Course name already exists: " + bean.getName());
 			throw new DuplicateRecordException("course name already exist");
 		}
 
 		try {
 			pk = nextPk();
+			log.debug("Generated course primary key: " + pk);
+
 			conn = JDBCDataSource.getConnection();
 			conn.setAutoCommit(false);
 
@@ -56,14 +65,21 @@ public class CourseModel extends BaseModel<CourseBean> {
 
 			int i = pstmt.executeUpdate();
 			conn.commit();
-			System.out.println("Data inserted successfully " + i + " row affected");
+
+			log.info("Course data inserted successfully. " + i + " row affected");
+			log.debug("Course record inserted with ID: " + pk);
+
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error("Error while inserting course record", e);
 			JDBCDataSource.trnRollBack(conn);
 		} finally {
+			log.debug("Closing course database connection");
 			JDBCDataSource.closeConnection(conn);
 
 		}
+
+		log.debug("CourseModel add method ended");
+
 		return pk;
 	}
 
@@ -76,11 +92,15 @@ public class CourseModel extends BaseModel<CourseBean> {
 	 */
 	@Override
 	public void update(CourseBean bean) throws ApplicationException, DuplicateRecordException {
+
+		log.debug("CourseModel update method started");
+
 		Connection conn = null;
 
 		CourseBean existBean = findByName(bean.getName());
 
-		if (existBean != null && existBean.getId()!=bean.getId()) {
+		if (existBean != null && existBean.getId() != bean.getId()) {
+			log.warn("Duplicate course name found: " + bean.getName());
 			throw new DuplicateRecordException("course name already exist");
 		}
 
@@ -101,13 +121,19 @@ public class CourseModel extends BaseModel<CourseBean> {
 
 			int i = pstmt.executeUpdate();
 			conn.commit();
-			System.out.println("Data updated successfully " + i + " row affected");
+
+			log.info("Course data updated successfully. " + i + " row affected");
+			log.debug("Course record updated with ID: " + bean.getId());
+
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error("Error while updating course record with ID: " + bean.getId(), e);
 			JDBCDataSource.trnRollBack(conn);
 		} finally {
+			log.debug("Closing course database connection");
 			JDBCDataSource.closeConnection(conn);
 		}
+
+		log.debug("CourseModel update method ended");
 
 	}
 
@@ -119,6 +145,9 @@ public class CourseModel extends BaseModel<CourseBean> {
 	 */
 	@Override
 	public String getWhereClause(CourseBean bean) {
+
+		log.debug("CourseModel getWhereClause method started");
+
 		StringBuffer sql = new StringBuffer("");
 
 		if (bean != null) {
@@ -147,6 +176,9 @@ public class CourseModel extends BaseModel<CourseBean> {
 				sql.append(" and modified_datetime like'" + bean.getModifiedDatetime() + "'");
 			}
 		}
+
+		log.debug("CourseModel getWhereClause method ended");
+
 		return sql.toString();
 
 	}
@@ -158,6 +190,9 @@ public class CourseModel extends BaseModel<CourseBean> {
 	 */
 	@Override
 	public String getTable() {
+
+		log.debug("CourseModel getTable method called");
+
 		return "st_course";
 	}
 
@@ -168,6 +203,9 @@ public class CourseModel extends BaseModel<CourseBean> {
 	 */
 	@Override
 	public CourseBean getBean() {
+
+		log.debug("CourseModel getBean method called");
+
 		return new CourseBean();
 	}
 
@@ -178,7 +216,19 @@ public class CourseModel extends BaseModel<CourseBean> {
 	 * @return CourseBean object if found
 	 */
 	public CourseBean findByName(String name) {
+
+		log.debug("CourseModel findByName method started. Course name: " + name);
+
 		CourseBean bean = findByUniqueColumn("name", name);
+
+		if (bean != null) {
+			log.info("Course record found: " + name);
+		} else {
+			log.warn("Course record not found: " + name);
+		}
+
+		log.debug("CourseModel findByName method ended");
+
 		return bean;
 	}
 }

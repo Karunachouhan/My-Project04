@@ -5,6 +5,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+import org.apache.log4j.Logger;
+
 import in.co.rays.proj4.bean.LibraryBean;
 import in.co.rays.proj4.exception.ApplicationException;
 import in.co.rays.proj4.exception.DuplicateRecordException;
@@ -19,6 +21,8 @@ import in.co.rays.proj4.util.JDBCDataSource;
  */
 public class LibraryModel extends BaseModel<LibraryBean> {
 
+	private static final Logger log = Logger.getLogger(LibraryModel.class);
+
 	/**
 	 * Adds a new library record to the database.
 	 *
@@ -29,19 +33,28 @@ public class LibraryModel extends BaseModel<LibraryBean> {
 	 */
 	@Override
 	public long add(LibraryBean bean) throws ApplicationException, DuplicateRecordException {
+
+		log.debug("LibraryModel add method started");
+
 		Connection conn = null;
 		long pk = 0;
 
 		LibraryBean existBean = findByTitle(bean.getTitle());
 
 		if (existBean != null) {
+			log.warn("Library title already exists: " + bean.getTitle());
 			throw new DuplicateRecordException("title allready exist ");
 		}
 
 		try {
 			pk = nextPk();
+
+			log.debug("Generated primary key: " + pk);
+
 			conn = JDBCDataSource.getConnection();
 			conn.setAutoCommit(false);
+
+			log.debug("Preparing insert query for library");
 
 			PreparedStatement pstmt = conn.prepareStatement("insert into " + getTable() + " values(?,?,?,?,?,?,?,?,?)");
 			pstmt.setLong(1, pk);
@@ -56,13 +69,19 @@ public class LibraryModel extends BaseModel<LibraryBean> {
 
 			int i = pstmt.executeUpdate();
 			conn.commit();
-			System.out.println("Record inserted successfully " + i + " row affected");
+
+			log.info("Record inserted successfully. " + i + " row affected");
+
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error("Exception occurred while inserting library record", e);
 			JDBCDataSource.trnRollBack(conn);
 		} finally {
+			log.debug("Closing library database connection");
 			JDBCDataSource.closeConnection(conn);
 		}
+
+		log.debug("LibraryModel add method ended");
+
 		return pk;
 	}
 
@@ -75,17 +94,23 @@ public class LibraryModel extends BaseModel<LibraryBean> {
 	 */
 	@Override
 	public void update(LibraryBean bean) throws ApplicationException, DuplicateRecordException {
+
+		log.debug("LibraryModel update method started");
+
 		Connection conn = null;
 
 		LibraryBean existBean = findByTitle(bean.getTitle());
 
 		if (existBean != null && existBean.getId() != bean.getId()) {
+			log.warn("Library title already exists: " + bean.getTitle());
 			throw new DuplicateRecordException("title allready exist");
 		}
 
 		try {
 			conn = JDBCDataSource.getConnection();
 			conn.setAutoCommit(false);
+
+			log.debug("Preparing update query for library");
 
 			PreparedStatement pstmt = conn.prepareStatement("update " + getTable()
 					+ " set title = ?, author = ?, price = ?, availability = ?, created_by = ?, modified_by = ?, created_datetime = ?, modified_datetime = ? where id = ?");
@@ -101,13 +126,18 @@ public class LibraryModel extends BaseModel<LibraryBean> {
 
 			int i = pstmt.executeUpdate();
 			conn.commit();
-			System.out.println("Record updated successfully " + i + " row affected");
+
+			log.info("Record updated successfully. " + i + " row affected");
+
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error("Exception occurred while updating library record", e);
 			JDBCDataSource.trnRollBack(conn);
 		} finally {
+			log.debug("Closing library database connection");
 			JDBCDataSource.closeConnection(conn);
 		}
+
+		log.debug("LibraryModel update method ended");
 	}
 
 	/**
@@ -118,6 +148,9 @@ public class LibraryModel extends BaseModel<LibraryBean> {
 	 */
 	@Override
 	public String getWhereClause(LibraryBean bean) {
+
+		log.debug("LibraryModel getWhereClause method started");
+
 		StringBuffer sql = new StringBuffer("");
 
 		if (bean != null) {
@@ -149,8 +182,11 @@ public class LibraryModel extends BaseModel<LibraryBean> {
 				sql.append(" and modified_datetime like'" + bean.getModifiedDatetime() + "'");
 			}
 		}
-		return sql.toString();
 
+		log.debug("Generated WHERE clause: " + sql.toString());
+		log.debug("LibraryModel getWhereClause method ended");
+
+		return sql.toString();
 	}
 
 	/**
@@ -160,6 +196,7 @@ public class LibraryModel extends BaseModel<LibraryBean> {
 	 */
 	@Override
 	public String getTable() {
+		log.debug("LibraryModel getTable method called");
 		return "st_library";
 	}
 
@@ -170,6 +207,7 @@ public class LibraryModel extends BaseModel<LibraryBean> {
 	 */
 	@Override
 	public LibraryBean getBean() {
+		log.debug("LibraryModel getBean method called");
 		return new LibraryBean();
 	}
 
@@ -180,7 +218,19 @@ public class LibraryModel extends BaseModel<LibraryBean> {
 	 * @return LibraryBean object if found, otherwise null
 	 */
 	public LibraryBean findByTitle(String title) {
+
+		log.debug("LibraryModel findByTitle method started");
+
 		LibraryBean bean = findByUniqueColumn("title", title);
+
+		if (bean != null) {
+			log.info("Library record found: " + title);
+		} else {
+			log.warn("Library record not found: " + title);
+		}
+
+		log.debug("LibraryModel findByTitle method ended");
+
 		return bean;
 	}
 }

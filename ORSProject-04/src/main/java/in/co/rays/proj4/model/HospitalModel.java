@@ -5,6 +5,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+import org.apache.log4j.Logger;
+
 import in.co.rays.proj4.bean.HospitalBean;
 import in.co.rays.proj4.exception.ApplicationException;
 import in.co.rays.proj4.exception.DuplicateRecordException;
@@ -20,6 +22,8 @@ import in.co.rays.proj4.util.JDBCDataSource;
  */
 public class HospitalModel extends BaseModel<HospitalBean> {
 
+	private static final Logger log = Logger.getLogger(HospitalModel.class);
+
 	/**
 	 * Adds a new hospital record into the database.
 	 *
@@ -30,19 +34,28 @@ public class HospitalModel extends BaseModel<HospitalBean> {
 	 */
 	@Override
 	public long add(HospitalBean bean) throws ApplicationException, DuplicateRecordException {
+
+		log.debug("HospitalModel add method started");
+
 		Connection conn = null;
 		long pk = 0;
 
 		HospitalBean existBean = findByName(bean.getName());
 
 		if (existBean != null) {
+			log.warn("Hospital record already exists: " + bean.getName());
 			throw new DuplicateRecordException("record allready exist");
 		}
 
 		try {
 			pk = nextPk();
+
+			log.debug("Generated primary key: " + pk);
+
 			conn = JDBCDataSource.getConnection();
 			conn.setAutoCommit(false);
+
+			log.debug("Preparing insert query for hospital");
 
 			PreparedStatement pstmt = conn.prepareStatement("insert into " + getTable() + " values(?,?,?,?,?,?,?,?,?)");
 			pstmt.setLong(1, pk);
@@ -57,13 +70,19 @@ public class HospitalModel extends BaseModel<HospitalBean> {
 
 			int i = pstmt.executeUpdate();
 			conn.commit();
-			System.out.println("Data inserted succcessfully " + i + " row affected");
+
+			log.info("Data inserted successfully. " + i + " row affected");
+
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error("Exception occurred while inserting hospital record", e);
 			JDBCDataSource.trnRollBack(conn);
 		} finally {
+			log.debug("Closing hospital database connection");
 			JDBCDataSource.closeConnection(conn);
 		}
+
+		log.debug("HospitalModel add method ended");
+
 		return pk;
 	}
 
@@ -77,17 +96,23 @@ public class HospitalModel extends BaseModel<HospitalBean> {
 	 */
 	@Override
 	public void update(HospitalBean bean) throws ApplicationException, DuplicateRecordException {
+
+		log.debug("HospitalModel update method started");
+
 		Connection conn = null;
 
 		HospitalBean existBean = findByName(bean.getName());
 
 		if (existBean != null && existBean.getId() != bean.getId()) {
+			log.warn("Hospital record already exists: " + bean.getName());
 			throw new DuplicateRecordException("record allready exist");
 		}
 
 		try {
 			conn = JDBCDataSource.getConnection();
 			conn.setAutoCommit(false);
+
+			log.debug("Preparing update query for hospital");
 
 			PreparedStatement pstmt = conn.prepareStatement("Update " + getTable()
 					+ " set name=? ,age=? ,blood_group=? ,disease=? ,created_by=? ,modified_by=? ,created_datetime=? ,modified_datetime=? where id=?");
@@ -100,16 +125,21 @@ public class HospitalModel extends BaseModel<HospitalBean> {
 			pstmt.setTimestamp(7, bean.getCreatedDatetime());
 			pstmt.setTimestamp(8, bean.getModifiedDatetime());
 			pstmt.setLong(9, bean.getId());
+
 			int i = pstmt.executeUpdate();
 			conn.commit();
-			System.out.println("Data updated successfully " + i + " row affected");
+
+			log.info("Data updated successfully. " + i + " row affected");
+
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error("Exception occurred while updating hospital record", e);
 			JDBCDataSource.trnRollBack(conn);
 		} finally {
+			log.debug("Closing hospital database connection");
 			JDBCDataSource.closeConnection(conn);
 		}
 
+		log.debug("HospitalModel update method ended");
 	}
 
 	/**
@@ -120,6 +150,9 @@ public class HospitalModel extends BaseModel<HospitalBean> {
 	 */
 	@Override
 	public String getWhereClause(HospitalBean bean) {
+
+		log.debug("HospitalModel getWhereClause method started");
+
 		StringBuffer sql = new StringBuffer("");
 
 		if (bean != null) {
@@ -152,6 +185,10 @@ public class HospitalModel extends BaseModel<HospitalBean> {
 			}
 
 		}
+
+		log.debug("Generated WHERE clause: " + sql.toString());
+		log.debug("HospitalModel getWhereClause method ended");
+
 		return sql.toString();
 	}
 
@@ -162,6 +199,7 @@ public class HospitalModel extends BaseModel<HospitalBean> {
 	 */
 	@Override
 	public String getTable() {
+		log.debug("HospitalModel getTable method called");
 		return "st_hospital";
 	}
 
@@ -172,6 +210,7 @@ public class HospitalModel extends BaseModel<HospitalBean> {
 	 */
 	@Override
 	public HospitalBean getBean() {
+		log.debug("HospitalModel getBean method called");
 		return new HospitalBean();
 	}
 
@@ -182,7 +221,19 @@ public class HospitalModel extends BaseModel<HospitalBean> {
 	 * @return HospitalBean object if found
 	 */
 	public HospitalBean findByName(String name) {
+
+		log.debug("HospitalModel findByName method started");
+
 		HospitalBean bean = findByUniqueColumn("name", name);
+
+		if (bean != null) {
+			log.info("Hospital record found: " + name);
+		} else {
+			log.warn("Hospital record not found: " + name);
+		}
+
+		log.debug("HospitalModel findByName method ended");
+
 		return bean;
 	}
 

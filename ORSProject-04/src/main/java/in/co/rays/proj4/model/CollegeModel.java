@@ -3,7 +3,8 @@ package in.co.rays.proj4.model;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.Collection;
+
+import org.apache.log4j.Logger;
 
 import in.co.rays.proj4.bean.CollegeBean;
 import in.co.rays.proj4.exception.ApplicationException;
@@ -20,6 +21,8 @@ import in.co.rays.proj4.util.JDBCDataSource;
  */
 public class CollegeModel extends BaseModel<CollegeBean> {
 
+	private static Logger log = Logger.getLogger(CollegeModel.class);
+
 	/**
 	 * Adds a new college record to the database. Checks whether the college name
 	 * already exists before inserting.
@@ -31,17 +34,23 @@ public class CollegeModel extends BaseModel<CollegeBean> {
 	 */
 	@Override
 	public long add(CollegeBean bean) throws ApplicationException, DuplicateRecordException {
+
+		log.debug("CollegeModel add method started");
+
 		Connection conn = null;
 		long pk = 0;
 
 		CollegeBean existBean = findByName(bean.getName());
 
 		if (existBean != null) {
+			log.warn("College name already exists: " + bean.getName());
 			throw new DuplicateRecordException("college name already exist");
 		}
 
 		try {
 			pk = nextPk();
+			log.debug("Generated college primary key: " + pk);
+
 			conn = JDBCDataSource.getConnection();
 			conn.setAutoCommit(false);
 
@@ -60,13 +69,20 @@ public class CollegeModel extends BaseModel<CollegeBean> {
 
 			int i = pstmt.executeUpdate();
 			conn.commit();
-			System.out.println("Data inserted succcessfully " + i + " row affected");
+
+			log.info("College data inserted successfully. " + i + " row affected");
+			log.debug("College record inserted with ID: " + pk);
+
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error("Error while inserting college record", e);
 			JDBCDataSource.trnRollBack(conn);
 		} finally {
+			log.debug("Closing college database connection");
 			JDBCDataSource.closeConnection(conn);
 		}
+
+		log.debug("CollegeModel add method ended");
+
 		return pk;
 	}
 
@@ -80,13 +96,18 @@ public class CollegeModel extends BaseModel<CollegeBean> {
 	 */
 	@Override
 	public void update(CollegeBean bean) throws ApplicationException, DuplicateRecordException {
+
+		log.debug("CollegeModel update method started");
+
 		Connection conn = null;
 
 		CollegeBean existBean = findByName(bean.getName());
 
 		if (existBean != null && existBean.getId() != bean.getId()) {
+			log.warn("Duplicate college name found: " + bean.getName());
 			throw new DuplicateRecordException("college name already exist");
 		}
+
 		try {
 			conn = JDBCDataSource.getConnection();
 			conn.setAutoCommit(false);
@@ -103,15 +124,22 @@ public class CollegeModel extends BaseModel<CollegeBean> {
 			pstmt.setTimestamp(8, bean.getCreatedDatetime());
 			pstmt.setTimestamp(9, bean.getModifiedDatetime());
 			pstmt.setLong(10, bean.getId());
+
 			int i = pstmt.executeUpdate();
 			conn.commit();
-			System.out.println("Data updated successfully " + i + " row affected");
+
+			log.info("College data updated successfully. " + i + " row affected");
+			log.debug("College record updated with ID: " + bean.getId());
+
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error("Error while updating college record with ID: " + bean.getId(), e);
 			JDBCDataSource.trnRollBack(conn);
 		} finally {
+			log.debug("Closing college database connection");
 			JDBCDataSource.closeConnection(conn);
 		}
+
+		log.debug("CollegeModel update method ended");
 	}
 
 	/**
@@ -122,6 +150,8 @@ public class CollegeModel extends BaseModel<CollegeBean> {
 	 */
 	@Override
 	public String getWhereClause(CollegeBean bean) {
+
+		log.debug("CollegeModel getWhereClause method started");
 
 		StringBuffer sql = new StringBuffer("");
 
@@ -156,8 +186,10 @@ public class CollegeModel extends BaseModel<CollegeBean> {
 			if (bean.getModifiedDatetime() != null) {
 				sql.append(" and modified_datetime like'" + bean.getModifiedDatetime() + "'");
 			}
-
 		}
+
+		log.debug("CollegeModel getWhereClause method ended");
+
 		return sql.toString();
 	}
 
@@ -169,6 +201,8 @@ public class CollegeModel extends BaseModel<CollegeBean> {
 	@Override
 	public String getTable() {
 
+		log.debug("CollegeModel getTable method called");
+
 		return "st_college";
 	}
 
@@ -179,6 +213,9 @@ public class CollegeModel extends BaseModel<CollegeBean> {
 	 */
 	@Override
 	public CollegeBean getBean() {
+
+		log.debug("CollegeModel getBean method called");
+
 		return new CollegeBean();
 	}
 
@@ -189,7 +226,19 @@ public class CollegeModel extends BaseModel<CollegeBean> {
 	 * @return CollegeBean if a matching record is found, otherwise null
 	 */
 	public CollegeBean findByName(String name) {
+
+		log.debug("CollegeModel findByName method started. College name: " + name);
+
 		CollegeBean bean = findByUniqueColumn("name", name);
+
+		if (bean != null) {
+			log.info("College record found: " + name);
+		} else {
+			log.warn("College record not found: " + name);
+		}
+
+		log.debug("CollegeModel findByName method ended");
+
 		return bean;
 	}
 }

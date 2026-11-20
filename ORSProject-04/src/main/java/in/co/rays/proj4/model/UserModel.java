@@ -6,6 +6,8 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.HashMap;
 
+import org.apache.log4j.Logger;
+
 import in.co.rays.proj4.bean.UserBean;
 import in.co.rays.proj4.exception.ApplicationException;
 import in.co.rays.proj4.exception.DuplicateRecordException;
@@ -24,6 +26,8 @@ import in.co.rays.proj4.util.JDBCDataSource;
  */
 public class UserModel extends BaseModel<UserBean> {
 
+	private static final Logger log = Logger.getLogger(UserModel.class);
+
 	/**
 	 * Adds a new user record to the database.
 	 *
@@ -34,21 +38,28 @@ public class UserModel extends BaseModel<UserBean> {
 	 */
 	@Override
 	public long add(UserBean bean) throws ApplicationException, DuplicateRecordException {
+
+		log.debug("UserModel add method started");
+
 		Connection conn = null;
 		long pk = 0;
 
 		UserBean existBean = findByLogin(bean.getLogin());
 
 		if (existBean != null) {
+			log.warn("User already exists with login: " + bean.getLogin());
 			throw new DuplicateRecordException("Login already exist");
 		}
 
 		try {
+			log.debug("Getting database connection");
+
 			conn = JDBCDataSource.getConnection();
 			conn.setAutoCommit(false);
 
 			PreparedStatement pstmt = conn
 					.prepareStatement("insert into " + getTable() + " values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+
 			pstmt.setLong(1, nextPk());
 			pstmt.setString(2, bean.getFirstName());
 			pstmt.setString(3, bean.getLastName());
@@ -68,17 +79,21 @@ public class UserModel extends BaseModel<UserBean> {
 			pstmt.setTimestamp(17, bean.getCreatedDatetime());
 			pstmt.setTimestamp(18, bean.getModifiedDatetime());
 			pstmt.setString(19, bean.getPhoto());
+
 			int i = pstmt.executeUpdate();
 
 			conn.commit();
-			System.out.println("Data inserted successfully " + i + " row affected");
+			log.info("User data inserted successfully. Rows affected: " + i);
 
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error("SQL exception occurred while adding user", e);
 			JDBCDataSource.trnRollBack(conn);
 		} finally {
 			JDBCDataSource.closeConnection(conn);
+			log.debug("Database connection closed");
 		}
+
+		log.debug("UserModel add method completed");
 		return pk;
 	}
 
@@ -91,11 +106,15 @@ public class UserModel extends BaseModel<UserBean> {
 	 */
 	@Override
 	public void update(UserBean bean) throws ApplicationException, DuplicateRecordException {
+
+		log.debug("UserModel update method started");
+
 		Connection conn = null;
 
 		UserBean existBean = findByLogin(bean.getLogin());
 
 		if (existBean != null && existBean.getId() != bean.getId()) {
+			log.warn("Login already exists: " + bean.getLogin());
 			throw new DuplicateRecordException("login already exist");
 		}
 
@@ -105,6 +124,7 @@ public class UserModel extends BaseModel<UserBean> {
 
 			PreparedStatement pstmt = conn.prepareStatement("update " + getTable()
 					+ " set first_name=? , last_name=? , login=? , password=? , dob=? ,mobile_no=? ,unsuccessful_login=?, gender=?, last_login=?, user_lock=?,registered_ip=?, last_login_ip=?, created_by = ? ,modified_by = ? , created_datetime = ? , modified_datetime = ? , role_id=? where id = ?  ");
+
 			pstmt.setString(1, bean.getFirstName());
 			pstmt.setString(2, bean.getLastName());
 			pstmt.setString(3, bean.getLogin());
@@ -126,14 +146,18 @@ public class UserModel extends BaseModel<UserBean> {
 
 			int i = pstmt.executeUpdate();
 			conn.commit();
-			System.out.println("Data updated successfully " + i + " row affected");
+
+			log.info("User data updated successfully. Rows affected: " + i);
+
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error("SQL exception occurred while updating user", e);
 			JDBCDataSource.trnRollBack(conn);
 		} finally {
 			JDBCDataSource.closeConnection(conn);
-
+			log.debug("Database connection closed");
 		}
+
+		log.debug("UserModel update method completed");
 	}
 
 	/**
@@ -144,6 +168,9 @@ public class UserModel extends BaseModel<UserBean> {
 	 */
 	@Override
 	public String getWhereClause(UserBean bean) {
+
+		log.debug("UserModel getWhereClause method started");
+
 		StringBuffer sql = new StringBuffer("");
 
 		if (bean != null) {
@@ -203,6 +230,7 @@ public class UserModel extends BaseModel<UserBean> {
 			}
 		}
 
+		log.debug("Generated user WHERE clause");
 		return sql.toString();
 	}
 
@@ -214,13 +242,18 @@ public class UserModel extends BaseModel<UserBean> {
 	 * @return UserBean if authentication is successful; otherwise null
 	 */
 	public UserBean authenticate(String login, String password) {
+
+		log.debug("UserModel authenticate method started");
+
 		UserBean bean = findByLogin(login);
 
 		if (bean != null && bean.getPassword().equals(password)) {
+			log.info("User authentication successful for login: " + login);
 			return bean;
 		}
-		return null;
 
+		log.warn("User authentication failed for login: " + login);
+		return null;
 	}
 
 	/**
@@ -230,7 +263,17 @@ public class UserModel extends BaseModel<UserBean> {
 	 * @return matching UserBean object
 	 */
 	public UserBean findByLogin(String login) {
+
+		log.debug("UserModel findByLogin method started");
+
 		UserBean bean = findByUniqueColumn("login", login);
+
+		if (bean != null) {
+			log.info("User found with login: " + login);
+		} else {
+			log.warn("No user found with login: " + login);
+		}
+
 		return bean;
 	}
 
@@ -244,9 +287,13 @@ public class UserModel extends BaseModel<UserBean> {
 	 * @return updated UserBean if the password is changed; otherwise null
 	 */
 	public UserBean changePassword(String newPassword, String oldPassword, String login) {
+
+		log.debug("UserModel changePassword method started");
+
 		UserBean bean = findByLogin(login);
 
 		if (bean != null && bean.getPassword().equals(oldPassword)) {
+
 			bean.setPassword(newPassword);
 			update(bean);
 
@@ -264,8 +311,12 @@ public class UserModel extends BaseModel<UserBean> {
 			msg.setMessageType(EmailMessage.HTML_MSG);
 
 			EmailUtility.sendMail(msg);
+
+			log.info("Password changed and email sent for login: " + login);
 			return bean;
 		}
+
+		log.warn("Password change failed for login: " + login);
 		return null;
 	}
 
@@ -276,9 +327,13 @@ public class UserModel extends BaseModel<UserBean> {
 	 * @return UserBean if the user is found; otherwise null
 	 */
 	public UserBean forgetPassword(String login) {
+
+		log.debug("UserModel forgetPassword method started");
+
 		UserBean bean = findByLogin(login);
 
 		if (bean != null) {
+
 			HashMap<String, String> map = new HashMap<String, String>();
 			EmailMessage msg = new EmailMessage();
 
@@ -293,9 +348,12 @@ public class UserModel extends BaseModel<UserBean> {
 			msg.setMessageType(EmailMessage.HTML_MSG);
 
 			EmailUtility.sendMail(msg);
+
+			log.info("Forget password email sent for login: " + login);
 			return bean;
 		}
 
+		log.warn("Forget password failed. User not found for login: " + login);
 		return null;
 	}
 
@@ -306,6 +364,9 @@ public class UserModel extends BaseModel<UserBean> {
 	 * @return primary key returned by the add method
 	 */
 	public long register(UserBean bean) {
+
+		log.debug("UserModel register method started");
+
 		long pk = add(bean);
 
 		HashMap<String, String> map = new HashMap<String, String>();
@@ -320,7 +381,7 @@ public class UserModel extends BaseModel<UserBean> {
 		msg.setMessageType(EmailMessage.HTML_MSG);
 
 		EmailUtility.sendMail(msg);
-		System.out.println("Mail send successfully");
+		log.info("Registration email sent successfully for login: " + bean.getLogin());
 
 		return pk;
 	}
@@ -332,6 +393,9 @@ public class UserModel extends BaseModel<UserBean> {
 	 * @param photo photo path or file name
 	 */
 	public void updatePhoto(long id, String photo) {
+
+		log.debug("UserModel updatePhoto method started for user ID: " + id);
+
 		Connection conn = null;
 
 		try {
@@ -341,14 +405,19 @@ public class UserModel extends BaseModel<UserBean> {
 			PreparedStatement pstmt = conn.prepareStatement("update " + getTable() + " set photo = ? where id = ?");
 			pstmt.setString(1, photo);
 			pstmt.setLong(2, id);
+
 			pstmt.executeUpdate();
 			conn.commit();
 			pstmt.close();
+
+			log.info("User photo updated successfully for user ID: " + id);
+
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("Exception occurred while updating user photo", e);
 			JDBCDataSource.trnRollBack(conn);
 		} finally {
 			JDBCDataSource.closeConnection(conn);
+			log.debug("Database connection closed");
 		}
 	}
 
@@ -358,6 +427,8 @@ public class UserModel extends BaseModel<UserBean> {
 	 * @param bean UserBean containing profile information
 	 */
 	public void updateProfile(UserBean bean) {
+
+		log.debug("UserModel updateProfile method started");
 
 		Connection conn = null;
 
@@ -376,14 +447,16 @@ public class UserModel extends BaseModel<UserBean> {
 
 			int i = pstmt.executeUpdate();
 			conn.commit();
-			System.out.println("Data updated successfully " + i + " row affected");
+
+			log.info("User profile updated successfully. Rows affected: " + i);
 
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error("SQL exception occurred while updating user profile", e);
 			JDBCDataSource.trnRollBack(conn);
 
 		} finally {
 			JDBCDataSource.closeConnection(conn);
+			log.debug("Database connection closed");
 		}
 	}
 
@@ -395,6 +468,7 @@ public class UserModel extends BaseModel<UserBean> {
 	@Override
 	public String getTable() {
 
+		log.debug("UserModel getTable method called");
 		return "st_user";
 	}
 
@@ -406,6 +480,7 @@ public class UserModel extends BaseModel<UserBean> {
 	@Override
 	public UserBean getBean() {
 
+		log.debug("UserModel getBean method called");
 		return new UserBean();
 	}
 

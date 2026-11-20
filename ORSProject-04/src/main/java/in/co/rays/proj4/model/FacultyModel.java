@@ -5,6 +5,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+import org.apache.log4j.Logger;
+
 import in.co.rays.proj4.bean.CollegeBean;
 import in.co.rays.proj4.bean.FacultyBean;
 import in.co.rays.proj4.exception.ApplicationException;
@@ -21,6 +23,8 @@ import in.co.rays.proj4.util.JDBCDataSource;
  */
 public class FacultyModel extends BaseModel<FacultyBean> {
 
+	private static final Logger log = Logger.getLogger(FacultyModel.class);
+
 	/**
 	 * Adds a new faculty record into the database.
 	 *
@@ -31,12 +35,16 @@ public class FacultyModel extends BaseModel<FacultyBean> {
 	 */
 	@Override
 	public long add(FacultyBean bean) throws ApplicationException, DuplicateRecordException {
+
+		log.debug("FacultyModel add method started");
+
 		Connection conn = null;
 		long pk = 0;
 
 		FacultyBean existBean = findByEmail(bean.getEmail());
 
 		if (existBean != null) {
+			log.warn("Faculty email already exists: " + bean.getEmail());
 			throw new DuplicateRecordException("email id already exist");
 		}
 
@@ -46,6 +54,8 @@ public class FacultyModel extends BaseModel<FacultyBean> {
 		try {
 			conn = JDBCDataSource.getConnection();
 			conn.setAutoCommit(false);
+
+			log.debug("Preparing insert query for faculty");
 
 			PreparedStatement pstmt = conn
 					.prepareStatement("insert into " + getTable() + " values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
@@ -66,13 +76,19 @@ public class FacultyModel extends BaseModel<FacultyBean> {
 
 			int i = pstmt.executeUpdate();
 			conn.commit();
-			System.out.println("Data inserted successfully " + i + " row affected");
+
+			log.info("Faculty data inserted successfully. " + i + " row affected");
+
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error("Exception occurred while inserting faculty data", e);
 			JDBCDataSource.trnRollBack(conn);
 		} finally {
+			log.debug("Closing faculty database connection");
 			JDBCDataSource.closeConnection(conn);
 		}
+
+		log.debug("FacultyModel add method ended");
+
 		return pk;
 	}
 
@@ -85,11 +101,15 @@ public class FacultyModel extends BaseModel<FacultyBean> {
 	 */
 	@Override
 	public void update(FacultyBean bean) throws ApplicationException, DuplicateRecordException {
+
+		log.debug("FacultyModel update method started");
+
 		Connection conn = null;
 
 		FacultyBean existBean = findByEmail(bean.getEmail());
 
 		if (existBean != null && existBean.getId() != bean.getId()) {
+			log.warn("Faculty email already exists: " + bean.getEmail());
 			throw new DuplicateRecordException("email id already exist");
 		}
 
@@ -99,6 +119,8 @@ public class FacultyModel extends BaseModel<FacultyBean> {
 		try {
 			conn = JDBCDataSource.getConnection();
 			conn.setAutoCommit(false);
+
+			log.debug("Preparing update query for faculty");
 
 			PreparedStatement pstmt = conn.prepareStatement("update " + getTable()
 					+ " set college_id=?, college_name=?, first_name=?, last_name=?, email=?, mobile_no=?, address=?, gender=?, date_of_birth=?, created_by=?, modified_by=?, created_datetime=?, modified_datetime=? where id=?");
@@ -119,14 +141,18 @@ public class FacultyModel extends BaseModel<FacultyBean> {
 
 			int i = pstmt.executeUpdate();
 			conn.commit();
-			System.out.println("Data updated successfully " + i + " row affected");
+
+			log.info("Faculty data updated successfully. " + i + " row affected");
+
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error("Exception occurred while updating faculty data", e);
 			JDBCDataSource.trnRollBack(conn);
 		} finally {
+			log.debug("Closing faculty database connection");
 			JDBCDataSource.closeConnection(conn);
 		}
 
+		log.debug("FacultyModel update method ended");
 	}
 
 	/**
@@ -137,6 +163,9 @@ public class FacultyModel extends BaseModel<FacultyBean> {
 	 */
 	@Override
 	public String getWhereClause(FacultyBean bean) {
+
+		log.debug("FacultyModel getWhereClause method started");
+
 		StringBuffer sql = new StringBuffer("");
 
 		if (bean != null) {
@@ -183,6 +212,10 @@ public class FacultyModel extends BaseModel<FacultyBean> {
 				sql.append(" and modified_datetime like'" + bean.getModifiedDatetime() + "'");
 			}
 		}
+
+		log.debug("Generated WHERE clause: " + sql.toString());
+		log.debug("FacultyModel getWhereClause method ended");
+
 		return sql.toString();
 	}
 
@@ -193,6 +226,7 @@ public class FacultyModel extends BaseModel<FacultyBean> {
 	 */
 	@Override
 	public String getTable() {
+		log.debug("FacultyModel getTable method called");
 		return "st_faculty";
 	}
 
@@ -203,6 +237,7 @@ public class FacultyModel extends BaseModel<FacultyBean> {
 	 */
 	@Override
 	public FacultyBean getBean() {
+		log.debug("FacultyModel getBean method called");
 		return new FacultyBean();
 	}
 
@@ -213,7 +248,19 @@ public class FacultyModel extends BaseModel<FacultyBean> {
 	 * @return FacultyBean object if found
 	 */
 	public FacultyBean findByEmail(String email) {
+
+		log.debug("FacultyModel findByEmail method started");
+
 		FacultyBean bean = findByUniqueColumn("email", email);
+
+		if (bean != null) {
+			log.info("Faculty record found for email: " + email);
+		} else {
+			log.warn("Faculty record not found for email: " + email);
+		}
+
+		log.debug("FacultyModel findByEmail method ended");
+
 		return bean;
 	}
 

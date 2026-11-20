@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+import org.apache.log4j.Logger;
+
 import in.co.rays.proj4.bean.ATMBean;
 import in.co.rays.proj4.exception.ApplicationException;
 import in.co.rays.proj4.exception.DuplicateRecordException;
@@ -19,6 +21,8 @@ import in.co.rays.proj4.util.JDBCDataSource;
  */
 public class ATMModel extends BaseModel<ATMBean> {
 
+	private static Logger log = Logger.getLogger(ATMModel.class);
+
 	/**
 	 * Adds a new ATM record to the database. Checks whether the bank name already
 	 * exists before inserting the record.
@@ -30,17 +34,23 @@ public class ATMModel extends BaseModel<ATMBean> {
 	 */
 	@Override
 	public long add(ATMBean bean) throws ApplicationException, DuplicateRecordException {
+
+		log.debug("ATMModel add method started");
+
 		Connection conn = null;
 		long pk = 0;
 
 		ATMBean existBean = findByName(bean.getBankName());
 
 		if (existBean != null) {
+			log.warn("ATM bank name already exists: " + bean.getBankName());
 			throw new DuplicateRecordException("bank name allready exist");
 		}
 
 		try {
 			pk = nextPk();
+			log.debug("Generated ATM primary key: " + pk);
+
 			conn = JDBCDataSource.getConnection();
 			conn.setAutoCommit(false);
 
@@ -57,13 +67,20 @@ public class ATMModel extends BaseModel<ATMBean> {
 
 			int i = pstmt.executeUpdate();
 			conn.commit();
-			System.out.println("Data inserted succcessfully " + i + " row affected");
+
+			log.info("ATM data inserted successfully. " + i + " row affected");
+			log.debug("ATM record inserted with ID: " + pk);
+
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error("Error while inserting ATM record", e);
 			JDBCDataSource.trnRollBack(conn);
 		} finally {
+			log.debug("Closing ATM database connection");
 			JDBCDataSource.closeConnection(conn);
 		}
+
+		log.debug("ATMModel add method ended");
+
 		return pk;
 	}
 
@@ -77,11 +94,15 @@ public class ATMModel extends BaseModel<ATMBean> {
 	 */
 	@Override
 	public void update(ATMBean bean) throws ApplicationException, DuplicateRecordException {
+
+		log.debug("ATMModel update method started");
+
 		Connection conn = null;
 
 		ATMBean existBean = findByName(bean.getBankName());
 
 		if (existBean != null && bean.getId() != existBean.getId()) {
+			log.warn("Duplicate ATM bank name found: " + bean.getBankName());
 			throw new DuplicateRecordException("bank name allready exist");
 		}
 
@@ -100,15 +121,22 @@ public class ATMModel extends BaseModel<ATMBean> {
 			pstmt.setTimestamp(7, bean.getCreatedDatetime());
 			pstmt.setTimestamp(8, bean.getModifiedDatetime());
 			pstmt.setLong(9, bean.getId());
+
 			int i = pstmt.executeUpdate();
 			conn.commit();
-			System.out.println("Data updated successfully " + i + " row affected");
+
+			log.info("ATM data updated successfully. " + i + " row affected");
+			log.debug("ATM record updated with ID: " + bean.getId());
+
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error("Error while updating ATM record with ID: " + bean.getId(), e);
 			JDBCDataSource.trnRollBack(conn);
 		} finally {
+			log.debug("Closing ATM database connection");
 			JDBCDataSource.closeConnection(conn);
 		}
+
+		log.debug("ATMModel update method ended");
 	}
 
 	/**
@@ -119,6 +147,9 @@ public class ATMModel extends BaseModel<ATMBean> {
 	 */
 	@Override
 	public String getWhereClause(ATMBean bean) {
+
+		log.debug("ATMModel getWhereClause method started");
+
 		StringBuffer sql = new StringBuffer("");
 
 		if (bean != null) {
@@ -149,8 +180,10 @@ public class ATMModel extends BaseModel<ATMBean> {
 			if (bean.getModifiedDatetime() != null) {
 				sql.append(" and modified_datetime like'" + bean.getModifiedDatetime() + "'");
 			}
-
 		}
+
+		log.debug("ATMModel getWhereClause method ended");
+
 		return sql.toString();
 	}
 
@@ -161,6 +194,9 @@ public class ATMModel extends BaseModel<ATMBean> {
 	 */
 	@Override
 	public String getTable() {
+
+		log.debug("ATMModel getTable method called");
+
 		return "atm";
 	}
 
@@ -171,6 +207,9 @@ public class ATMModel extends BaseModel<ATMBean> {
 	 */
 	@Override
 	public ATMBean getBean() {
+
+		log.debug("ATMModel getBean method called");
+
 		return new ATMBean();
 	}
 
@@ -181,7 +220,19 @@ public class ATMModel extends BaseModel<ATMBean> {
 	 * @return ATMBean if a matching record is found, otherwise null
 	 */
 	public ATMBean findByName(String bank_name) {
+
+		log.debug("ATMModel findByName method started. Bank name: " + bank_name);
+
 		ATMBean bean = findByUniqueColumn("bank_name", bank_name);
+
+		if (bean != null) {
+			log.info("ATM record found for bank: " + bank_name);
+		} else {
+			log.warn("ATM record not found for bank: " + bank_name);
+		}
+
+		log.debug("ATMModel findByName method ended");
+
 		return bean;
 	}
 

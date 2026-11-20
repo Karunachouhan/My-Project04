@@ -5,6 +5,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+import org.apache.log4j.Logger;
+
 import in.co.rays.proj4.bean.RoleBean;
 import in.co.rays.proj4.exception.ApplicationException;
 import in.co.rays.proj4.exception.DuplicateRecordException;
@@ -19,6 +21,9 @@ import in.co.rays.proj4.util.JDBCDataSource;
  */
 public class RoleModel extends BaseModel<RoleBean> {
 
+	/** Logger for RoleModel class. */
+	private static final Logger log = Logger.getLogger(RoleModel.class);
+
 	/**
 	 * Adds a new role record to the database.
 	 *
@@ -29,19 +34,26 @@ public class RoleModel extends BaseModel<RoleBean> {
 	 */
 	@Override
 	public long add(RoleBean bean) throws ApplicationException, DuplicateRecordException {
+		log.debug("RoleModel add method started");
+
 		Connection conn = null;
 		long pk = 0;
 
 		RoleBean existBean = findByName(bean.getName());
 
 		if (existBean != null) {
+			log.warn("Role name already exists: " + bean.getName());
 			throw new DuplicateRecordException("role name already exist");
 		}
 
 		try {
 			pk = nextPk();
+			log.debug("Generated primary key: " + pk);
+
 			conn = JDBCDataSource.getConnection();
 			conn.setAutoCommit(false);
+
+			log.debug("Preparing insert query for role record");
 
 			PreparedStatement pstmt = conn.prepareStatement("insert into " + getTable() + " values(?,?,?,?,?,?,?)");
 			pstmt.setLong(1, pk);
@@ -51,16 +63,20 @@ public class RoleModel extends BaseModel<RoleBean> {
 			pstmt.setString(5, bean.getModifiedBy());
 			pstmt.setTimestamp(6, bean.getCreatedDatetime());
 			pstmt.setTimestamp(7, bean.getModifiedDatetime());
+
 			int i = pstmt.executeUpdate();
 			conn.commit();
-			System.out.println("Data inserted successfully " + i + " row affected");
+
+			log.info("Data inserted successfully " + i + " row affected");
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error("SQL Exception while inserting role record", e);
 			JDBCDataSource.trnRollBack(conn);
 		} finally {
+			log.debug("Closing database connection");
 			JDBCDataSource.closeConnection(conn);
 		}
 
+		log.debug("RoleModel add method ended");
 		return pk;
 	}
 
@@ -74,17 +90,22 @@ public class RoleModel extends BaseModel<RoleBean> {
 	@Override
 	public void update(RoleBean bean) throws ApplicationException, DuplicateRecordException {
 
+		log.debug("RoleModel update method started");
+
 		Connection conn = null;
 
 		RoleBean existBean = findByName(bean.getName());
 
 		if (existBean != null && existBean.getId() != bean.getId()) {
+			log.warn("Role name already exists: " + bean.getName());
 			throw new DuplicateRecordException("role name already exist");
 		}
 
 		try {
 			conn = JDBCDataSource.getConnection();
 			conn.setAutoCommit(false);
+
+			log.debug("Preparing update query for role record");
 
 			PreparedStatement pstmt = conn.prepareStatement("update " + getTable()
 					+ " set name = ? ,description = ? ,created_by = ? ,modified_by = ? , created_datetime = ? , modified_datetime = ? where id = ? ");
@@ -98,13 +119,17 @@ public class RoleModel extends BaseModel<RoleBean> {
 
 			int i = pstmt.executeUpdate();
 			conn.commit();
-			System.out.println("Data updated successfully " + i + " row affected");
+
+			log.info("Data updated successfully " + i + " row affected");
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error("SQL Exception while updating role record", e);
 			JDBCDataSource.trnRollBack(conn);
 		} finally {
+			log.debug("Closing database connection");
 			JDBCDataSource.closeConnection(conn);
 		}
+
+		log.debug("RoleModel update method ended");
 	}
 
 	/**
@@ -115,6 +140,8 @@ public class RoleModel extends BaseModel<RoleBean> {
 	 */
 	@Override
 	public String getWhereClause(RoleBean bean) {
+		log.debug("RoleModel getWhereClause method started");
+
 		StringBuffer sql = new StringBuffer("");
 
 		if (bean != null) {
@@ -141,6 +168,9 @@ public class RoleModel extends BaseModel<RoleBean> {
 			}
 		}
 
+		log.debug("Generated WHERE clause: " + sql.toString());
+		log.debug("RoleModel getWhereClause method ended");
+
 		return sql.toString();
 	}
 
@@ -151,7 +181,7 @@ public class RoleModel extends BaseModel<RoleBean> {
 	 */
 	@Override
 	public String getTable() {
-
+		log.debug("RoleModel getTable method called");
 		return "st_role";
 	}
 
@@ -162,7 +192,7 @@ public class RoleModel extends BaseModel<RoleBean> {
 	 */
 	@Override
 	public RoleBean getBean() {
-
+		log.debug("RoleModel getBean method called");
 		return new RoleBean();
 	}
 
@@ -173,7 +203,17 @@ public class RoleModel extends BaseModel<RoleBean> {
 	 * @return RoleBean object if found, otherwise null
 	 */
 	public RoleBean findByName(String name) {
+		log.debug("RoleModel findByName method started: " + name);
+
 		RoleBean bean = findByUniqueColumn("name", name);
+
+		if (bean != null) {
+			log.info("Role found with name: " + name);
+		} else {
+			log.warn("Role not found with name: " + name);
+		}
+
+		log.debug("RoleModel findByName method ended");
 		return bean;
 	}
 }
