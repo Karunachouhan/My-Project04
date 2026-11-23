@@ -78,7 +78,7 @@
 
 				<tr>
 					<th>DOB<font color="red">*</font></th>
-					<td><input type="date" name="dob" value="<%=DataUtility.getStringData(bean.getDob())%>"></td>
+					<td><input type="date" name="dob" value="<%=DataUtility.getDateString(bean.getDob())%>"></td>
 					<td style="color: red"><%=ServletUtility.getErrorMessage("dob", request)%></td>
 				</tr>
 

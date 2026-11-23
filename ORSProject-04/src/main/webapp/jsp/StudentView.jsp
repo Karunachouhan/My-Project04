@@ -69,7 +69,7 @@
 				<tr>
 					<th>Dob<font color="red">*</font></th>
 					<td><input type="date" name="dateOfBirth"
-						placeholder="enter your date of birth" value="<%=DataUtility.getStringData(bean.getDateOfBirth())%>"></td>
+						placeholder="enter your date of birth" value="<%=DataUtility.getDateString(bean.getDateOfBirth())%>"></td>
 					<td style="color: red"><%=ServletUtility.getErrorMessage("dateOfBirth", request)%></td>
 				</tr>
 				

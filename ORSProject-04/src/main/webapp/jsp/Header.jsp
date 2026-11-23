@@ -50,9 +50,9 @@
         <!-- Logo -->
         <td rowspan="2" valign="top" align="right">
             <h1>
-                <img src="<%=ORSView.APP_CONTEXT%>/img/raysLogo.png"
-                     width="200"
-                     height="150">
+                <img src="<%=ORSView.APP_CONTEXT%>/img/customLogo.jpg"
+                     width="150px"
+                     height="100px">
             </h1>
         </td>
     </tr>
